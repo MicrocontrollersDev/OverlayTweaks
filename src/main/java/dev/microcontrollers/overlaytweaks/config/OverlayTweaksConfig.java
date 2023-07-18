@@ -5,6 +5,7 @@ import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.YetAnotherConfigLib;
+import dev.isxander.yacl3.api.controller.DoubleSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import dev.isxander.yacl3.config.ConfigEntry;
 import dev.isxander.yacl3.config.GsonConfigInstance;
@@ -54,7 +55,9 @@ public class OverlayTweaksConfig {
                                 .name(Text.literal("Change Fire Overlay Height"))
                                 .description(OptionDescription.of(Text.of("Change the height of the fire overlay if your pack does not have low fire. May improve visibility. Set to 0.0 for default.")))
                                 .binding(0.0, () -> fireOverlayHeight, newVal -> fireOverlayHeight = newVal)
-                                .customController(opt -> new DoubleSliderController(opt, -0.5, 0.0, 0.01))
+                                .controller(opt -> DoubleSliderControllerBuilder.create(opt)
+                                        .range(-0.5, 0.0)
+                                        .step(0.01))
                                 .build())
                         .option(Option.createBuilder(boolean.class)
                                 .name(Text.literal("Constant Vignette Darkness"))
