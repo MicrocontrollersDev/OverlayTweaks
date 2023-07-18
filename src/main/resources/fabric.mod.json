@@ -1,33 +1,29 @@
 {
 	"schemaVersion": 1,
-	"id": "modid",
+	"id": "overlaytweaks",
 	"version": "${version}",
-	"name": "Example mod",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"name": "Overlay Tweaks",
+	"description": "Small tweaks to Minecraft's overlays!",
 	"authors": [
 		"Me!"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://github.com/MicrocontrollersDev/OverlayTweaks",
+		"sources": "https://github.com/MicrocontrollersDev/OverlayTweaks/issues"
 	},
 	"license": "CC0-1.0",
-	"icon": "assets/modid/icon.png",
+	"icon": "assets/overlaytweaks/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"com.example.ExampleMod"
+			"dev.microcontrollers.overlaytweaks.OverlayTweaks"
 		],
-		"client": [
-			"com.example.ExampleModClient"
+		"modmenu": [
+			"dev.microcontrollers.overlaytweaks.config.ModMenuIntegration"
 		]
 	},
 	"mixins": [
-		"modid.mixins.json",
-		{
-			"config": "modid.client.mixins.json",
-			"environment": "client"
-		}
+		"overlaytweaks.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.14.21",

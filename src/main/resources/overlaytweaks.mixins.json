@@ -1,9 +1,10 @@
 {
 	"required": true,
-	"package": "com.example.mixin",
+	"package": "dev.microcontrollers.overlaytweaks.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
-		"ExampleMixin"
+		"InGameOverlayRendererMixin",
+		"InGameHudMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
