@@ -5,13 +5,14 @@
 	"name": "Overlay Tweaks",
 	"description": "Small tweaks to Minecraft's overlays!",
 	"authors": [
-		"Me!"
+		"Microcontrollers"
 	],
 	"contact": {
-		"homepage": "https://github.com/MicrocontrollersDev/OverlayTweaks",
-		"sources": "https://github.com/MicrocontrollersDev/OverlayTweaks/issues"
+		"homepage": "https://github.com/MicrocontrollersDev",
+		"sources": "https://github.com/MicrocontrollersDev/OverlayTweaks",
+		"issues": "https://github.com/MicrocontrollersDev/OverlayTweaks/issues"
 	},
-	"license": "CC0-1.0",
+	"license": "LGPLV3",
 	"icon": "assets/overlaytweaks/icon.png",
 	"environment": "*",
 	"entrypoints": {
@@ -31,7 +32,12 @@
 		"java": ">=17",
 		"fabric-api": "*"
 	},
-	"suggests": {
-		"another-mod": "*"
+	"custom": {
+		"modmenu": {
+			"links": {
+				"modmenu.discord": "https://discord.gg/rejfv9kFJj"
+			},
+			"update_checker": true
+		}
 	}
 }
