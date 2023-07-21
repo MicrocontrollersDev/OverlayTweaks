@@ -5,11 +5,11 @@ import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.YetAnotherConfigLib;
 import dev.isxander.yacl3.api.controller.DoubleSliderControllerBuilder;
+import dev.isxander.yacl3.api.controller.FloatSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import dev.isxander.yacl3.config.ConfigEntry;
 import dev.isxander.yacl3.config.ConfigInstance;
 import dev.isxander.yacl3.config.GsonConfigInstance;
-import dev.isxander.yacl3.gui.controllers.slider.DoubleSliderController;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
@@ -27,6 +27,9 @@ public class OverlayTweaksConfig {
 
     @ConfigEntry
     public double fireOverlayHeight = 0.0;
+
+    @ConfigEntry
+    public float customFireOverlayOpacity = 100F;
 
     @ConfigEntry
     public boolean customVignetteDarkness = false;
@@ -59,6 +62,14 @@ public class OverlayTweaksConfig {
                                         .range(-0.5, 0.0)
                                         .step(0.01))
                                 .build())
+                        .option(Option.createBuilder(float.class)
+                                .name(Text.literal("Fire Overlay Opacity"))
+                                .description(OptionDescription.of(Text.of("The value for fire overlay opacity.")))
+                                .binding(100F, () -> config.customFireOverlayOpacity, newVal -> config.customFireOverlayOpacity = newVal)
+                                .controller(opt -> FloatSliderControllerBuilder.create(opt)
+                                        .range(0F, 100F)
+                                        .step(1F))
+                                .build())
                         .option(Option.createBuilder(boolean.class)
                                 .name(Text.literal("Constant Vignette Darkness"))
                                 .description(OptionDescription.of(Text.of("Apply a constant vignette regardless of sky light level.")))
@@ -69,7 +80,9 @@ public class OverlayTweaksConfig {
                                 .name(Text.literal("Constant Vignette Darkness Value"))
                                 .description(OptionDescription.of(Text.of("The value for constant vignette.")))
                                 .binding(0.0, () -> config.customVignetteDarknessValue, newVal -> config.customVignetteDarknessValue = newVal)
-                                .customController(opt -> new DoubleSliderController(opt, 0.0, 1.0, 0.1))
+                                .controller(opt -> DoubleSliderControllerBuilder.create(opt)
+                                        .range(0.0, 1.0)
+                                        .step(0.1))
                                 .build())
                         .build())
         )).generateScreen(parent);
