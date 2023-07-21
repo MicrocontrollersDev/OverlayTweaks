@@ -62,7 +62,7 @@ public class OverlayTweaksConfig {
                         .option(Option.createBuilder(boolean.class)
                                 .name(Text.literal("Constant Vignette Darkness"))
                                 .description(OptionDescription.of(Text.of("Apply a constant vignette regardless of sky light level.")))
-                                .binding(defaults.removeWaterOverlay, () -> config.customVignetteDarkness, newVal -> config.customVignetteDarkness = newVal)
+                                .binding(defaults.customVignetteDarkness, () -> config.customVignetteDarkness, newVal -> config.customVignetteDarkness = newVal)
                                 .controller(TickBoxControllerBuilder::create)
                                 .build())
                         .option(Option.createBuilder(double.class)
