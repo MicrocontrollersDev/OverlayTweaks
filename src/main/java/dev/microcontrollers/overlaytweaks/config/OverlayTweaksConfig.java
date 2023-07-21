@@ -20,19 +20,19 @@ public class OverlayTweaksConfig {
             .build();
 
     @ConfigEntry
-    public boolean removeWaterOverlay;
+    public boolean removeWaterOverlay = true;
 
     @ConfigEntry
-    public boolean removeFireOverlay;
+    public boolean removeFireOverlay = true;
 
     @ConfigEntry
-    public double fireOverlayHeight;
+    public double fireOverlayHeight = 0.0;
 
     @ConfigEntry
-    public boolean customVignetteDarkness;
+    public boolean customVignetteDarkness = false;
 
     @ConfigEntry
-    public double customVignetteDarknessValue;
+    public double customVignetteDarknessValue = 0.0;
 
     public static Screen configScreen(Screen parent) {
         return YetAnotherConfigLib.create(INSTANCE, ((defaults, config, builder) -> builder
@@ -62,7 +62,7 @@ public class OverlayTweaksConfig {
                         .option(Option.createBuilder(boolean.class)
                                 .name(Text.literal("Constant Vignette Darkness"))
                                 .description(OptionDescription.of(Text.of("Apply a constant vignette regardless of sky light level.")))
-                                .binding(defaults.removeWaterOverlay, () -> config.customVignetteDarkness, newVal -> config.customVignetteDarkness = newVal)
+                                .binding(defaults.customVignetteDarkness, () -> config.customVignetteDarkness, newVal -> config.customVignetteDarkness = newVal)
                                 .controller(TickBoxControllerBuilder::create)
                                 .build())
                         .option(Option.createBuilder(double.class)
