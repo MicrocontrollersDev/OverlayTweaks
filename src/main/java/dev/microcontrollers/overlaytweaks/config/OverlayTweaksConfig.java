@@ -48,7 +48,7 @@ public class OverlayTweaksConfig {
                         .option(Option.createBuilder(boolean.class)
                                 .name(Text.literal("Remove Fire Overlay When Resistant"))
                                 .description(OptionDescription.of(Text.of("Shows the crosshair when in third person.")))
-                                .binding(defaults.removeWaterOverlay, () -> config.removeFireOverlay, newVal -> config.removeFireOverlay = newVal)
+                                .binding(defaults.removeFireOverlay, () -> config.removeFireOverlay, newVal -> config.removeFireOverlay = newVal)
                                 .controller(TickBoxControllerBuilder::create)
                                 .build())
                         .option(Option.createBuilder(double.class)
