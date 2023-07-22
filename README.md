@@ -11,4 +11,7 @@ Downloads can be found on the [Modrinth page](https://modrinth.com/mod/overlaytw
 - Remove Water Overlay
 - Remove Fire Overlay When Resistant
 - Custom Fire Overlay Height
+- Custom Fire Overlay Opacity
+- Custom Shield Height
+- Custom Shield Opacity
 - Constant Custom Vignette Darkness

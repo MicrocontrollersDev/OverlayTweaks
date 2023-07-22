@@ -3,6 +3,9 @@
 	"package": "dev.microcontrollers.overlaytweaks.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
+		"BuiltinItemModelRendererMixin",
+		"GameRendererMixin",
+		"HeldItemRendererMixin",
 		"InGameOverlayRendererMixin",
 		"InGameHudMixin"
 	],

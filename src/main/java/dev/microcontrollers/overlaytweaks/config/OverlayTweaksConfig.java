@@ -23,6 +23,9 @@ public class OverlayTweaksConfig {
     public boolean removeWaterOverlay = true;
 
     @ConfigEntry
+    public boolean removeWaterFov = true;
+
+    @ConfigEntry
     public boolean removeFireOverlay = true;
 
     @ConfigEntry
@@ -30,6 +33,12 @@ public class OverlayTweaksConfig {
 
     @ConfigEntry
     public float customFireOverlayOpacity = 100F;
+
+    @ConfigEntry
+    public float customShieldHeight = 0F;
+
+    @ConfigEntry
+    public float customShieldOpacity = 100F;
 
     @ConfigEntry
     public boolean customVignetteDarkness = false;
@@ -49,13 +58,19 @@ public class OverlayTweaksConfig {
                                 .controller(TickBoxControllerBuilder::create)
                                 .build())
                         .option(Option.createBuilder(boolean.class)
+                                .name(Text.literal("Remove Underwater FOV Change"))
+                                .description(OptionDescription.of(Text.of("Stops the FOV from changing when you go underwater.")))
+                                .binding(defaults.removeWaterFov, () -> config.removeWaterFov, newVal -> config.removeWaterFov = newVal)
+                                .controller(TickBoxControllerBuilder::create)
+                                .build())
+                        .option(Option.createBuilder(boolean.class)
                                 .name(Text.literal("Remove Fire Overlay When Resistant"))
                                 .description(OptionDescription.of(Text.of("Removes the fire overlay when you are resistant to fire, such as when you have fire resistance or are in creative mode.")))
                                 .binding(defaults.removeFireOverlay, () -> config.removeFireOverlay, newVal -> config.removeFireOverlay = newVal)
                                 .controller(TickBoxControllerBuilder::create)
                                 .build())
                         .option(Option.createBuilder(double.class)
-                                .name(Text.literal("Change Fire Overlay Height"))
+                                .name(Text.literal("Fire Overlay Height"))
                                 .description(OptionDescription.of(Text.of("Change the height of the fire overlay if your pack does not have low fire. May improve visibility. Set to 0.0 for default vanilla.")))
                                 .binding(0.0, () -> config.fireOverlayHeight, newVal -> config.fireOverlayHeight = newVal)
                                 .controller(opt -> DoubleSliderControllerBuilder.create(opt)
@@ -66,6 +81,24 @@ public class OverlayTweaksConfig {
                                 .name(Text.literal("Fire Overlay Opacity"))
                                 .description(OptionDescription.of(Text.of("The value for fire overlay opacity. This is controlled as a percentage.")))
                                 .binding(100F, () -> config.customFireOverlayOpacity, newVal -> config.customFireOverlayOpacity = newVal)
+                                .controller(opt -> FloatSliderControllerBuilder.create(opt)
+                                        .valueFormatter(value -> Text.of(String.format("%,.0f", value)))
+                                        .range(0F, 100F)
+                                        .step(1F))
+                                .build())
+                        .option(Option.createBuilder(float.class)
+                                .name(Text.literal("Shield Height"))
+                                .description(OptionDescription.of(Text.of("The value for shield height. Set to 0.0 for default vanilla.")))
+                                .binding(0F, () -> config.customShieldHeight, newVal -> config.customShieldHeight = newVal)
+                                .controller(opt -> FloatSliderControllerBuilder.create(opt)
+                                        .valueFormatter(value -> Text.of(String.format("%,.2f", value)))
+                                        .range(-0.5F, 0F)
+                                        .step(0.01F))
+                                .build())
+                        .option(Option.createBuilder(float.class)
+                                .name(Text.literal("Shield Opacity"))
+                                .description(OptionDescription.of(Text.of("The value for shield opacity. This affects any held shields, including shields that other players are holding. This is controlled as a percentage.")))
+                                .binding(100F, () -> config.customShieldOpacity, newVal -> config.customShieldOpacity = newVal)
                                 .controller(opt -> FloatSliderControllerBuilder.create(opt)
                                         .valueFormatter(value -> Text.of(String.format("%,.0f", value)))
                                         .range(0F, 100F)
