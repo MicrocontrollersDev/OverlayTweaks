@@ -16,6 +16,6 @@ public class InGameHudMixin {
 
     @Inject(method = "updateVignetteDarkness", at = @At("TAIL"))
     public void changeVignetteDarkness(Entity entity, CallbackInfo ci) {
-        if (OverlayTweaksConfig.INSTANCE.getConfig().customVignetteDarkness) this.vignetteDarkness = (float) OverlayTweaksConfig.INSTANCE.getConfig().customVignetteDarknessValue;
+        if (OverlayTweaksConfig.INSTANCE.getConfig().customVignetteDarkness) this.vignetteDarkness = OverlayTweaksConfig.INSTANCE.getConfig().customVignetteDarknessValue / 100;
     }
 }

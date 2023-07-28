@@ -44,7 +44,7 @@ public class OverlayTweaksConfig {
     public boolean customVignetteDarkness = false;
 
     @ConfigEntry
-    public double customVignetteDarknessValue = 0.0;
+    public float customVignetteDarknessValue = 0F;
 
     public static Screen configScreen(Screen parent) {
         return YetAnotherConfigLib.create(INSTANCE, ((defaults, config, builder) -> builder
@@ -79,10 +79,10 @@ public class OverlayTweaksConfig {
                                 .build())
                         .option(Option.createBuilder(float.class)
                                 .name(Text.literal("Fire Overlay Opacity"))
-                                .description(OptionDescription.of(Text.of("The value for fire overlay opacity. This is controlled as a percentage.")))
+                                .description(OptionDescription.of(Text.of("The value for fire overlay opacity.")))
                                 .binding(100F, () -> config.customFireOverlayOpacity, newVal -> config.customFireOverlayOpacity = newVal)
                                 .controller(opt -> FloatSliderControllerBuilder.create(opt)
-                                        .valueFormatter(value -> Text.of(String.format("%,.0f", value)))
+                                        .valueFormatter(value -> Text.of(String.format("%,.0f", value) + "%"))
                                         .range(0F, 100F)
                                         .step(1F))
                                 .build())
@@ -97,10 +97,10 @@ public class OverlayTweaksConfig {
                                 .build())
                         .option(Option.createBuilder(float.class)
                                 .name(Text.literal("Shield Opacity"))
-                                .description(OptionDescription.of(Text.of("The value for shield opacity. This affects any held shields, including shields that other players are holding. This is controlled as a percentage.")))
+                                .description(OptionDescription.of(Text.of("The value for shield opacity. This affects any held shields, including shields that other players are holding.")))
                                 .binding(100F, () -> config.customShieldOpacity, newVal -> config.customShieldOpacity = newVal)
                                 .controller(opt -> FloatSliderControllerBuilder.create(opt)
-                                        .valueFormatter(value -> Text.of(String.format("%,.0f", value)))
+                                        .valueFormatter(value -> Text.of(String.format("%,.0f", value) + "%"))
                                         .range(0F, 100F)
                                         .step(1F))
                                 .build())
@@ -110,14 +110,14 @@ public class OverlayTweaksConfig {
                                 .binding(defaults.customVignetteDarkness, () -> config.customVignetteDarkness, newVal -> config.customVignetteDarkness = newVal)
                                 .controller(TickBoxControllerBuilder::create)
                                 .build())
-                        .option(Option.createBuilder(double.class)
+                        .option(Option.createBuilder(float.class)
                                 .name(Text.literal("Constant Vignette Darkness Value"))
                                 .description(OptionDescription.of(Text.of("The value for constant vignette.")))
-                                .binding(0.0, () -> config.customVignetteDarknessValue, newVal -> config.customVignetteDarknessValue = newVal)
-                                .controller(opt -> DoubleSliderControllerBuilder.create(opt)
-                                        .valueFormatter(value -> Text.of(String.format("%,.1f", value)))
-                                        .range(0.0, 1.0)
-                                        .step(0.1))
+                                .binding(0F, () -> config.customVignetteDarknessValue, newVal -> config.customVignetteDarknessValue = newVal)
+                                .controller(opt -> FloatSliderControllerBuilder.create(opt)
+                                        .valueFormatter(value -> Text.of(String.format("%,.0f", value) + "%"))
+                                        .range(0F, 100F)
+                                        .step(1F))
                                 .build())
                         .build())
         )).generateScreen(parent);
