@@ -189,7 +189,7 @@ public class OverlayTweaksConfig {
                                 .controller(TickBoxControllerBuilder::create)
                                 .build())
                         .option(Option.createBuilder(float.class)
-                                .name(Text.literal("Constant Vignette Darkness Value"))
+                                .name(Text.literal("Csutom Vignette Darkness Value"))
                                 .description(OptionDescription.of(Text.of("The value for constant vignette.")))
                                 .binding(0F, () -> config.customVignetteDarknessValue, newVal -> config.customVignetteDarknessValue = newVal)
                                 .controller(opt -> FloatSliderControllerBuilder.create(opt)
