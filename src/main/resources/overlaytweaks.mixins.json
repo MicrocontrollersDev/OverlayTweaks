@@ -9,6 +9,7 @@
 		"HeldItemRendererMixin",
 		"InGameOverlayRendererMixin",
 		"InGameHudMixin",
+		"PlayerListHudMixin",
 		"ScreenMixin"
 	],
 	"injectors": {

@@ -15,6 +15,7 @@ repositories {
 	maven { url = "https://jitpack.io" }
 	maven { url = "https://maven.isxander.dev/releases" }
 	maven { url = "https://maven.terraformersmc.com/releases" }
+	maven { url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1" }
 }
 
 loom {
@@ -37,6 +38,9 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+	// DevAuth. Let's us log in with our own Minecraft account.
+	modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:${project.devauthVersion}")
 
 }
 

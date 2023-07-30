@@ -39,6 +39,7 @@ public class OverlayTweaksConfig {
     @ConfigEntry public boolean showCrosshairInPerspective = false;
     @ConfigEntry public boolean removeCrosshairBlending = false;
     @ConfigEntry public float containerOpacity = (208/255f) * 100f;
+    @ConfigEntry public float tabPlayerListOpacity = 100F;
 
     // Effects
 
@@ -149,6 +150,15 @@ public class OverlayTweaksConfig {
                                 .name(Text.literal("Container Background Opacity"))
                                 .description(OptionDescription.of(Text.of("Set the transparency of the container background. Set to 0 to make it completely transparent.")))
                                 .binding((208/255f) * 100f, () -> config.containerOpacity, newVal -> config.containerOpacity = newVal)
+                                .controller(opt -> FloatSliderControllerBuilder.create(opt)
+                                        .valueFormatter(value -> Text.of(String.format("%,.0f", value) + "%"))
+                                        .range(0F, 100F)
+                                        .step(1F))
+                                .build())
+                        .option(Option.createBuilder(float.class)
+                                .name(Text.literal("Tab Player List Background Opacity"))
+                                .description(OptionDescription.of(Text.of("Set the transparency of the player list in tab. Set to 0 to make it completely transparent.")))
+                                .binding((208/255f) * 100f, () -> config.tabPlayerListOpacity, newVal -> config.tabPlayerListOpacity = newVal)
                                 .controller(opt -> FloatSliderControllerBuilder.create(opt)
                                         .valueFormatter(value -> Text.of(String.format("%,.0f", value) + "%"))
                                         .range(0F, 100F)
