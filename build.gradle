@@ -39,7 +39,7 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	// DevAuth. Let's us log in with our own Minecraft account.
+	// DevAuth. Lets us log in with our own Minecraft account. Useful for testing tab features.
 	modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:${project.devauthVersion}")
 
 }
