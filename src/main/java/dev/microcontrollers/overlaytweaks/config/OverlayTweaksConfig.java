@@ -32,9 +32,12 @@ public class OverlayTweaksConfig {
     @ConfigEntry public float customShieldHeight = 0F;
     @ConfigEntry public float customShieldOpacity = 100F;
 
-    // Screens
+    // Screens and HUD
 
     @ConfigEntry public boolean shouldMoveHotbar = true;
+    @ConfigEntry public boolean hideCrosshairInContainers = true;
+    @ConfigEntry public boolean showCrosshairInPerspective = false;
+    @ConfigEntry public boolean removeCrosshairBlending = false;
 
     // Effects
 
@@ -43,6 +46,7 @@ public class OverlayTweaksConfig {
     @ConfigEntry public boolean customVignetteDarkness = false;
     @ConfigEntry public float customVignetteDarknessValue = 0F;
 
+    @SuppressWarnings("deprecation")
     public static Screen configScreen(Screen parent) {
         return YetAnotherConfigLib.create(INSTANCE, ((defaults, config, builder) -> builder
                 .title(Text.literal("Overlay Tweaks"))
@@ -112,14 +116,32 @@ public class OverlayTweaksConfig {
                                 .build())
                         .build())
 
-                // Screens
+                // Screens and HUD
 
                 .category(ConfigCategory.createBuilder()
-                        .name(Text.literal("Screens"))
+                        .name(Text.literal("Screens and HUD"))
                         .option(Option.createBuilder(boolean.class)
                                 .name(Text.literal("Move Hotbar Up"))
                                 .description(OptionDescription.of(Text.of("Moves the hotbar up by 2 pixels to show the entire hotbar on the screen with no cutoff. This may cause chat to interfere with hearts or armor status on smaller screens or GUI scales. Use the mod \"Chat Patches\" on Modrinth to move chat up.")))
                                 .binding(defaults.shouldMoveHotbar, () -> config.shouldMoveHotbar, newVal -> config.shouldMoveHotbar = newVal)
+                                .controller(TickBoxControllerBuilder::create)
+                                .build())
+                        .option(Option.createBuilder(boolean.class)
+                                .name(Text.literal("Hide Crosshair in Containers"))
+                                .description(OptionDescription.of(Text.of("Hides crosshair when a container is opened. Great for containers with translucent backgrounds.")))
+                                .binding(defaults.hideCrosshairInContainers, () -> config.hideCrosshairInContainers, newVal -> config.hideCrosshairInContainers = newVal)
+                                .controller(TickBoxControllerBuilder::create)
+                                .build())
+                        .option(Option.createBuilder(boolean.class)
+                                .name(Text.literal("Show Crosshair in Third Person"))
+                                .description(OptionDescription.of(Text.of("Shows the crosshair when in third person.")))
+                                .binding(defaults.showCrosshairInPerspective, () -> config.showCrosshairInPerspective, newVal -> config.showCrosshairInPerspective = newVal)
+                                .controller(TickBoxControllerBuilder::create)
+                                .build())
+                        .option(Option.createBuilder(boolean.class)
+                                .name(Text.literal("Remove Crosshair Blending"))
+                                .description(OptionDescription.of(Text.of("Removes color blending on the crosshair, making it always white.")))
+                                .binding(defaults.removeCrosshairBlending, () -> config.removeCrosshairBlending, newVal -> config.removeCrosshairBlending = newVal)
                                 .controller(TickBoxControllerBuilder::create)
                                 .build())
                         .build())
