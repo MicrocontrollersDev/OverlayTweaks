@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import static net.minecraft.entity.effect.StatusEffects.FIRE_RESISTANCE;
 
 /*
-  Fire overlay height features were taken from Easeify with permission from Wyvest
+  Fire overlay height code was taken from Easeify with permission from Wyvest
   Only changes to variables have been changed
   https://github.com/Polyfrost/Easeify/blob/main/LICENSE
  */

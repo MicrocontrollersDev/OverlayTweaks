@@ -19,38 +19,38 @@ public class OverlayTweaksConfig {
             .setPath(FabricLoader.getInstance().getConfigDir().resolve("overlaytweaks.json"))
             .build();
 
-    @ConfigEntry
-    public boolean removeWaterOverlay = true;
+    // Water and Fire
 
-    @ConfigEntry
-    public boolean removeWaterFov = true;
+    @ConfigEntry public boolean removeWaterOverlay = true;
+    @ConfigEntry public boolean removeWaterFov = true;
+    @ConfigEntry public boolean removeFireOverlay = true;
+    @ConfigEntry public double fireOverlayHeight = 0.0;
+    @ConfigEntry public float customFireOverlayOpacity = 100F;
 
-    @ConfigEntry
-    public boolean removeFireOverlay = true;
+    // Held Items
 
-    @ConfigEntry
-    public double fireOverlayHeight = 0.0;
+    @ConfigEntry public float customShieldHeight = 0F;
+    @ConfigEntry public float customShieldOpacity = 100F;
 
-    @ConfigEntry
-    public float customFireOverlayOpacity = 100F;
+    // Screens
 
-    @ConfigEntry
-    public float customShieldHeight = 0F;
+    @ConfigEntry public boolean shouldMoveHotbar = true;
 
-    @ConfigEntry
-    public float customShieldOpacity = 100F;
+    // Effects
 
-    @ConfigEntry
-    public boolean customVignetteDarkness = false;
-
-    @ConfigEntry
-    public float customVignetteDarknessValue = 0F;
+    @ConfigEntry public boolean cleanerNightVision = true;
+    @ConfigEntry public boolean removeElderGuardianJumpscare = false;
+    @ConfigEntry public boolean customVignetteDarkness = false;
+    @ConfigEntry public float customVignetteDarknessValue = 0F;
 
     public static Screen configScreen(Screen parent) {
         return YetAnotherConfigLib.create(INSTANCE, ((defaults, config, builder) -> builder
                 .title(Text.literal("Overlay Tweaks"))
+
+                // Water and Fire
+
                 .category(ConfigCategory.createBuilder()
-                        .name(Text.literal("Overlay Tweaks"))
+                        .name(Text.literal("Water and Fire"))
                         .option(Option.createBuilder(boolean.class)
                                 .name(Text.literal("Remove Water Overlay"))
                                 .description(OptionDescription.of(Text.of("Removes the underwater overlay when in water.")))
@@ -86,6 +86,12 @@ public class OverlayTweaksConfig {
                                         .range(0F, 100F)
                                         .step(1F))
                                 .build())
+                        .build())
+
+                // Held Items
+
+                .category(ConfigCategory.createBuilder()
+                        .name(Text.literal("Held Items"))
                         .option(Option.createBuilder(float.class)
                                 .name(Text.literal("Shield Height"))
                                 .description(OptionDescription.of(Text.of("The value for shield height. Set to 0.0 for default vanilla.")))
@@ -97,12 +103,36 @@ public class OverlayTweaksConfig {
                                 .build())
                         .option(Option.createBuilder(float.class)
                                 .name(Text.literal("Shield Opacity"))
-                                .description(OptionDescription.of(Text.of("The value for shield opacity. This affects any held shields, including shields that other players are holding.")))
+                                .description(OptionDescription.of(Text.of("The value for shield opacity.")))
                                 .binding(100F, () -> config.customShieldOpacity, newVal -> config.customShieldOpacity = newVal)
                                 .controller(opt -> FloatSliderControllerBuilder.create(opt)
                                         .valueFormatter(value -> Text.of(String.format("%,.0f", value) + "%"))
                                         .range(0F, 100F)
                                         .step(1F))
+                                .build())
+                        .build())
+
+                // Screens
+
+                .category(ConfigCategory.createBuilder()
+                        .name(Text.literal("Screens"))
+                        .option(Option.createBuilder(boolean.class)
+                                .name(Text.literal("Move Hotbar Up"))
+                                .description(OptionDescription.of(Text.of("Moves the hotbar up by 2 pixels to show the entire hotbar on the screen with no cutoff. This may cause chat to interfere with hearts or armor status on smaller screens or GUI scales. Use the mod \"Chat Patches\" on Modrinth to move chat up.")))
+                                .binding(defaults.shouldMoveHotbar, () -> config.shouldMoveHotbar, newVal -> config.shouldMoveHotbar = newVal)
+                                .controller(TickBoxControllerBuilder::create)
+                                .build())
+                        .build())
+
+                // Effects
+
+                .category(ConfigCategory.createBuilder()
+                        .name(Text.literal("Effects"))
+                        .option(Option.createBuilder(boolean.class)
+                                .name(Text.literal("Cleaner Night Vision"))
+                                .description(OptionDescription.of(Text.of("Makes the night vision loss a gradual effect instead of an on and off flicker.")))
+                                .binding(defaults.cleanerNightVision, () -> config.cleanerNightVision, newVal -> config.cleanerNightVision = newVal)
+                                .controller(TickBoxControllerBuilder::create)
                                 .build())
                         .option(Option.createBuilder(boolean.class)
                                 .name(Text.literal("Constant Vignette Darkness"))
