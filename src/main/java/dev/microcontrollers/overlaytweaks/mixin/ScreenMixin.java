@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 public class ScreenMixin {
     @WrapWithCondition(method = "renderBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;fillGradient(IIIIII)V"))
     private boolean shouldRenderBackground(DrawContext instance, int startX, int startY, int endX, int endY, int colorStart, int colorEnd) {
-        return OverlayTweaksConfig.INSTANCE.getConfig().containerOpacity >= 0;
+        return OverlayTweaksConfig.INSTANCE.getConfig().containerOpacity > 0;
     }
 
     @ModifyArgs(method = "renderBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;fillGradient(IIIIII)V"))
