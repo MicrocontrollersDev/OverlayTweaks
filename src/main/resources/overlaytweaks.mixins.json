@@ -8,7 +8,8 @@
 		"GameRendererMixin",
 		"HeldItemRendererMixin",
 		"InGameOverlayRendererMixin",
-		"InGameHudMixin"
+		"InGameHudMixin",
+		"ScreenMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

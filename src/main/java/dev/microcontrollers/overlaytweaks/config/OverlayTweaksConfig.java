@@ -38,6 +38,7 @@ public class OverlayTweaksConfig {
     @ConfigEntry public boolean hideCrosshairInContainers = true;
     @ConfigEntry public boolean showCrosshairInPerspective = false;
     @ConfigEntry public boolean removeCrosshairBlending = false;
+    @ConfigEntry public float containerOpacity = (208/255f) * 100f;
 
     // Effects
 
@@ -143,6 +144,15 @@ public class OverlayTweaksConfig {
                                 .description(OptionDescription.of(Text.of("Removes color blending on the crosshair, making it always white.")))
                                 .binding(defaults.removeCrosshairBlending, () -> config.removeCrosshairBlending, newVal -> config.removeCrosshairBlending = newVal)
                                 .controller(TickBoxControllerBuilder::create)
+                                .build())
+                        .option(Option.createBuilder(float.class)
+                                .name(Text.literal("Container Background Opacity"))
+                                .description(OptionDescription.of(Text.of("Set the transparency of the container background. Set to 0 to make it completely transparent.")))
+                                .binding((208/255f) * 100f, () -> config.containerOpacity, newVal -> config.containerOpacity = newVal)
+                                .controller(opt -> FloatSliderControllerBuilder.create(opt)
+                                        .valueFormatter(value -> Text.of(String.format("%,.0f", value) + "%"))
+                                        .range(0F, 100F)
+                                        .step(1F))
                                 .build())
                         .build())
 
