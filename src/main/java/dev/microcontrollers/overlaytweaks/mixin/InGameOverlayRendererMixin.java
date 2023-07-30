@@ -30,7 +30,8 @@ public class InGameOverlayRendererMixin {
 
     @Inject(method = "renderFireOverlay", at = @At("HEAD"), cancellable = true)
     private static void cancelFireOverlay(MinecraftClient client, MatrixStack matrices, CallbackInfo ci) {
-        if (OverlayTweaksConfig.INSTANCE.getConfig().removeFireOverlay && client.player != null && (client.player.isCreative() || client.player.hasStatusEffect(FIRE_RESISTANCE))) ci.cancel();
+        if (OverlayTweaksConfig.INSTANCE.getConfig().removeFireOverlay && client.player != null && (client.player.isCreative() || client.player.hasStatusEffect(FIRE_RESISTANCE)))
+            ci.cancel();
     }
 
     @Inject(method = "renderFireOverlay", at = @At("HEAD"))

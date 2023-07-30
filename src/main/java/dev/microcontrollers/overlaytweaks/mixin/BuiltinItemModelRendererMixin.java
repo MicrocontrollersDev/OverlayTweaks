@@ -23,15 +23,17 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 @Mixin(BuiltinModelItemRenderer.class)
 public class BuiltinItemModelRendererMixin {
     @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/entity/model/ShieldEntityModel;getLayer(Lnet/minecraft/util/Identifier;)Lnet/minecraft/client/render/RenderLayer;", ordinal = 0))
-    public RenderLayer enableShieldTransparency(ShieldEntityModel model, Identifier texture, Operation<RenderLayer> original) {
+    private RenderLayer enableShieldTransparency(ShieldEntityModel model, Identifier texture, Operation<RenderLayer> original) {
         // Might as well force this to be enabled since it doesn't seem to cause any issues.
         return RenderLayer.getEntityTranslucent(texture);
     }
 
     // We need to get the parent method parameters for mode, so we need to use @ModifyArgs.
     @ModifyArgs(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/ModelPart;render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;IIFFFF)V"))
-    public void changeShieldTransparency(Args args, ItemStack stack, ModelTransformationMode mode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+    private void changeShieldTransparency(Args args, ItemStack stack, ModelTransformationMode mode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         // We want this to only change shields that are being held so it doesn't affect containers/dropped items.
-        if (mode == ModelTransformationMode.FIRST_PERSON_LEFT_HAND || mode == ModelTransformationMode.FIRST_PERSON_RIGHT_HAND) args.set(7, OverlayTweaksConfig.INSTANCE.getConfig().customShieldOpacity / 100);
+        if (mode == ModelTransformationMode.FIRST_PERSON_LEFT_HAND || mode == ModelTransformationMode.FIRST_PERSON_RIGHT_HAND)
+            args.set(7, OverlayTweaksConfig.INSTANCE.getConfig().customShieldOpacity / 100);
     }
+
 }

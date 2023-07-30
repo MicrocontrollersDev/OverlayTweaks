@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(GameRenderer.class)
 public class GameRendererMixin {
     @ModifyExpressionValue(method = "getFov", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/MathHelper;lerp(DDD)D"))
-    public double removeWaterFov(double original) {
+    private double removeWaterFov(double original) {
         if (OverlayTweaksConfig.INSTANCE.getConfig().removeWaterFov) return 1.0;
         else return original;
     }

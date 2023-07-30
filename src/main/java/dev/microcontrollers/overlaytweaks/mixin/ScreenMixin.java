@@ -19,12 +19,13 @@ public class ScreenMixin {
 
     @ModifyArgs(method = "renderBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;fillGradient(IIIIII)V"))
     private void changeContainerOpacity(Args args) {
-        args.set(4, overlayTweaks$withOpacity(args.get(4), Math.max(OverlayTweaksConfig.INSTANCE.getConfig().containerOpacity / 100f - 16/255f, 0)));
-        args.set(5, overlayTweaks$withOpacity(args.get(5), OverlayTweaksConfig.INSTANCE.getConfig().containerOpacity / 100f));
+        args.set(4, withOpacity(args.get(4), Math.max(OverlayTweaksConfig.INSTANCE.getConfig().containerOpacity / 100F - 16/255F, 0)));
+        args.set(5, withOpacity(args.get(5), OverlayTweaksConfig.INSTANCE.getConfig().containerOpacity / 100F));
     }
 
     @Unique
-    private int overlayTweaks$withOpacity(int color, float opacity) {
+    private int withOpacity(int color, float opacity) {
         return (int) (opacity * 255) << 24 | (color & 0xFFFFFF);
     }
+
 }

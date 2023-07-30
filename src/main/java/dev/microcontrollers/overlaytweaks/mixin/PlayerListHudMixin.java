@@ -9,7 +9,8 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 @Mixin(PlayerListHud.class)
 public class PlayerListHudMixin {
     @ModifyConstant(method = "render", constant = @Constant(intValue = 553648127))
-    public int tabOpacity(int opacity) {
+    private int tabOpacity(int opacity) {
         return (int) (opacity * OverlayTweaksConfig.INSTANCE.getConfig().tabPlayerListOpacity);
     }
+
 }
