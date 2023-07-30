@@ -30,7 +30,7 @@ Downloads can be found on the [Modrinth page](https://modrinth.com/mod/overlaytw
 
 #### Effects
 
-- Cleaner Night Vision
+- Cleaner Night Vision Decay
 - Remove Elder Guardian Jumpscare
 - Constant Vignette Darkness
 - Custom Vignette Darkness Value

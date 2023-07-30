@@ -171,7 +171,7 @@ public class OverlayTweaksConfig {
                 .category(ConfigCategory.createBuilder()
                         .name(Text.literal("Effects"))
                         .option(Option.createBuilder(boolean.class)
-                                .name(Text.literal("Cleaner Night Vision"))
+                                .name(Text.literal("Cleaner Night Vision Decay"))
                                 .description(OptionDescription.of(Text.of("Makes the night vision loss a gradual effect instead of an on and off flicker.")))
                                 .binding(defaults.cleanerNightVision, () -> config.cleanerNightVision, newVal -> config.cleanerNightVision = newVal)
                                 .controller(TickBoxControllerBuilder::create)
