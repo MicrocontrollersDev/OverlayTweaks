@@ -28,6 +28,7 @@ public class OverlayTweaksConfig {
 
     @ConfigEntry public float customShieldHeight = 0F;
     @ConfigEntry public float customShieldOpacity = 100F;
+    @ConfigEntry public boolean colorShieldCooldown = false;
 
     // Screens and HUD
 
@@ -119,24 +120,30 @@ public class OverlayTweaksConfig {
 
                         .group(OptionGroup.createBuilder()
                                 .name(Text.literal("Shield"))
-                                    .option(Option.createBuilder(float.class)
-                                            .name(Text.literal("Shield Height"))
-                                            .description(OptionDescription.of(Text.of("The value for shield height. Set to 0.0 for default vanilla.")))
-                                            .binding(0F, () -> config.customShieldHeight, newVal -> config.customShieldHeight = newVal)
-                                            .controller(opt -> FloatSliderControllerBuilder.create(opt)
-                                                    .valueFormatter(value -> Text.of(String.format("%,.2f", value)))
-                                                    .range(-0.5F, 0F)
-                                                    .step(0.01F))
-                                            .build())
-                                    .option(Option.createBuilder(float.class)
-                                            .name(Text.literal("Shield Opacity"))
-                                            .description(OptionDescription.of(Text.of("The value for shield opacity.")))
-                                            .binding(100F, () -> config.customShieldOpacity, newVal -> config.customShieldOpacity = newVal)
-                                            .controller(opt -> FloatSliderControllerBuilder.create(opt)
-                                                    .valueFormatter(value -> Text.of(String.format("%,.0f", value) + "%"))
-                                                    .range(0F, 100F)
-                                                    .step(1F))
-                                            .build())
+                                .option(Option.createBuilder(float.class)
+                                        .name(Text.literal("Shield Height"))
+                                        .description(OptionDescription.of(Text.of("The value for shield height. Set to 0.0 for default vanilla.")))
+                                        .binding(0F, () -> config.customShieldHeight, newVal -> config.customShieldHeight = newVal)
+                                        .controller(opt -> FloatSliderControllerBuilder.create(opt)
+                                                .valueFormatter(value -> Text.of(String.format("%,.2f", value)))
+                                                .range(-0.5F, 0F)
+                                                .step(0.01F))
+                                        .build())
+                                .option(Option.createBuilder(float.class)
+                                        .name(Text.literal("Shield Opacity"))
+                                        .description(OptionDescription.of(Text.of("The value for shield opacity.")))
+                                        .binding(100F, () -> config.customShieldOpacity, newVal -> config.customShieldOpacity = newVal)
+                                        .controller(opt -> FloatSliderControllerBuilder.create(opt)
+                                                .valueFormatter(value -> Text.of(String.format("%,.0f", value) + "%"))
+                                                .range(0F, 100F)
+                                                .step(1F))
+                                        .build())
+                                .option(Option.createBuilder(boolean.class)
+                                        .name(Text.literal("Color Shield Cooldown"))
+                                        .description(OptionDescription.of(Text.of("Adds a color to your shield depending on the cooldown remaining")))
+                                        .binding(defaults.colorShieldCooldown, () -> config.colorShieldCooldown, newVal -> config.colorShieldCooldown = newVal)
+                                        .controller(TickBoxControllerBuilder::create)
+                                        .build())
                                 .build())
                         .build())
 
