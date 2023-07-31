@@ -42,6 +42,9 @@ dependencies {
 	// DevAuth. Lets us log in with our own Minecraft account. Useful for testing tab features.
 	modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:${project.devauthVersion}")
 
+	// To test AppleSkin compatability. Add AppleSkin to your libs folder https://modrinth.com/mod/appleskin.
+	// Also, remember to add ClothConfig to your run/mods https://modrinth.com/mod/cloth-config.
+	modImplementation(files("libs/appleskin-fabric-mc${project.appleSkinVersion}.jar"))
 }
 
 processResources {

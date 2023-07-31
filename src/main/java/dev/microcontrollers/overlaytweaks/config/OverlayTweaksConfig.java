@@ -151,7 +151,7 @@ public class OverlayTweaksConfig {
                                 .name(Text.literal("Inventory and Hotbar"))
                                 .option(Option.createBuilder(boolean.class)
                                         .name(Text.literal("Move Hotbar Up"))
-                                        .description(OptionDescription.of(Text.of("Moves the hotbar up by 2 pixels to show the entire hotbar on the screen with no cutoff. This may cause chat to interfere with hearts or armor status on smaller screens or GUI scales. Use the mod \"Chat Patches\" on Modrinth to move chat up.")))
+                                        .description(OptionDescription.of(Text.of("Moves the hotbar up by 2 pixels to show the entire hotbar on the screen with no cutoff. This may cause chat to interfere with hearts or armor status on smaller screens or GUI scales. Use the mod \"Chat Patches\" on Modrinth to move chat up. May cause issues with other mods.")))
                                         .binding(defaults.shouldMoveHotbar, () -> config.shouldMoveHotbar, newVal -> config.shouldMoveHotbar = newVal)
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
