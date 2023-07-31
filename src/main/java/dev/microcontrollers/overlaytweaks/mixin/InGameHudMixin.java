@@ -3,18 +3,23 @@ package dev.microcontrollers.overlaytweaks.mixin;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import dev.microcontrollers.overlaytweaks.config.OverlayTweaksConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
+import net.minecraft.client.option.AttackIndicator;
+import net.minecraft.client.option.GameOptions;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import org.objectweb.asm.Opcodes;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.ModifyArgs;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
@@ -22,6 +27,19 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 public class InGameHudMixin {
     @Shadow
     public float vignetteDarkness;
+    @Shadow
+    private Text title;
+    @Shadow
+    private Text subtitle;
+    @Final
+    @Shadow
+    private static final Identifier ICONS = new Identifier("textures/gui/icons.png");
+    @Shadow
+    private int scaledWidth;
+    @Shadow
+    private int scaledHeight;
+    @Unique
+    MinecraftClient client = MinecraftClient.getInstance();
 
     @Inject(method = "updateVignetteDarkness", at = @At("TAIL"))
     private void changeVignetteDarkness(Entity entity, CallbackInfo ci) {
@@ -96,6 +114,83 @@ public class InGameHudMixin {
     @WrapWithCondition(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;blendFuncSeparate(Lcom/mojang/blaze3d/platform/GlStateManager$SrcFactor;Lcom/mojang/blaze3d/platform/GlStateManager$DstFactor;Lcom/mojang/blaze3d/platform/GlStateManager$SrcFactor;Lcom/mojang/blaze3d/platform/GlStateManager$DstFactor;)V"))
     private boolean removeBlending(GlStateManager.SrcFactor srcFactor, GlStateManager.DstFactor dstFactor, GlStateManager.SrcFactor srcAlpha, GlStateManager.DstFactor dstAlpha) {
         return !OverlayTweaksConfig.INSTANCE.getConfig().removeCrosshairBlending;
+    }
+
+    @Redirect(method = "renderCrosshair", at = @At(value = "FIELD", target = "Lnet/minecraft/client/option/GameOptions;debugEnabled:Z", opcode = Opcodes.GETFIELD))
+    private boolean cancelDebugCrosshair(GameOptions gameOptions) {
+        if (OverlayTweaksConfig.INSTANCE.getConfig().useNormalCrosshair) return false;
+        else if (OverlayTweaksConfig.INSTANCE.getConfig().useDebugCrosshair) return true;
+        return gameOptions.debugEnabled;
+    }
+
+    @Inject(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;applyModelViewMatrix()V"))
+    private void showCooldownOnDebug(DrawContext context, CallbackInfo ci) {
+        if (!OverlayTweaksConfig.INSTANCE.getConfig().fixDebugCooldown) return;
+        context.drawTexture(ICONS, (this.scaledWidth - 15) / 2, (this.scaledHeight - 15) / 2, 0, 0, 15, 15);
+        if (this.client.options.getAttackIndicator().getValue() == AttackIndicator.CROSSHAIR) {
+            assert this.client.player != null;
+            float f = this.client.player.getAttackCooldownProgress(0.0F);
+            boolean bl = false;
+            if (this.client.targetedEntity != null && this.client.targetedEntity instanceof LivingEntity && f >= 1.0F) {
+                bl = this.client.player.getAttackCooldownProgressPerTick() > 5.0F;
+                bl &= this.client.targetedEntity.isAlive();
+            }
+            int j = this.scaledHeight / 2 - 7 + 16;
+            int k = this.scaledWidth / 2 - 8;
+            if (bl) {
+                context.drawTexture(ICONS, k, j, 68, 94, 16, 16);
+            } else if (f < 1.0F) {
+                int l = (int)(f * 17.0F);
+                RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.ONE_MINUS_DST_COLOR, GlStateManager.DstFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
+                context.drawTexture(ICONS, k, j, 36, 94, 16, 4);
+                context.drawTexture(ICONS, k, j, 52, 94, l, 4);
+            }
+            RenderSystem.defaultBlendFunc();
+        }
+    }
+
+    /*
+        The following methods were taken from Easeify under LGPLV3
+        https://github.com/Polyfrost/Easeify/blob/main/LICENSE
+        The code has been updated to 1.20 and with slight changes to variables
+     */
+
+    @ModifyExpressionValue(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/MathHelper;clamp(III)I"))
+    private int clamp(int value) {
+        if (OverlayTweaksConfig.INSTANCE.getConfig().disableTitles) {
+            return 0;
+        } else {
+            return value;
+        }
+    }
+
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;scale(FFF)V", ordinal = 0, shift = At.Shift.AFTER))
+    private void modifyTitle(DrawContext context, float tickDelta, CallbackInfo ci) {
+        float titleScale = OverlayTweaksConfig.INSTANCE.getConfig().titleScale / 100;
+        if (OverlayTweaksConfig.INSTANCE.getConfig().autoTitleScale) {
+            final float width = MinecraftClient.getInstance().textRenderer.getWidth(title) * 4.0F;
+            if (width > context.getScaledWindowWidth()) {
+                titleScale = (context.getScaledWindowWidth() / width) * OverlayTweaksConfig.INSTANCE.getConfig().titleScale / 100;
+            }
+        }
+        context.getMatrices().scale(titleScale, titleScale, titleScale);
+    }
+
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;scale(FFF)V", ordinal = 1, shift = At.Shift.AFTER))
+    private void modifySubtitle(DrawContext context, float tickDelta, CallbackInfo ci) {
+        float titleScale = OverlayTweaksConfig.INSTANCE.getConfig().titleScale / 100;
+        if (OverlayTweaksConfig.INSTANCE.getConfig().autoTitleScale) {
+            final float width = MinecraftClient.getInstance().textRenderer.getWidth(subtitle) * 2.0F;
+            if (width > context.getScaledWindowWidth()) {
+                titleScale = (context.getScaledWindowWidth() / width) * OverlayTweaksConfig.INSTANCE.getConfig().titleScale / 100;
+            }
+        }
+        context.getMatrices().scale(titleScale, titleScale, titleScale);
+    }
+
+    @ModifyConstant(method = "render", constant = @Constant(intValue = 255, ordinal = 3))
+    private int modifyOpacity(int constant) {
+        return (int) (OverlayTweaksConfig.INSTANCE.getConfig().titleOpacity / 100 * 255);
     }
 
 }
