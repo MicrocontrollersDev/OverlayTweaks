@@ -34,6 +34,11 @@ public class OverlayTweaksConfig {
 
     @ConfigEntry public boolean shouldMoveHotbar = true;
     @ConfigEntry public float containerOpacity = (208/255F) * 100F;
+    @ConfigEntry public boolean disableScreenBobbing = true;
+    @ConfigEntry public boolean disableHandBobbing = false;
+    @ConfigEntry public boolean disableMapBobbing = true;
+    @ConfigEntry public boolean disableScreenDamage = false;
+    @ConfigEntry public boolean disableHandDamage = false;
     @ConfigEntry public boolean hideCrosshairInContainers = true;
     @ConfigEntry public boolean showCrosshairInPerspective = false;
     @ConfigEntry public boolean removeCrosshairBlending = false;
@@ -172,6 +177,42 @@ public class OverlayTweaksConfig {
                                                 .valueFormatter(value -> Text.of(String.format("%,.0f", value) + "%"))
                                                 .range(0F, 100F)
                                                 .step(1F))
+                                        .build())
+                                .build())
+
+                        // Shake
+
+                        .group(OptionGroup.createBuilder()
+                                .name(Text.literal("Screen and HUD Shake"))
+                                .option(Option.createBuilder(boolean.class)
+                                        .name(Text.literal("Disable Screen Bobbing"))
+                                        .description(OptionDescription.of(Text.of("Disables the screen shake when moving.")))
+                                        .binding(defaults.disableScreenBobbing, () -> config.disableScreenBobbing, newVal -> config.disableScreenBobbing = newVal)
+                                        .controller(TickBoxControllerBuilder::create)
+                                        .build())
+                                .option(Option.createBuilder(boolean.class)
+                                        .name(Text.literal("Disable Hand Bobbing"))
+                                        .description(OptionDescription.of(Text.of("Disables the hand shake when moving.")))
+                                        .binding(defaults.disableHandBobbing, () -> config.disableHandBobbing, newVal -> config.disableHandBobbing = newVal)
+                                        .controller(TickBoxControllerBuilder::create)
+                                        .build())
+                                .option(Option.createBuilder(boolean.class)
+                                        .name(Text.literal("Disable Map Bobbing"))
+                                        .description(OptionDescription.of(Text.of("Disables the hand shake when holding a map. Does nothing if \"Disable Hand Bobbing\" is turned on.")))
+                                        .binding(defaults.disableMapBobbing, () -> config.disableMapBobbing, newVal -> config.disableMapBobbing = newVal)
+                                        .controller(TickBoxControllerBuilder::create)
+                                        .build())
+                                .option(Option.createBuilder(boolean.class)
+                                        .name(Text.literal("Disable Screen Damage Tilt"))
+                                        .description(OptionDescription.of(Text.of("Disables the screen shake when taking damage.")))
+                                        .binding(defaults.disableScreenDamage, () -> config.disableScreenDamage, newVal -> config.disableScreenDamage = newVal)
+                                        .controller(TickBoxControllerBuilder::create)
+                                        .build())
+                                .option(Option.createBuilder(boolean.class)
+                                        .name(Text.literal("Disable Hand Damage Tilt"))
+                                        .description(OptionDescription.of(Text.of("Disables the hand shake when taking damage.")))
+                                        .binding(defaults.disableHandDamage, () -> config.disableHandDamage, newVal -> config.disableHandDamage = newVal)
+                                        .controller(TickBoxControllerBuilder::create)
                                         .build())
                                 .build())
 
