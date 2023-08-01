@@ -40,7 +40,9 @@ public class OverlayTweaksConfig {
     @ConfigEntry public boolean useNormalCrosshair = false;
     @ConfigEntry public boolean useDebugCrosshair = false;
     @ConfigEntry public boolean fixDebugCooldown = true;
-    @ConfigEntry public float tabPlayerListOpacity = 100F;
+    @ConfigEntry public float tabPlayerListOpacity = (32/255F) * 100F;
+    @ConfigEntry public boolean showPingInTab = false;
+    @ConfigEntry public boolean hideFalsePing = false;
     @ConfigEntry public boolean disableTitles = false;
     @ConfigEntry public float titleScale = 100F;
     @ConfigEntry public boolean autoTitleScale = true;
@@ -93,7 +95,7 @@ public class OverlayTweaksConfig {
                                         .build())
                                 .option(Option.createBuilder(double.class)
                                         .name(Text.literal("Fire Overlay Height"))
-                                        .description(OptionDescription.of(Text.of("Change the height of the fire overlay if your pack does not have low fire. May improve visibility. Set to 0.0 for default vanilla.")))
+                                        .description(OptionDescription.of(Text.of("Change the height of the fire overlay if your pack does not have low fire. May improve visibility.")))
                                         .binding(0.0, () -> config.fireOverlayHeight, newVal -> config.fireOverlayHeight = newVal)
                                         .controller(opt -> DoubleSliderControllerBuilder.create(opt)
                                                 .range(-0.5, 0.0)
@@ -122,7 +124,7 @@ public class OverlayTweaksConfig {
                                 .name(Text.literal("Shield"))
                                 .option(Option.createBuilder(float.class)
                                         .name(Text.literal("Shield Height"))
-                                        .description(OptionDescription.of(Text.of("The value for shield height. Set to 0.0 for default vanilla.")))
+                                        .description(OptionDescription.of(Text.of("The value for shield height.")))
                                         .binding(0F, () -> config.customShieldHeight, newVal -> config.customShieldHeight = newVal)
                                         .controller(opt -> FloatSliderControllerBuilder.create(opt)
                                                 .valueFormatter(value -> Text.of(String.format("%,.2f", value)))
@@ -165,7 +167,7 @@ public class OverlayTweaksConfig {
                                 .option(Option.createBuilder(float.class)
                                         .name(Text.literal("Container Background Opacity"))
                                         .description(OptionDescription.of(Text.of("Set the transparency of the container background. Set to 0 to make it completely transparent.")))
-                                        .binding((208/255f) * 100f, () -> config.containerOpacity, newVal -> config.containerOpacity = newVal)
+                                        .binding((208/255F) * 100F, () -> config.containerOpacity, newVal -> config.containerOpacity = newVal)
                                         .controller(opt -> FloatSliderControllerBuilder.create(opt)
                                                 .valueFormatter(value -> Text.of(String.format("%,.0f", value) + "%"))
                                                 .range(0F, 100F)
@@ -222,11 +224,23 @@ public class OverlayTweaksConfig {
                                 .option(Option.createBuilder(float.class)
                                         .name(Text.literal("Tab Player List Background Opacity"))
                                         .description(OptionDescription.of(Text.of("Set the transparency of the player list in tab. Set to 0 to make it completely transparent.")))
-                                        .binding((208/255f) * 100f, () -> config.tabPlayerListOpacity, newVal -> config.tabPlayerListOpacity = newVal)
+                                        .binding((32/255F) * 100F, () -> config.tabPlayerListOpacity, newVal -> config.tabPlayerListOpacity = newVal)
                                         .controller(opt -> FloatSliderControllerBuilder.create(opt)
                                                 .valueFormatter(value -> Text.of(String.format("%,.0f", value) + "%"))
                                                 .range(0F, 100F)
                                                 .step(1F))
+                                        .build())
+                                .option(Option.createBuilder(boolean.class)
+                                        .name(Text.literal("Show Numerical Ping"))
+                                        .description(OptionDescription.of(Text.of("Replace the ping icon with a numerical value.")))
+                                        .binding(defaults.showPingInTab, () -> config.showPingInTab, newVal -> config.showPingInTab = newVal)
+                                        .controller(TickBoxControllerBuilder::create)
+                                        .build())
+                                .option(Option.createBuilder(boolean.class)
+                                        .name(Text.literal("Hide Fake Ping"))
+                                        .description(OptionDescription.of(Text.of("Some servers force a ping of 0 or 1 or very high numbers to hide players ping. This will hide the number from being displayed as it is useless.")))
+                                        .binding(defaults.hideFalsePing, () -> config.hideFalsePing, newVal -> config.hideFalsePing = newVal)
+                                        .controller(TickBoxControllerBuilder::create)
                                         .build())
                                 .build())
 
