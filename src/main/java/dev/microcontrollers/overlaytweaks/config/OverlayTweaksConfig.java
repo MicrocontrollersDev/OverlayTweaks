@@ -59,6 +59,7 @@ public class OverlayTweaksConfig {
 
     @ConfigEntry public boolean cleanerNightVision = true;
     @ConfigEntry public boolean removeElderGuardianJumpscare = false;
+    @ConfigEntry public float pumpkinOpacity = 100F;
     @ConfigEntry public boolean customVignetteDarkness = false;
     @ConfigEntry public float customVignetteDarknessValue = 0F;
 
@@ -356,16 +357,25 @@ public class OverlayTweaksConfig {
                                         .build())
                                 .option(Option.createBuilder(boolean.class)
                                         .name(Text.literal("Remove Elder Guardian Jumpscare"))
-                                        .description(OptionDescription.of(Text.of("Removed the elder guardian particle effect from showing on your screen.")))
+                                        .description(OptionDescription.of(Text.of("Removes the elder guardian particle effect from showing on your screen.")))
                                         .binding(defaults.removeElderGuardianJumpscare, () -> config.removeElderGuardianJumpscare, newVal -> config.removeElderGuardianJumpscare = newVal)
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
                                 .build())
 
-                        // Vignette
+                        // Full Screen Effects
 
                         .group(OptionGroup.createBuilder()
-                                .name(Text.literal("Vignette"))
+                                .name(Text.literal("Full Screen Effects"))
+                                .option(Option.createBuilder(float.class)
+                                        .name(Text.literal("Pumpkin Overlay Opacity"))
+                                        .description(OptionDescription.of(Text.of("Changes the opacity of the pumpkin overlay when wearing a pumpkin.")))
+                                        .binding(100F, () -> config.pumpkinOpacity, newVal -> config.pumpkinOpacity = newVal)
+                                        .controller(opt -> FloatSliderControllerBuilder.create(opt)
+                                                .valueFormatter(value -> Text.of(String.format("%,.0f", value) + "%"))
+                                                .range(0F, 100F)
+                                                .step(1F))
+                                        .build())
                                 .option(Option.createBuilder(boolean.class)
                                         .name(Text.literal("Constant Vignette Darkness"))
                                         .description(OptionDescription.of(Text.of("Apply a constant vignette regardless of sky light level.")))

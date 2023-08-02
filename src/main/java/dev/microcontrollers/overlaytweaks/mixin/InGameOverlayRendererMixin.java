@@ -1,6 +1,5 @@
 package dev.microcontrollers.overlaytweaks.mixin;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import dev.microcontrollers.overlaytweaks.config.OverlayTweaksConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.InGameOverlayRenderer;
@@ -9,6 +8,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static net.minecraft.entity.effect.StatusEffects.FIRE_RESISTANCE;
@@ -49,9 +49,9 @@ public class InGameOverlayRendererMixin {
         }
     }
 
-    @Inject(method = "renderFireOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;push()V"))
-    private static void enableFireOverlayOpacity(MinecraftClient client, MatrixStack matrices, CallbackInfo ci) {
-        RenderSystem.setShaderColor(1F, 1F, 1F, OverlayTweaksConfig.INSTANCE.getConfig().customFireOverlayOpacity / 100);
+    @ModifyArg(method = "renderFireOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/VertexConsumer;color(FFFF)Lnet/minecraft/client/render/VertexConsumer;"), index = 3)
+    private static float enableFireOverlayOpacity(float opacity) {
+        return OverlayTweaksConfig.INSTANCE.getConfig().customFireOverlayOpacity / 100;
     }
 
 }
