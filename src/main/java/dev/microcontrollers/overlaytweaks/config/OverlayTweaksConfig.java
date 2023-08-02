@@ -34,7 +34,7 @@ public class OverlayTweaksConfig {
 
     @ConfigEntry public boolean shouldMoveHotbar = true;
     @ConfigEntry public float containerOpacity = (208/255F) * 100F;
-    @ConfigEntry public boolean disableScreenBobbing = true;
+    @ConfigEntry public boolean disableScreenBobbing = false;
     @ConfigEntry public boolean disableHandBobbing = false;
     @ConfigEntry public boolean disableMapBobbing = true;
     @ConfigEntry public boolean disableScreenDamage = false;
@@ -46,7 +46,9 @@ public class OverlayTweaksConfig {
     @ConfigEntry public boolean useDebugCrosshair = false;
     @ConfigEntry public boolean fixDebugCooldown = true;
     @ConfigEntry public float tabPlayerListOpacity = (32/255F) * 100F;
+    @ConfigEntry public float moveTabDown = 10F;
     @ConfigEntry public boolean showPingInTab = false;
+    @ConfigEntry public boolean scalePingDisplay = false;
     @ConfigEntry public boolean hideFalsePing = false;
     @ConfigEntry public boolean disableTitles = false;
     @ConfigEntry public float titleScale = 100F;
@@ -171,7 +173,7 @@ public class OverlayTweaksConfig {
                                         .build())
                                 .option(Option.createBuilder(float.class)
                                         .name(Text.literal("Container Background Opacity"))
-                                        .description(OptionDescription.of(Text.of("Set the transparency of the container background. Set to 0 to make it completely transparent.")))
+                                        .description(OptionDescription.of(Text.of("Set the transparency of container backgrounds. Set to 0 to make it completely transparent.")))
                                         .binding((208/255F) * 100F, () -> config.containerOpacity, newVal -> config.containerOpacity = newVal)
                                         .controller(opt -> FloatSliderControllerBuilder.create(opt)
                                                 .valueFormatter(value -> Text.of(String.format("%,.0f", value) + "%"))
@@ -271,10 +273,25 @@ public class OverlayTweaksConfig {
                                                 .range(0F, 100F)
                                                 .step(1F))
                                         .build())
+                                .option(Option.createBuilder(float.class)
+                                        .name(Text.literal("Move Tab List Down"))
+                                        .description(OptionDescription.of(Text.of("Moves the tab list down by the specified number of units. Helps prevent tab from overlapping with a bossbar.")))
+                                        .binding(10F, () -> config.moveTabDown, newVal -> config.moveTabDown = newVal)
+                                        .controller(opt -> FloatSliderControllerBuilder.create(opt)
+                                                .valueFormatter(value -> Text.of(String.format("%,.0f", value)))
+                                                .range(0F, 20F)
+                                                .step(1F))
+                                        .build())
                                 .option(Option.createBuilder(boolean.class)
                                         .name(Text.literal("Show Numerical Ping"))
                                         .description(OptionDescription.of(Text.of("Replace the ping icon with a numerical value.")))
                                         .binding(defaults.showPingInTab, () -> config.showPingInTab, newVal -> config.showPingInTab = newVal)
+                                        .controller(TickBoxControllerBuilder::create)
+                                        .build())
+                                .option(Option.createBuilder(boolean.class)
+                                        .name(Text.literal("Scale Numerical Ping"))
+                                        .description(OptionDescription.of(Text.of("Scales the ping display to make it smaller.")))
+                                        .binding(defaults.scalePingDisplay, () -> config.scalePingDisplay, newVal -> config.scalePingDisplay = newVal)
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
                                 .option(Option.createBuilder(boolean.class)

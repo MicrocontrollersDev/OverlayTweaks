@@ -5,6 +5,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.PlayerListHud;
 import net.minecraft.client.network.PlayerListEntry;
+import net.minecraft.scoreboard.Scoreboard;
+import net.minecraft.scoreboard.ScoreboardObjective;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -38,9 +40,18 @@ public class PlayerListHudMixin {
         String pingString = String.valueOf(ping);
         if (OverlayTweaksConfig.INSTANCE.getConfig().hideFalsePing && (ping <= 1 || ping >= 999)) pingString = "";
         if (OverlayTweaksConfig.INSTANCE.getConfig().showPingInTab) {
-            context.drawTextWithShadow(MinecraftClient.getInstance().textRenderer, pingString, x + width - MinecraftClient.getInstance().textRenderer.getWidth(String.valueOf(ping)), y, color);
+            if (OverlayTweaksConfig.INSTANCE.getConfig().scalePingDisplay) {
+                context.getMatrices().scale(0.5F, 0.5F, 0.5F);
+                context.drawTextWithShadow(MinecraftClient.getInstance().textRenderer, pingString, 2 * (x + width) - MinecraftClient.getInstance().textRenderer.getWidth(String.valueOf(ping)) - 4, 2 * y + 4, color);
+                context.getMatrices().scale(2F, 2F, 2F);
+            } else context.drawTextWithShadow(MinecraftClient.getInstance().textRenderer, pingString, x + width - MinecraftClient.getInstance().textRenderer.getWidth(String.valueOf(ping)), y, color);
             ci.cancel();
         }
+    }
+
+    @Inject(method = "render", at = @At("HEAD"))
+    private void moveTabDown(DrawContext context, int scaledWindowWidth, Scoreboard scoreboard, ScoreboardObjective objective, CallbackInfo ci) {
+        context.getMatrices().translate(0, OverlayTweaksConfig.INSTANCE.getConfig().moveTabDown, 0);
     }
 
 }
