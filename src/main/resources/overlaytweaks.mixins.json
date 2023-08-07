@@ -8,11 +8,14 @@
 		"BuiltinItemModelRendererMixin",
 		"ElderGuardianAppearanceParticleMixin",
 		"GameRendererMixin",
+		"GenericContainerScreenMixin",
 		"HeldItemRendererMixin",
 		"InGameOverlayRendererMixin",
 		"InGameHudMixin",
+		"InventoryScreenMixin",
 		"PlayerListHudMixin",
-		"ScreenMixin"
+		"ScreenMixin",
+		"TutorialToastMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

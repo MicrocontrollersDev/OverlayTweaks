@@ -34,6 +34,7 @@ public class OverlayTweaksConfig {
 
     @ConfigEntry public boolean shouldMoveHotbar = true;
     @ConfigEntry public float containerOpacity = (208/255F) * 100F;
+    @ConfigEntry public float containerTextureOpacity = 100F;
     @ConfigEntry public boolean disableScreenBobbing = false;
     @ConfigEntry public boolean disableHandBobbing = false;
     @ConfigEntry public boolean disableMapBobbing = true;
@@ -54,6 +55,7 @@ public class OverlayTweaksConfig {
     @ConfigEntry public float titleScale = 100F;
     @ConfigEntry public boolean autoTitleScale = true;
     @ConfigEntry public float titleOpacity = 100F;
+    @ConfigEntry public boolean removeTutorialToasts = true;
 
     // Effects
 
@@ -176,6 +178,15 @@ public class OverlayTweaksConfig {
                                         .name(Text.literal("Container Background Opacity"))
                                         .description(OptionDescription.of(Text.of("Set the transparency of container backgrounds. Set to 0 to make it completely transparent.")))
                                         .binding((208/255F) * 100F, () -> config.containerOpacity, newVal -> config.containerOpacity = newVal)
+                                        .controller(opt -> FloatSliderControllerBuilder.create(opt)
+                                                .valueFormatter(value -> Text.of(String.format("%,.0f", value) + "%"))
+                                                .range(0F, 100F)
+                                                .step(1F))
+                                        .build())
+                                .option(Option.createBuilder(float.class)
+                                        .name(Text.literal("Container Texture Opacity"))
+                                        .description(OptionDescription.of(Text.of("Set the transparency of container textures. Set to 0 to make it completely transparent.")))
+                                        .binding(100F, () -> config.containerTextureOpacity, newVal -> config.containerTextureOpacity = newVal)
                                         .controller(opt -> FloatSliderControllerBuilder.create(opt)
                                                 .valueFormatter(value -> Text.of(String.format("%,.0f", value) + "%"))
                                                 .range(0F, 100F)
@@ -336,6 +347,18 @@ public class OverlayTweaksConfig {
                                                 .valueFormatter(value -> Text.of(String.format("%,.0f", value) + "%"))
                                                 .range(0F, 100F)
                                                 .step(1F))
+                                        .build())
+                                .build())
+
+                        // Toasts
+
+                        .group(OptionGroup.createBuilder()
+                                .name(Text.literal("Toasts"))
+                                .option(Option.createBuilder(boolean.class)
+                                        .name(Text.literal("Remove Tutorial Toasts"))
+                                        .description(OptionDescription.of(Text.of("Removes tutorial toasts when entering a world in a new instance.")))
+                                        .binding(defaults.removeTutorialToasts, () -> config.removeTutorialToasts, newVal -> config.removeTutorialToasts = newVal)
+                                        .controller(TickBoxControllerBuilder::create)
                                         .build())
                                 .build())
                         .build())
