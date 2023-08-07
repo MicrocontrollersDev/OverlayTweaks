@@ -23,7 +23,8 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
-@Mixin(InGameHud.class)
+// BetterF3 has a priority of 1100. This is to prevent a crash with cancelDebugCrosshair.
+@Mixin(value = InGameHud.class, priority = 1200)
 public class InGameHudMixin {
     @Shadow
     public float vignetteDarkness;
