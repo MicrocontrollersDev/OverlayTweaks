@@ -5,7 +5,6 @@ import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import squeek.appleskin.client.HUDOverlayHandler;
@@ -17,17 +16,12 @@ public class AppleSkinFixMixin {
 
     @Redirect(method = "onPreRender", at = @At(value = "FIELD", target = "Lsqueek/appleskin/client/HUDOverlayHandler;foodIconsOffset:I", opcode = Opcodes.GETFIELD))
     private int movePreAppleSkinUp(HUDOverlayHandler instance) {
-        return this.foodIconsOffset + shouldAppleMove();
+        return this.foodIconsOffset + OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
     }
 
     @Redirect(method = "onRender", at = @At(value = "FIELD", target = "Lsqueek/appleskin/client/HUDOverlayHandler;foodIconsOffset:I", opcode = Opcodes.GETFIELD))
     private int moveAppleSkinUp(HUDOverlayHandler instance) {
-        return this.foodIconsOffset + shouldAppleMove();
+        return this.foodIconsOffset + OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
     }
 
-    @Unique
-    private int shouldAppleMove() {
-        if (OverlayTweaksConfig.INSTANCE.getConfig().shouldMoveHotbar) return 2;
-        return 0;
-    }
 }

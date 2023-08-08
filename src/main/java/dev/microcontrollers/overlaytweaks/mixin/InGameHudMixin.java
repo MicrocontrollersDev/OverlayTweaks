@@ -57,54 +57,48 @@ public class InGameHudMixin {
 
     @ModifyArg(method = "renderHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"), index = 2)
     private int moveHotbarUp(int y) {
-        return y - shouldMove();
+        return y - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
     }
 
     @ModifyArg(method = "renderHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;renderHotbarItem(Lnet/minecraft/client/gui/DrawContext;IIFLnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/item/ItemStack;I)V"), index = 2)
     private int moveHotbarUp2(int o) {
-        return o - shouldMove();
+        return o - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
     }
 
     @ModifyArg(method = "renderMountJumpBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"), index = 2)
     private int moveMountJumpUp(int k) {
-        return k - shouldMove();
+        return k - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
     }
 
     @ModifyArg(method = "renderExperienceBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"), index = 2)
     private int moveExperienceUp(int l) {
-        return l - shouldMove();
+        return l - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
     }
 
     @ModifyArg(method = "renderExperienceBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawText(Lnet/minecraft/client/font/TextRenderer;Ljava/lang/String;IIIZ)I"), index = 3)
     private int moveExperienceUp2(int l) {
-        return l - shouldMove();
+        return l - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
     }
 
     @ModifyArgs(method = "renderHeldItemTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;fill(IIIII)V"))
     private void moveTooltipUp(Args args) {
-        args.set(1, (int) args.get(1) - shouldMove());
-        args.set(3, (int) args.get(3) - shouldMove());
+        args.set(1, (int) args.get(1) - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy);
+        args.set(3, (int) args.get(3) - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy);
     }
 
     @ModifyArg(method = "renderStatusBars", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"), index = 2)
     private int moveStatusUp(int s) {
-        return s - shouldMove();
+        return s - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
     }
 
     @ModifyArg(method = "renderStatusBars", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;renderHealthBar(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/entity/player/PlayerEntity;IIIIFIIIZ)V"), index = 3)
     private int moveStatusUp2(int o) {
-        return o - shouldMove();
+        return o - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
     }
 
     @ModifyArg(method = "renderMountHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"), index = 2)
     private int moveMountHealthUp(int m) {
-        return m - shouldMove();
-    }
-
-    @Unique
-    private int shouldMove() {
-        if (OverlayTweaksConfig.INSTANCE.getConfig().shouldMoveHotbar) return 2;
-        return 0;
+        return m - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
     }
 
     @Inject(method = "renderCrosshair", at = @At("HEAD"), cancellable = true)

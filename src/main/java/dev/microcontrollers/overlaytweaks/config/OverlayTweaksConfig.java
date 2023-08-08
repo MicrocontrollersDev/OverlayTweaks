@@ -26,7 +26,6 @@ public class OverlayTweaksConfig {
     @ConfigEntry public boolean showPingInTab = false;
     @ConfigEntry public boolean scalePingDisplay = false;
     @ConfigEntry public boolean hideFalsePing = false;
-    @ConfigEntry public boolean shouldMoveHotbar = true;
     @ConfigEntry public boolean disableScreenBobbing = false;
     @ConfigEntry public boolean disableHandBobbing = false;
     @ConfigEntry public boolean disableMapBobbing = true;
@@ -43,6 +42,7 @@ public class OverlayTweaksConfig {
     @ConfigEntry public boolean removeFireOverlay = true;
     @ConfigEntry public double fireOverlayHeight = 0.0;
     @ConfigEntry public float customFireOverlayOpacity = 100F;
+    @ConfigEntry public int moveHotbarBy = 0;
     @ConfigEntry public boolean disableTitles = false;
     @ConfigEntry public float titleScale = 100F;
     @ConfigEntry public boolean autoTitleScale = true;
@@ -262,6 +262,20 @@ public class OverlayTweaksConfig {
                                                 .valueFormatter(value -> Text.of(String.format("%,.0f", value) + "%"))
                                                 .range(0F, 100F)
                                                 .step(1F))
+                                        .build())
+                                .build())
+
+                        // Hotbar
+
+                        .group(OptionGroup.createBuilder()
+                                .name(Text.literal("Hotbar"))
+                                .option(Option.createBuilder(int.class)
+                                        .name(Text.literal("Move Hotbar Up"))
+                                        .description(OptionDescription.of(Text.of("Move the hotbar up by the specified amount. 2 is the recommended value.")))
+                                        .binding(0, () -> config.moveHotbarBy, newVal -> config.moveHotbarBy = newVal)
+                                        .controller(opt -> IntegerSliderControllerBuilder.create(opt)
+                                                .range(0, 5)
+                                                .step(1))
                                         .build())
                                 .build())
 
