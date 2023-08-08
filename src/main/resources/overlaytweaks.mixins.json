@@ -3,7 +3,7 @@
 	"package": "dev.microcontrollers.overlaytweaks.mixin",
 	"plugin": "dev.microcontrollers.overlaytweaks.OverlayTweaksMixinPlugin",
 	"compatibilityLevel": "JAVA_17",
-	"mixins": [
+	"client": [
 		"AbstractFurnaceScreenMixin",
 		"AnvilScreenMixin",
 		"AppleSkinFixMixin",
