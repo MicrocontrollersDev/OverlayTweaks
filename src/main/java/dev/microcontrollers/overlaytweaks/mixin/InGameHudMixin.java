@@ -10,11 +10,11 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.option.AttackIndicator;
 import net.minecraft.client.option.GameOptions;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.hit.HitResult;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,10 +22,11 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 // BetterF3 has a priority of 1100. This is to prevent a crash with cancelDebugCrosshair.
-@Mixin(value = InGameHud.class)
+@Mixin(value = InGameHud.class, priority = 1200)
 public class InGameHudMixin {
     @Shadow
     public float vignetteDarkness;
@@ -123,6 +124,16 @@ public class InGameHudMixin {
         return !OverlayTweaksConfig.INSTANCE.getConfig().removeCrosshairBlending;
     }
 
+    @Inject(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;blendFuncSeparate(Lcom/mojang/blaze3d/platform/GlStateManager$SrcFactor;Lcom/mojang/blaze3d/platform/GlStateManager$DstFactor;Lcom/mojang/blaze3d/platform/GlStateManager$SrcFactor;Lcom/mojang/blaze3d/platform/GlStateManager$DstFactor;)V", shift = At.Shift.AFTER))
+    private void changeCrosshairOpacity(DrawContext context, CallbackInfo ci) {
+        if (OverlayTweaksConfig.INSTANCE.getConfig().removeCrosshairBlending) RenderSystem.setShaderColor(1F, 1F, 1F, OverlayTweaksConfig.INSTANCE.getConfig().crosshairOpacity / 100F);
+    }
+
+    @ModifyArg(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;renderCrosshair(I)V"))
+    private int changeDebugCrosshairSize(int size) {
+        return OverlayTweaksConfig.INSTANCE.getConfig().debugCrosshairSize;
+    }
+
     @Redirect(method = "renderCrosshair", at = @At(value = "FIELD", target = "Lnet/minecraft/client/option/GameOptions;debugEnabled:Z", opcode = Opcodes.GETFIELD))
     private boolean cancelDebugCrosshair(GameOptions gameOptions) {
         if (OverlayTweaksConfig.INSTANCE.getConfig().useNormalCrosshair) return false;
@@ -153,6 +164,11 @@ public class InGameHudMixin {
             }
             RenderSystem.defaultBlendFunc();
         }
+    }
+
+    @Inject(method = "shouldRenderSpectatorCrosshair", at = @At("HEAD"), cancellable = true)
+    private void showInSpectator(HitResult hitResult, CallbackInfoReturnable<Boolean> cir) {
+        if (OverlayTweaksConfig.INSTANCE.getConfig().showCrosshairInSpectator) cir.setReturnValue(true);
     }
 
     /*
