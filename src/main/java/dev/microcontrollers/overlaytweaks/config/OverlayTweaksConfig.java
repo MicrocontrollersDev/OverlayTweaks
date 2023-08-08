@@ -42,7 +42,7 @@ public class OverlayTweaksConfig {
     @ConfigEntry public boolean removeFireOverlay = true;
     @ConfigEntry public double fireOverlayHeight = 0.0;
     @ConfigEntry public float customFireOverlayOpacity = 100F;
-    @ConfigEntry public int moveHotbarBy = 0;
+    @ConfigEntry public int moveHotbarBy = 2;
     @ConfigEntry public boolean disableTitles = false;
     @ConfigEntry public float titleScale = 100F;
     @ConfigEntry public boolean autoTitleScale = true;
@@ -271,8 +271,8 @@ public class OverlayTweaksConfig {
                                 .name(Text.literal("Hotbar"))
                                 .option(Option.createBuilder(int.class)
                                         .name(Text.literal("Move Hotbar Up"))
-                                        .description(OptionDescription.of(Text.of("Move the hotbar up by the specified amount. 2 is the recommended value.")))
-                                        .binding(0, () -> config.moveHotbarBy, newVal -> config.moveHotbarBy = newVal)
+                                        .description(OptionDescription.of(Text.of("Move the hotbar up by the specified amount.")))
+                                        .binding(2, () -> config.moveHotbarBy, newVal -> config.moveHotbarBy = newVal)
                                         .controller(opt -> IntegerSliderControllerBuilder.create(opt)
                                                 .range(0, 5)
                                                 .step(1))
