@@ -12,27 +12,27 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(AnvilScreen.class)
 public class AnvilScreenMixin {
     // TODO: FIGURE OUT WHY THIS DOESNT WORK
-//    @Inject(method = "drawBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"))
-//    private void containerOpacityStart(DrawContext context, float delta, int mouseX, int mouseY, CallbackInfo ci) {
-//        RenderSystem.enableBlend();
-//        RenderSystem.setShaderColor(1F, 1F, 1F, OverlayTweaksConfig.INSTANCE.getConfig().containerTextureOpacity / 100F);
-//    }
-//
-//    @Inject(method = "drawBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V", shift = At.Shift.AFTER))
-//    private void containerOpacityEnd(DrawContext context, float delta, int mouseX, int mouseY, CallbackInfo ci) {
-//        RenderSystem.disableBlend();
-//        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-//    }
-//
-//    @Inject(method = "drawInvalidRecipeArrow", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"))
-//    private void containerOpacityStartInvalid(DrawContext context, int x, int y, CallbackInfo ci) {
-//        RenderSystem.enableBlend();
-//        RenderSystem.setShaderColor(1F, 1F, 1F, OverlayTweaksConfig.INSTANCE.getConfig().containerTextureOpacity / 100F);
-//    }
-//
-//    @Inject(method = "drawInvalidRecipeArrow", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V", shift = At.Shift.AFTER))
-//    private void containerOpacityEndInvalid(DrawContext context, int x, int y, CallbackInfo ci) {
-//        RenderSystem.disableBlend();
-//        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-//    }
+    @Inject(method = "drawBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"))
+    private void containerOpacityStart(DrawContext context, float delta, int mouseX, int mouseY, CallbackInfo ci) {
+        RenderSystem.enableBlend();
+        RenderSystem.setShaderColor(1F, 1F, 1F, OverlayTweaksConfig.INSTANCE.getConfig().containerTextureOpacity / 100F);
+    }
+
+    @Inject(method = "drawBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V", shift = At.Shift.AFTER))
+    private void containerOpacityEnd(DrawContext context, float delta, int mouseX, int mouseY, CallbackInfo ci) {
+        RenderSystem.disableBlend();
+        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+    }
+
+    @Inject(method = "drawInvalidRecipeArrow", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"))
+    private void containerOpacityStartInvalid(DrawContext context, int x, int y, CallbackInfo ci) {
+        RenderSystem.enableBlend();
+        RenderSystem.setShaderColor(1F, 1F, 1F, OverlayTweaksConfig.INSTANCE.getConfig().containerTextureOpacity / 100F);
+    }
+
+    @Inject(method = "drawInvalidRecipeArrow", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V", shift = At.Shift.AFTER))
+    private void containerOpacityEndInvalid(DrawContext context, int x, int y, CallbackInfo ci) {
+        RenderSystem.disableBlend();
+        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+    }
 }
