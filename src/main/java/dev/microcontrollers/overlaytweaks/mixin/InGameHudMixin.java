@@ -25,6 +25,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
+import java.util.Objects;
+
 // BetterF3 has a priority of 1100. This is to prevent a crash with cancelDebugCrosshair.
 @Mixin(value = InGameHud.class, priority = 1200)
 public class InGameHudMixin {
@@ -180,23 +182,13 @@ public class InGameHudMixin {
         }
     }
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;scale(FFF)V", ordinal = 0, shift = At.Shift.AFTER))
+    // There's only two of these targets, one for title and one for subtitle. We can remove duplicate code by removing the ordinal.
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;scale(FFF)V", shift = At.Shift.AFTER))
     private void modifyTitle(DrawContext context, float tickDelta, CallbackInfo ci) {
         float titleScale = OverlayTweaksConfig.INSTANCE.getConfig().titleScale / 100;
-        if (OverlayTweaksConfig.INSTANCE.getConfig().autoTitleScale) {
+        // MCCIsland uses a giant title to black out your screen when switching worlds.
+        if (OverlayTweaksConfig.INSTANCE.getConfig().autoTitleScale && !Objects.requireNonNull(MinecraftClient.getInstance().getCurrentServerEntry()).address.contains("mccisland.net")) {
             final float width = MinecraftClient.getInstance().textRenderer.getWidth(title) * 4.0F;
-            if (width > context.getScaledWindowWidth()) {
-                titleScale = (context.getScaledWindowWidth() / width) * OverlayTweaksConfig.INSTANCE.getConfig().titleScale / 100;
-            }
-        }
-        context.getMatrices().scale(titleScale, titleScale, titleScale);
-    }
-
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;scale(FFF)V", ordinal = 1, shift = At.Shift.AFTER))
-    private void modifySubtitle(DrawContext context, float tickDelta, CallbackInfo ci) {
-        float titleScale = OverlayTweaksConfig.INSTANCE.getConfig().titleScale / 100;
-        if (OverlayTweaksConfig.INSTANCE.getConfig().autoTitleScale) {
-            final float width = MinecraftClient.getInstance().textRenderer.getWidth(subtitle) * 2.0F;
             if (width > context.getScaledWindowWidth()) {
                 titleScale = (context.getScaledWindowWidth() / width) * OverlayTweaksConfig.INSTANCE.getConfig().titleScale / 100;
             }

@@ -4,6 +4,7 @@ import dev.microcontrollers.overlaytweaks.config.OverlayTweaksConfig;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.PotionItem;
+import net.minecraft.potion.PotionUtil;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(PotionItem.class)
@@ -14,6 +15,7 @@ public class PotionItemMixin extends Item {
 
     @Override
     public boolean hasGlint(ItemStack stack) {
-        return OverlayTweaksConfig.INSTANCE.getConfig().potionGlint;
+        return OverlayTweaksConfig.INSTANCE.getConfig().potionGlint && !PotionUtil.getPotionEffects(stack).isEmpty();
     }
+
 }
