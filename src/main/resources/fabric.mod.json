@@ -5,7 +5,9 @@
 	"name": "Overlay Tweaks",
 	"description": "Small tweaks to Minecraft's overlays!",
 	"authors": [
-		"Microcontrollers"
+		"Microcontrollers",
+		"Wyvest (code contributor)",
+		"Mixces (code contributor)"
 	],
 	"contact": {
 		"homepage": "https://github.com/MicrocontrollersDev",
