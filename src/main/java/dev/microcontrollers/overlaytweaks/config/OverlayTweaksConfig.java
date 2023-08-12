@@ -282,7 +282,7 @@ public class OverlayTweaksConfig {
                                                 .step(1))
                                         .build())
                                 .option(Option.createBuilder(boolean.class)
-                                        .name(Text.literal("Remove Item Tooltip"))
+                                        .name(Text.literal("Remove Held Item Tooltip"))
                                         .description(OptionDescription.of(Text.of("Removes the tooltip above the hotbar when holding an item.")))
                                         .binding(defaults.removeItemTooltip, () -> config.removeItemTooltip, newVal -> config.removeItemTooltip = newVal)
                                         .controller(TickBoxControllerBuilder::create)
