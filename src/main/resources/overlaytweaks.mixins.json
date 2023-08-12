@@ -27,6 +27,7 @@
     "PotionItemMixin",
     "ScreenMixin",
     "StonecutterScreenMixin",
+    "ToastManagerMixin",
     "TutorialToastMixin"
   ],
   "injectors": {

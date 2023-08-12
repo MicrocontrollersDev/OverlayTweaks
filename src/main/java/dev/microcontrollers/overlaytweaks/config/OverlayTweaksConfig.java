@@ -48,6 +48,7 @@ public class OverlayTweaksConfig {
     @ConfigEntry public float titleScale = 100F;
     @ConfigEntry public boolean autoTitleScale = true;
     @ConfigEntry public float titleOpacity = 100F;
+    @ConfigEntry public boolean removeAllToasts = false;
     @ConfigEntry public boolean removeTutorialToasts = true;
 
     // Crosshair
@@ -329,8 +330,14 @@ public class OverlayTweaksConfig {
                         .group(OptionGroup.createBuilder()
                                 .name(Text.literal("Toasts"))
                                 .option(Option.createBuilder(boolean.class)
+                                        .name(Text.literal("Remove All Toasts"))
+                                        .description(OptionDescription.of(Text.of("Prevents all toasts from rendering.")))
+                                        .binding(defaults.removeAllToasts, () -> config.removeAllToasts, newVal -> config.removeAllToasts = newVal)
+                                        .controller(TickBoxControllerBuilder::create)
+                                        .build())
+                                .option(Option.createBuilder(boolean.class)
                                         .name(Text.literal("Remove Tutorial Toasts"))
-                                        .description(OptionDescription.of(Text.of("Removes tutorial toasts when entering a world in a new instance.")))
+                                        .description(OptionDescription.of(Text.of("Removes only tutorial toasts when entering a world in a new instance. Does nothing if \"Remove all Toasts\" is enabled.")))
                                         .binding(defaults.removeTutorialToasts, () -> config.removeTutorialToasts, newVal -> config.removeTutorialToasts = newVal)
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
