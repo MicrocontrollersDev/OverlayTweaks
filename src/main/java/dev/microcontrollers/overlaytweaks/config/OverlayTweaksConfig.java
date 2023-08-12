@@ -43,6 +43,7 @@ public class OverlayTweaksConfig {
     @ConfigEntry public double fireOverlayHeight = 0.0;
     @ConfigEntry public float customFireOverlayOpacity = 100F;
     @ConfigEntry public int moveHotbarBy = 2;
+    @ConfigEntry public boolean removeItemTooltip = false;
     @ConfigEntry public boolean disableTitles = false;
     @ConfigEntry public float titleScale = 100F;
     @ConfigEntry public boolean autoTitleScale = true;
@@ -278,6 +279,12 @@ public class OverlayTweaksConfig {
                                         .controller(opt -> IntegerSliderControllerBuilder.create(opt)
                                                 .range(0, 5)
                                                 .step(1))
+                                        .build())
+                                .option(Option.createBuilder(boolean.class)
+                                        .name(Text.literal("Remove Item Tooltip"))
+                                        .description(OptionDescription.of(Text.of("Removes the tooltip above the hotbar when holding an item.")))
+                                        .binding(defaults.removeItemTooltip, () -> config.removeItemTooltip, newVal -> config.removeItemTooltip = newVal)
+                                        .controller(TickBoxControllerBuilder::create)
                                         .build())
                                 .build())
 

@@ -34,8 +34,6 @@ public class InGameHudMixin {
     public float vignetteDarkness;
     @Shadow
     private Text title;
-    @Shadow
-    private Text subtitle;
     @Final
     @Shadow
     private static final Identifier ICONS = new Identifier("textures/gui/icons.png");
@@ -55,6 +53,11 @@ public class InGameHudMixin {
     @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;renderOverlay(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/util/Identifier;F)V"), index = 2)
     private float changePumpkinOpacity(float opacity) {
         return OverlayTweaksConfig.INSTANCE.getConfig().pumpkinOpacity / 100F;
+    }
+
+    @Inject(method = "renderHeldItemTooltip", at = @At("HEAD"), cancellable = true)
+    private void cancelTooltip(DrawContext context, CallbackInfo ci) {
+        if (OverlayTweaksConfig.INSTANCE.getConfig().removeItemTooltip) ci.cancel();
     }
 
     @ModifyArg(method = "renderHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"), index = 2)
