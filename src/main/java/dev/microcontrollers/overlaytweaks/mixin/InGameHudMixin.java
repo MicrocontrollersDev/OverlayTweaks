@@ -6,12 +6,20 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.microcontrollers.overlaytweaks.config.OverlayTweaksConfig;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.AttackIndicator;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ToolItem;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.HitResult;
@@ -68,6 +76,45 @@ public class InGameHudMixin {
     @ModifyArg(method = "renderHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;renderHotbarItem(Lnet/minecraft/client/gui/DrawContext;IIFLnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/item/ItemStack;I)V"), index = 2)
     private int moveHotbarUp2(int o) {
         return o - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
+    }
+
+    @Inject(method = "renderHotbar", at = @At(value = "HEAD"))
+    private void drawItemDamage(float tickDelta, DrawContext context, CallbackInfo ci) {
+        if (!OverlayTweaksConfig.INSTANCE.getConfig().hotbarDamageGlance) return;
+        ClientPlayerEntity player = MinecraftClient.getInstance().player;
+        if (player == null) return;
+
+        ItemStack stack = player.getMainHandStack();
+        if (stack.isEmpty()) return;
+
+        if (!(stack.getItem() instanceof ToolItem item)) return;
+        double itemDamage = item.getAttributeModifiers(stack, EquipmentSlot.MAINHAND).entries().stream()
+                .filter(entry -> entry.getValue().getOperation() == EntityAttributeModifier.Operation.ADDITION)
+                .filter(entry -> "Weapon modifier".equals(entry.getValue().getName()) || "Tool modifier".equals(entry.getValue().getName()))
+                .mapToDouble(entry -> entry.getValue().getValue() + 1)
+                .findFirst().orElse(0d);
+
+        int enchantLvl = 0;
+        for (NbtElement enchantmentData : stack.getEnchantments()) {
+            if (enchantmentData instanceof NbtCompound enchantment) {
+                if ("minecraft:sharpness".equals(enchantment.getString("id"))) {
+                    enchantLvl = enchantment.getShort("lvl");
+                    break;  // exit loop when sharp is found
+                }
+            }
+        }
+
+        // https://minecraft.fandom.com/wiki/Sharpness
+        itemDamage += (enchantLvl > 0) ? (0.5 * (enchantLvl - 1) + 1.0) : 0;
+        if (itemDamage == 0) return;
+
+        String itemDamageStr = "+" + (itemDamage % 1 == 0 ? Integer.toString((int) itemDamage) : Double.toString(itemDamage));
+        TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
+
+        int x = (context.getScaledWindowWidth() / 2) - (renderer.getWidth(itemDamageStr) / 2);
+        int y = context.getScaledWindowHeight() - 31 - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy; // 31 is kinda arbitrary but i think it looks the best
+
+        context.drawTextWithShadow(renderer, itemDamageStr, x, y, 16777215); // white color
     }
 
     @ModifyArg(method = "renderMountJumpBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"), index = 2)
