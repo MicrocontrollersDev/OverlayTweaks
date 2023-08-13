@@ -112,9 +112,12 @@ public class InGameHudMixin {
         TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
 
         int x = (context.getScaledWindowWidth() / 2) - (renderer.getWidth(itemDamageStr) / 2);
-        int y = context.getScaledWindowHeight() - 31 - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy; // 31 is kinda arbitrary but i think it looks the best
+        int y = context.getScaledWindowHeight() - 47 - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy; //47
 
-        context.drawTextWithShadow(renderer, itemDamageStr, x, y, 16777215); // white color
+        RenderSystem.enableBlend(); // without this the hotbar loses all translucency for some reason
+        context.getMatrices().scale(0.5F, 0.5F, 0.5F);
+        context.drawTextWithShadow(renderer, itemDamageStr, 2 * x + 7, 2 * y + 13, 16777215); // white color
+        context.getMatrices().scale(2F, 2F, 2F);
     }
 
     @ModifyArg(method = "renderMountJumpBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"), index = 2)
