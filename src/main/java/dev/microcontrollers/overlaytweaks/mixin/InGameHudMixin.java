@@ -12,6 +12,8 @@ import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.AttackIndicator;
 import net.minecraft.client.option.GameOptions;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -31,8 +33,9 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 // BetterF3 has a priority of 1100. This is to prevent a crash with cancelDebugCrosshair.
@@ -68,6 +71,108 @@ public class InGameHudMixin {
         if (OverlayTweaksConfig.INSTANCE.getConfig().removeItemTooltip) ci.cancel();
     }
 
+    // these names are inspired by Patcher https://github.com/Sk1erLLC/Patcher
+    @Unique
+    private final Map<Enchantment, String> enchantmentIdToString = new HashMap<>() {{
+        put(Enchantment.byRawId(0), "P");       // Protection
+        put(Enchantment.byRawId(1), "FP");      // Fire Protection
+        put(Enchantment.byRawId(2), "FF");      // Feather Falling
+        put(Enchantment.byRawId(3), "BP");      // Blast Protection
+        put(Enchantment.byRawId(4), "PP");      // Projectile Protection
+        put(Enchantment.byRawId(5), "R");       // Respiration
+        put(Enchantment.byRawId(6), "AA");      // Aqua Infinity
+        put(Enchantment.byRawId(7), "T");       // Thorns
+        put(Enchantment.byRawId(8), "DS");      // Depth Strider
+        put(Enchantment.byRawId(9), "FW");      // Frost Walker
+        put(Enchantment.byRawId(10), "CoB");    // Curse of Binding
+        put(Enchantment.byRawId(11), "SS");     // Soul Speed
+        put(Enchantment.byRawId(12), "SS");     // Swift Sneak
+        put(Enchantment.byRawId(13), "SH");     // Sharpness
+        put(Enchantment.byRawId(14), "SM");     // Smite
+        put(Enchantment.byRawId(15), "BoA");    // Bane of Arthropods
+        put(Enchantment.byRawId(16), "KB");     // Knockback
+        put(Enchantment.byRawId(17), "FA");     // Fire Aspect
+        put(Enchantment.byRawId(18), "L");      // Looting
+        put(Enchantment.byRawId(19), "SE");     // Sweeping Edge
+        put(Enchantment.byRawId(20), "EFF");    // Efficiency
+        put(Enchantment.byRawId(21), "ST");     // Silk Touch
+        put(Enchantment.byRawId(22), "UNB");    // Unbreaking
+        put(Enchantment.byRawId(23), "FORT");   // Fortune
+        put(Enchantment.byRawId(24), "POW");    // Power
+        put(Enchantment.byRawId(25), "PUN");    // Punch
+        put(Enchantment.byRawId(26), "F");      // Flame
+        put(Enchantment.byRawId(27), "INF");    // Infinity
+        put(Enchantment.byRawId(28), "LoS");    // Luck of the Sea
+        put(Enchantment.byRawId(29), "LURE");   // Lure
+        put(Enchantment.byRawId(30), "LOY");    // Loyalty
+        put(Enchantment.byRawId(31), "IMP");    // Impaling
+        put(Enchantment.byRawId(32), "RIP");    // Riptide
+        put(Enchantment.byRawId(33), "CHAN");   // Channeling
+        put(Enchantment.byRawId(34), "MS");     // Multishot
+        put(Enchantment.byRawId(35), "QC");     // Quick Charge
+        put(Enchantment.byRawId(36), "PIER");   // Piercing
+        put(Enchantment.byRawId(37), "MEND");   // Mending
+        put(Enchantment.byRawId(38), "CoV");    // Vanishing
+    }};
+
+    @Inject(method = "renderHotbar", at = @At(value = "HEAD"))
+    private void drawItemDamage(float tickDelta, DrawContext context, CallbackInfo ci) {
+        if (!OverlayTweaksConfig.INSTANCE.getConfig().hotbarEnchantmentGlance && !OverlayTweaksConfig.INSTANCE.getConfig().hotbarDamageGlance) return;
+        ClientPlayerEntity player = MinecraftClient.getInstance().player;
+        if (player == null) return;
+
+        ItemStack stack = player.getMainHandStack();
+        if (stack.isEmpty()) return;
+        StringBuilder enchantmentStringBuilder = new StringBuilder();
+        double itemDamage = 0.0;
+        String itemDamageStr = "";
+
+        if ((stack.getItem() instanceof ToolItem item)) {
+            itemDamage = item.getAttributeModifiers(stack, EquipmentSlot.MAINHAND).entries().stream()
+                    .filter(entry -> entry.getValue().getOperation() == EntityAttributeModifier.Operation.ADDITION)
+                    .filter(entry -> "Weapon modifier".equals(entry.getValue().getName()) || "Tool modifier".equals(entry.getValue().getName()))
+                    .mapToDouble(entry -> entry.getValue().getValue() + 1)
+                    .findFirst().orElse(0d);
+
+            int enchantLvl = 0;
+            for (NbtElement enchantmentData : stack.getEnchantments()) {
+                if (enchantmentData instanceof NbtCompound enchantment) {
+                    if ("minecraft:sharpness".equals(enchantment.getString("id"))) {
+                        enchantLvl = enchantment.getShort("lvl");
+                        break;  // exit loop when sharp is found
+                    }
+                }
+            }
+
+            // https://minecraft.fandom.com/wiki/Sharpness
+            itemDamage += (enchantLvl > 0) ? (0.5 * (enchantLvl - 1) + 1.0) : 0;
+        }
+
+        Map<Enchantment, Integer> enchantmentMap = EnchantmentHelper.get(stack);
+        for (Map.Entry<Enchantment, Integer> entry : enchantmentMap.entrySet()) {
+            enchantmentStringBuilder.append(enchantmentIdToString.get(entry.getKey())).append(" ").append(entry.getValue()).append(" ");
+        }
+
+        String itemEnchantStr = enchantmentStringBuilder.toString().trim();
+        if (itemDamage != 0) itemDamageStr = "+" + (itemDamage % 1 == 0 ? Integer.toString((int) itemDamage) : Double.toString(itemDamage));
+        TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
+
+        // the x and y values here and in the draw method are pretty much entirely random
+        // these are just eyeballed to look nice and centered which is why the math is stupid and makes no sense
+        int xush = 47;
+        if (player.isCreative()) xush = 31;
+        int x = (context.getScaledWindowWidth() / 2) - (renderer.getWidth(itemDamageStr) / 2);
+        int y = context.getScaledWindowHeight() - xush - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
+
+        RenderSystem.enableBlend(); // without this the hotbar loses all translucency for some reason
+        RenderSystem.disableDepthTest();
+        if (OverlayTweaksConfig.INSTANCE.getConfig().hotbarEnchantmentGlance)
+            context.drawTextWithShadow(renderer, itemEnchantStr, 2 * x - itemEnchantStr.length() * 2, 2 * y - 15, 16777215); // white color
+        if (OverlayTweaksConfig.INSTANCE.getConfig().hotbarDamageGlance)
+            context.drawTextWithShadow(renderer, itemDamageStr, 2 * x + 7, 2 * y + 3, 16777215); // white color
+        context.getMatrices().scale(2F, 2F, 2F);
+    }
+
     @ModifyArg(method = "renderHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"), index = 2)
     private int moveHotbarUp(int y) {
         return y - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
@@ -76,48 +181,6 @@ public class InGameHudMixin {
     @ModifyArg(method = "renderHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;renderHotbarItem(Lnet/minecraft/client/gui/DrawContext;IIFLnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/item/ItemStack;I)V"), index = 2)
     private int moveHotbarUp2(int o) {
         return o - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
-    }
-
-    @Inject(method = "renderHotbar", at = @At(value = "HEAD"))
-    private void drawItemDamage(float tickDelta, DrawContext context, CallbackInfo ci) {
-        if (!OverlayTweaksConfig.INSTANCE.getConfig().hotbarDamageGlance) return;
-        ClientPlayerEntity player = MinecraftClient.getInstance().player;
-        if (player == null) return;
-
-        ItemStack stack = player.getMainHandStack();
-        if (stack.isEmpty()) return;
-
-        if (!(stack.getItem() instanceof ToolItem item)) return;
-        double itemDamage = item.getAttributeModifiers(stack, EquipmentSlot.MAINHAND).entries().stream()
-                .filter(entry -> entry.getValue().getOperation() == EntityAttributeModifier.Operation.ADDITION)
-                .filter(entry -> "Weapon modifier".equals(entry.getValue().getName()) || "Tool modifier".equals(entry.getValue().getName()))
-                .mapToDouble(entry -> entry.getValue().getValue() + 1)
-                .findFirst().orElse(0d);
-
-        int enchantLvl = 0;
-        for (NbtElement enchantmentData : stack.getEnchantments()) {
-            if (enchantmentData instanceof NbtCompound enchantment) {
-                if ("minecraft:sharpness".equals(enchantment.getString("id"))) {
-                    enchantLvl = enchantment.getShort("lvl");
-                    break;  // exit loop when sharp is found
-                }
-            }
-        }
-
-        // https://minecraft.fandom.com/wiki/Sharpness
-        itemDamage += (enchantLvl > 0) ? (0.5 * (enchantLvl - 1) + 1.0) : 0;
-        if (itemDamage == 0) return;
-
-        String itemDamageStr = "+" + (itemDamage % 1 == 0 ? Integer.toString((int) itemDamage) : Double.toString(itemDamage));
-        TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
-
-        int x = (context.getScaledWindowWidth() / 2) - (renderer.getWidth(itemDamageStr) / 2);
-        int y = context.getScaledWindowHeight() - 47 - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy; //47
-
-        RenderSystem.enableBlend(); // without this the hotbar loses all translucency for some reason
-        context.getMatrices().scale(0.5F, 0.5F, 0.5F);
-        context.drawTextWithShadow(renderer, itemDamageStr, 2 * x + 7, 2 * y + 13, 16777215); // white color
-        context.getMatrices().scale(2F, 2F, 2F);
     }
 
     @ModifyArg(method = "renderMountJumpBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"), index = 2)
@@ -135,10 +198,11 @@ public class InGameHudMixin {
         return l - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
     }
 
-    @ModifyArgs(method = "renderHeldItemTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;fill(IIIII)V"))
-    private void moveTooltipUp(Args args) {
-        args.set(1, (int) args.get(1) - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy);
-        args.set(3, (int) args.get(3) - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy);
+    @ModifyArg(method = "renderHeldItemTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTextWithShadow(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/text/Text;III)I"), index = 3)
+    private int moveTooltipUp(int y) {
+        int xextra = 0;
+        if (OverlayTweaksConfig.INSTANCE.getConfig().hotbarEnchantmentGlance) xextra = 7;
+        return y - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy - xextra;
     }
 
     @ModifyArg(method = "renderStatusBars", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"), index = 2)

@@ -44,6 +44,7 @@ public class OverlayTweaksConfig {
     @ConfigEntry public float customFireOverlayOpacity = 100F;
     @ConfigEntry public int moveHotbarBy = 2;
     @ConfigEntry public boolean removeItemTooltip = false;
+    @ConfigEntry public boolean hotbarEnchantmentGlance = false;
     @ConfigEntry public boolean hotbarDamageGlance = false;
     @ConfigEntry public boolean disableTitles = false;
     @ConfigEntry public float titleScale = 100F;
@@ -283,14 +284,20 @@ public class OverlayTweaksConfig {
                                                 .step(1))
                                         .build())
                                 .option(Option.createBuilder(boolean.class)
-                                        .name(Text.literal("Remove Held Item Tooltip"))
+                                        .name(Text.literal("Remove Held Item Name Tooltip"))
                                         .description(OptionDescription.of(Text.of("Removes the tooltip above the hotbar when holding an item.")))
                                         .binding(defaults.removeItemTooltip, () -> config.removeItemTooltip, newVal -> config.removeItemTooltip = newVal)
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
                                 .option(Option.createBuilder(boolean.class)
-                                        .name(Text.literal("Show Damage Glance"))
-                                        .description(OptionDescription.of(Text.of("Shows the attack damage of a held item above the hotbar")))
+                                        .name(Text.literal("Enchantment Glance"))
+                                        .description(OptionDescription.of(Text.of("Shows the enchantments of a held item above the hotbar. This will move the item name tooltip higher if it is not disabled.")))
+                                        .binding(defaults.hotbarEnchantmentGlance, () -> config.hotbarEnchantmentGlance, newVal -> config.hotbarEnchantmentGlance = newVal)
+                                        .controller(TickBoxControllerBuilder::create)
+                                        .build())
+                                .option(Option.createBuilder(boolean.class)
+                                        .name(Text.literal("Damage Glance"))
+                                        .description(OptionDescription.of(Text.of("Shows the attack damage of a held item above the hotbar.")))
                                         .binding(defaults.hotbarDamageGlance, () -> config.hotbarDamageGlance, newVal -> config.hotbarDamageGlance = newVal)
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
