@@ -52,6 +52,9 @@ Downloads can be found on the [Modrinth page](https://modrinth.com/mod/overlaytw
 #### Hotbar
 
 - Move Hotbar Up
+- Remove Held Item Name Tooltip
+- Enchantment Glance
+- Damage Glance
 
 #### Titles
 
