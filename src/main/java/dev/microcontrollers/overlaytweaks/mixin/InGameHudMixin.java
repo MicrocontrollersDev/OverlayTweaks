@@ -166,6 +166,7 @@ public class InGameHudMixin {
 
         RenderSystem.enableBlend(); // without this the hotbar loses all translucency for some reason
         RenderSystem.disableDepthTest();
+        context.getMatrices().scale(0.5F, 0.5F, 0.5F);
         if (OverlayTweaksConfig.INSTANCE.getConfig().hotbarEnchantmentGlance)
             context.drawTextWithShadow(renderer, itemEnchantStr, 2 * x - itemEnchantStr.length() * 2, 2 * y - 15, 16777215); // white color
         if (OverlayTweaksConfig.INSTANCE.getConfig().hotbarDamageGlance)
