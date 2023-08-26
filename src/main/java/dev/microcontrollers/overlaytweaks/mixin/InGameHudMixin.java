@@ -168,7 +168,7 @@ public class InGameHudMixin {
         RenderSystem.disableDepthTest();
         context.getMatrices().scale(0.5F, 0.5F, 0.5F);
         if (OverlayTweaksConfig.INSTANCE.getConfig().hotbarEnchantmentGlance)
-            context.drawTextWithShadow(renderer, itemEnchantStr, 2 * x - itemEnchantStr.length() * 2, 2 * y - 15, 16777215); // white color
+            context.drawTextWithShadow(renderer, itemEnchantStr, context.getScaledWindowWidth() - (renderer.getWidth(itemEnchantStr) / 2), 2 * y - 15, 16777215); // white color
         if (OverlayTweaksConfig.INSTANCE.getConfig().hotbarDamageGlance)
             context.drawTextWithShadow(renderer, itemDamageStr, 2 * x + 7, 2 * y + 3, 16777215); // white color
         context.getMatrices().scale(2F, 2F, 2F);
