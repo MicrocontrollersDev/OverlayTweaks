@@ -23,6 +23,7 @@ public class OverlayTweaksConfig {
     @ConfigEntry public float containerTextureOpacity = 100F;
     @ConfigEntry public float tabPlayerListOpacity = (32/255F) * 100F;
     @ConfigEntry public float moveTabDown = 10F;
+    @ConfigEntry public boolean moveTabBelowBossBars = false;
     @ConfigEntry public boolean showPingInTab = false;
     @ConfigEntry public boolean scalePingDisplay = false;
     @ConfigEntry public boolean hideFalsePing = false;
@@ -131,6 +132,12 @@ public class OverlayTweaksConfig {
                                                 .valueFormatter(value -> Text.of(String.format("%,.0f", value)))
                                                 .range(0F, 20F)
                                                 .step(1F))
+                                        .build())
+                                .option(Option.createBuilder(boolean.class)
+                                        .name(Text.literal("Move Tab List Below BossBars"))
+                                        .description(OptionDescription.of(Text.of("Moves the tab list below all bossbars. This will take priority over the \"Move Tab List Down\" setting.")))
+                                        .binding(defaults.moveTabBelowBossBars, () -> config.moveTabBelowBossBars, newVal -> config.moveTabBelowBossBars = newVal)
+                                        .controller(TickBoxControllerBuilder::create)
                                         .build())
                                 .option(Option.createBuilder(boolean.class)
                                         .name(Text.literal("Show Numerical Ping"))
