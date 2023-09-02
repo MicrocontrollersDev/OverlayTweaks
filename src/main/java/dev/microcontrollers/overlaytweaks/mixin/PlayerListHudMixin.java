@@ -1,5 +1,6 @@
 package dev.microcontrollers.overlaytweaks.mixin;
 
+import dev.microcontrollers.overlaytweaks.Shifter;
 import dev.microcontrollers.overlaytweaks.config.OverlayTweaksConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -7,7 +8,9 @@ import net.minecraft.client.gui.hud.PlayerListHud;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.scoreboard.ScoreboardObjective;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
@@ -17,6 +20,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerListHud.class)
 public class PlayerListHudMixin {
+    @Shadow
+    @Final
+    private MinecraftClient client;
+
     @ModifyConstant(method = "render", constant = @Constant(intValue = 553648127))
     private int tabOpacity(int opacity) {
         return withTabOpacity(opacity, OverlayTweaksConfig.INSTANCE.getConfig().tabPlayerListOpacity / 100F);
@@ -51,7 +58,10 @@ public class PlayerListHudMixin {
 
     @Inject(method = "render", at = @At("HEAD"))
     private void moveTabDown(DrawContext context, int scaledWindowWidth, Scoreboard scoreboard, ScoreboardObjective objective, CallbackInfo ci) {
-        context.getMatrices().translate(0, OverlayTweaksConfig.INSTANCE.getConfig().moveTabDown, 0);
+        float distance = OverlayTweaksConfig.INSTANCE.getConfig().moveTabBelowBossBars
+                ? ((Shifter) client.inGameHud.getBossBarHud()).overlayTweaks$getShift()
+                : OverlayTweaksConfig.INSTANCE.getConfig().moveTabDown;
+        context.getMatrices().translate(0, distance, 0);
     }
 
 }
