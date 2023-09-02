@@ -154,6 +154,8 @@ public class InGameHudMixin {
         }
 
         String itemEnchantStr = enchantmentStringBuilder.toString().trim();
+        if (itemEnchantStr.equals("P 0")) itemEnchantStr = ""; // compatibility with Hypixel Skyblock custom enchants
+
         if (itemDamage != 0) itemDamageStr = "+" + (itemDamage % 1 == 0 ? Integer.toString((int) itemDamage) : Double.toString(itemDamage));
         TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
 
@@ -167,9 +169,9 @@ public class InGameHudMixin {
         RenderSystem.enableBlend(); // without this the hotbar loses all translucency for some reason
         RenderSystem.disableDepthTest();
         context.getMatrices().scale(0.5F, 0.5F, 0.5F);
-        if (OverlayTweaksConfig.INSTANCE.getConfig().hotbarEnchantmentGlance)
+        if (OverlayTweaksConfig.INSTANCE.getConfig().hotbarEnchantmentGlance && !itemEnchantStr.isEmpty())
             context.drawTextWithShadow(renderer, itemEnchantStr, context.getScaledWindowWidth() - (renderer.getWidth(itemEnchantStr) / 2), 2 * y - 15, 16777215); // white color
-        if (OverlayTweaksConfig.INSTANCE.getConfig().hotbarDamageGlance)
+        if (OverlayTweaksConfig.INSTANCE.getConfig().hotbarDamageGlance && !itemDamageStr.isEmpty())
             context.drawTextWithShadow(renderer, itemDamageStr, 2 * x + 7, 2 * y + 3, 16777215); // white color
         context.getMatrices().scale(2F, 2F, 2F);
     }
