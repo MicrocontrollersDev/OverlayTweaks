@@ -45,6 +45,8 @@ public class InGameHudMixin {
     public float vignetteDarkness;
     @Shadow
     private Text title;
+    @Shadow
+    private Text subtitle;
     @Final
     @Shadow
     private static final Identifier ICONS = new Identifier("textures/gui/icons.png");
@@ -290,7 +292,7 @@ public class InGameHudMixin {
     /*
         The following methods were taken from Easeify under LGPLV3
         https://github.com/Polyfrost/Easeify/blob/main/LICENSE
-        The code has been updated to 1.20 and with slight changes to variables
+        The code has been updated to 1.20 and with several fixes
      */
 
     @ModifyExpressionValue(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/MathHelper;clamp(III)I"))
@@ -302,13 +304,25 @@ public class InGameHudMixin {
         }
     }
 
-    // There's only two of these targets, one for title and one for subtitle. We can remove duplicate code by removing the ordinal.
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;scale(FFF)V", shift = At.Shift.AFTER))
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;scale(FFF)V", ordinal = 0, shift = At.Shift.AFTER))
     private void modifyTitle(DrawContext context, float tickDelta, CallbackInfo ci) {
         float titleScale = OverlayTweaksConfig.INSTANCE.getConfig().titleScale / 100;
-        // MCCIsland uses a giant title to black out your screen when switching worlds.
-        if (OverlayTweaksConfig.INSTANCE.getConfig().autoTitleScale && !Objects.requireNonNull(MinecraftClient.getInstance().getCurrentServerEntry()).address.contains("mccisland.net")) {
+        // MCCIsland uses a giant title to black out your screen when switching worlds, so let's keep that
+        if (OverlayTweaksConfig.INSTANCE.getConfig().autoTitleScale && (MinecraftClient.getInstance().getCurrentServerEntry() != null && !MinecraftClient.getInstance().getCurrentServerEntry().address.contains("mccisland.net"))) {
             final float width = MinecraftClient.getInstance().textRenderer.getWidth(title) * 4.0F;
+            if (width > context.getScaledWindowWidth()) {
+                titleScale = (context.getScaledWindowWidth() / width) * OverlayTweaksConfig.INSTANCE.getConfig().titleScale / 100;
+            }
+        }
+        context.getMatrices().scale(titleScale, titleScale, titleScale);
+    }
+
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;scale(FFF)V", ordinal = 1, shift = At.Shift.AFTER))
+    private void modifySubtitle(DrawContext context, float tickDelta, CallbackInfo ci) {
+        float titleScale = OverlayTweaksConfig.INSTANCE.getConfig().titleScale / 100;
+        // MCCIsland uses a giant title to black out your screen when switching worlds, so let's keep that
+        if (OverlayTweaksConfig.INSTANCE.getConfig().autoTitleScale && (MinecraftClient.getInstance().getCurrentServerEntry() != null && !MinecraftClient.getInstance().getCurrentServerEntry().address.contains("mccisland.net"))) {
+            final float width = MinecraftClient.getInstance().textRenderer.getWidth(subtitle) * 2.0F;
             if (width > context.getScaledWindowWidth()) {
                 titleScale = (context.getScaledWindowWidth() / width) * OverlayTweaksConfig.INSTANCE.getConfig().titleScale / 100;
             }

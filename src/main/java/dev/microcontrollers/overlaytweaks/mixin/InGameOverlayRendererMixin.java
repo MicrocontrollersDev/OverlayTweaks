@@ -15,7 +15,7 @@ import static net.minecraft.entity.effect.StatusEffects.FIRE_RESISTANCE;
 
 /*
   Fire overlay height code was taken from Easeify with permission from Wyvest
-  Only changes to variables have been changed
+  Only changes to variables have been made
   https://github.com/Polyfrost/Easeify/blob/main/LICENSE
  */
 @Mixin(InGameOverlayRenderer.class)
