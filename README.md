@@ -19,6 +19,7 @@ Downloads can be found on the [Modrinth page](https://modrinth.com/mod/overlaytw
 
 - Tab Player List Background Opacity
 - Move Tab List Down
+- Move Tab List Below Bossbars
 - Show Numerical Ping
 - Scale Numerical Ping
 - Hide Fake Ping
@@ -65,6 +66,7 @@ Downloads can be found on the [Modrinth page](https://modrinth.com/mod/overlaytw
 
 #### Toasts
 
+- Remove All Toasts
 - Remove Tutorial Toasts
 
 ### Crosshair
@@ -80,7 +82,7 @@ Downloads can be found on the [Modrinth page](https://modrinth.com/mod/overlaytw
 
 - Ignore Debug Crosshair
 - Always Use Debug Crosshair
-- Fix Debug Crosshair Cooldown Icon
+- Fix Debug Crosshair Attack Indicator
 - Debug Crosshair Size
 
 ### Effects
@@ -100,3 +102,4 @@ Downloads can be found on the [Modrinth page](https://modrinth.com/mod/overlaytw
 - Pumpkin Overlay Opacity
 - Constant Vignette Darkness
 - Custom Vignette Darkness Value
+- 
