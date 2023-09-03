@@ -5,19 +5,23 @@
 	"name": "Overlay Tweaks",
 	"description": "Small tweaks to Minecraft's overlays!",
 	"authors": [
-		"Microcontrollers",
-		"Wyvest (code contributor)",
-		"Mixces (code contributor)",
-		"Ownwn (code contributor)"
+		"Microcontrollers\n",
+		" ",
+		" -- Code Contributors -- ",
+		" ",
+		"Wyvest",
+		"Mixces",
+		"Ownwn",
+		"Squagward"
 	],
 	"contact": {
 		"homepage": "https://github.com/MicrocontrollersDev",
 		"sources": "https://github.com/MicrocontrollersDev/OverlayTweaks",
 		"issues": "https://github.com/MicrocontrollersDev/OverlayTweaks/issues"
 	},
-	"license": "LGPLV3",
+	"license": "LGPLv3",
 	"icon": "assets/overlaytweaks/icon.png",
-	"environment": "*",
+	"environment": "client",
 	"entrypoints": {
 		"main": [
 			"dev.microcontrollers.overlaytweaks.OverlayTweaks"
