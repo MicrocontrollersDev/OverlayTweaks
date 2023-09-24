@@ -12,7 +12,6 @@ import net.minecraft.client.gui.hud.DebugHud;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.AttackIndicator;
-import net.minecraft.client.option.GameOptions;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -26,7 +25,6 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.HitResult;
-import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -36,7 +34,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 // BetterF3 has a priority of 1100. This is to prevent a crash with cancelDebugCrosshair.
-@Debug(export = true)
 @Mixin(value = InGameHud.class, priority = 1200)
 public class InGameHudMixin {
     @Shadow
@@ -58,6 +55,8 @@ public class InGameHudMixin {
     private int scaledWidth;
     @Shadow
     private int scaledHeight;
+    @Mutable
+    @Final
     @Shadow
     private final DebugHud debugHud;
     @Unique
@@ -66,6 +65,7 @@ public class InGameHudMixin {
     public InGameHudMixin(DebugHud debugHud) {
         this.debugHud = debugHud;
     }
+
 
     @Inject(method = "updateVignetteDarkness", at = @At("TAIL"))
     private void changeVignetteDarkness(Entity entity, CallbackInfo ci) {
