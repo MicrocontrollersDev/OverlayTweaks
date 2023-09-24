@@ -5,10 +5,9 @@
 	"name": "Overlay Tweaks",
 	"description": "Small tweaks to Minecraft's overlays!",
 	"authors": [
-		"Microcontrollers\n",
-		" ",
-		" -- Code Contributors -- ",
-		" ",
+		"Microcontrollers"
+	],
+	"contributors": [
 		"Wyvest",
 		"Mixces",
 		"Ownwn",
@@ -34,8 +33,8 @@
 		"overlaytweaks.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.14.21",
-		"minecraft": ">=1.20 <=1.20.1",
+		"fabricloader": ">=0.14.22",
+		"minecraft": "1.20.2",
 		"java": ">=17",
 		"fabric-api": "*",
 		"yet_another_config_lib_v3": "*"

@@ -8,6 +8,7 @@ import dev.microcontrollers.overlaytweaks.config.OverlayTweaksConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.hud.DebugHud;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.AttackIndicator;
@@ -26,19 +27,16 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.HitResult;
 import org.objectweb.asm.Opcodes;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 // BetterF3 has a priority of 1100. This is to prevent a crash with cancelDebugCrosshair.
+@Debug(export = true)
 @Mixin(value = InGameHud.class, priority = 1200)
 public class InGameHudMixin {
     @Shadow
@@ -49,13 +47,25 @@ public class InGameHudMixin {
     private Text subtitle;
     @Final
     @Shadow
-    private static final Identifier ICONS = new Identifier("textures/gui/icons.png");
+    private static Identifier CROSSHAIR_ATTACK_INDICATOR_FULL_TEXTURE;
+    @Final
+    @Shadow
+    private static Identifier CROSSHAIR_ATTACK_INDICATOR_BACKGROUND_TEXTURE;
+    @Final
+    @Shadow
+    private static Identifier CROSSHAIR_ATTACK_INDICATOR_PROGRESS_TEXTURE;
     @Shadow
     private int scaledWidth;
     @Shadow
     private int scaledHeight;
+    @Shadow
+    private final DebugHud debugHud;
     @Unique
     MinecraftClient client = MinecraftClient.getInstance();
+
+    public InGameHudMixin(DebugHud debugHud) {
+        this.debugHud = debugHud;
+    }
 
     @Inject(method = "updateVignetteDarkness", at = @At("TAIL"))
     private void changeVignetteDarkness(Entity entity, CallbackInfo ci) {
@@ -178,7 +188,7 @@ public class InGameHudMixin {
         context.getMatrices().scale(2F, 2F, 2F);
     }
 
-    @ModifyArg(method = "renderHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"), index = 2)
+    @ModifyArg(method = "renderHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V"), index = 2)
     private int moveHotbarUp(int y) {
         return y - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
     }
@@ -188,18 +198,23 @@ public class InGameHudMixin {
         return o - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
     }
 
-    @ModifyArg(method = "renderMountJumpBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"), index = 2)
+    @ModifyArg(method = "renderMountJumpBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V"), index = 2)
     private int moveMountJumpUp(int k) {
         return k - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
     }
 
-    @ModifyArg(method = "renderExperienceBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"), index = 2)
+    @ModifyArg(method = "renderExperienceBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V"), index = 2)
     private int moveExperienceUp(int l) {
         return l - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
     }
 
-    @ModifyArg(method = "renderExperienceBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawText(Lnet/minecraft/client/font/TextRenderer;Ljava/lang/String;IIIZ)I"), index = 3)
+    @ModifyArg(method = "renderExperienceBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIIIIIII)V"), index = 6)
     private int moveExperienceUp2(int l) {
+        return l - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
+    }
+
+    @ModifyArg(method = "renderExperienceBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawText(Lnet/minecraft/client/font/TextRenderer;Ljava/lang/String;IIIZ)I"), index = 3)
+    private int moveExperienceUp3(int l) {
         return l - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
     }
 
@@ -210,7 +225,7 @@ public class InGameHudMixin {
         return y - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy - xextra;
     }
 
-    @ModifyArg(method = "renderStatusBars", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"), index = 2)
+    @ModifyArg(method = "renderStatusBars", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V"), index = 2)
     private int moveStatusUp(int s) {
         return s - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
     }
@@ -220,7 +235,7 @@ public class InGameHudMixin {
         return o - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
     }
 
-    @ModifyArg(method = "renderMountHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"), index = 2)
+    @ModifyArg(method = "renderMountHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V"), index = 2)
     private int moveMountHealthUp(int m) {
         return m - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
     }
@@ -252,11 +267,11 @@ public class InGameHudMixin {
         return OverlayTweaksConfig.INSTANCE.getConfig().debugCrosshairSize;
     }
 
-    @Redirect(method = "renderCrosshair", at = @At(value = "FIELD", target = "Lnet/minecraft/client/option/GameOptions;debugEnabled:Z", opcode = Opcodes.GETFIELD))
-    private boolean cancelDebugCrosshair(GameOptions gameOptions) {
+    @ModifyExpressionValue(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/DebugHud;shouldShowDebugHud()Z"))
+    private boolean cancelDebugCrosshair(boolean original) {
         if (OverlayTweaksConfig.INSTANCE.getConfig().useNormalCrosshair) return false;
         else if (OverlayTweaksConfig.INSTANCE.getConfig().useDebugCrosshair) return true;
-        return gameOptions.debugEnabled;
+        return original;
     }
 
     @Inject(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;applyModelViewMatrix()V"))
@@ -273,12 +288,12 @@ public class InGameHudMixin {
             int j = this.scaledHeight / 2 - 7 + 16;
             int k = this.scaledWidth / 2 - 8;
             if (bl) {
-                context.drawTexture(ICONS, k, j, 68, 94, 16, 16);
+                context.drawTexture(CROSSHAIR_ATTACK_INDICATOR_FULL_TEXTURE, k, j, 68, 94, 16, 16);
             } else if (f < 1.0F) {
                 int l = (int)(f * 17.0F);
                 RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.ONE_MINUS_DST_COLOR, GlStateManager.DstFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
-                context.drawTexture(ICONS, k, j, 36, 94, 16, 4);
-                context.drawTexture(ICONS, k, j, 52, 94, l, 4);
+                context.drawTexture(CROSSHAIR_ATTACK_INDICATOR_BACKGROUND_TEXTURE, k, j, 36, 94, 16, 4);
+                context.drawTexture(CROSSHAIR_ATTACK_INDICATOR_PROGRESS_TEXTURE, k, j, 52, 94, l, 4);
             }
             RenderSystem.defaultBlendFunc();
         }
