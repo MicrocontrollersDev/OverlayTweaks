@@ -39,14 +39,14 @@ dependencies {
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	// Fabric API. This is technically optional, but you probably want it anyway.
+	// Fabric API.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	// DevAuth. Lets us log in with our own Minecraft account. Useful for testing tab features.
 	modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:${project.devauthVersion}")
 
 	// To test AppleSkin compatability. Remember to add ClothConfig to your run/mods https://modrinth.com/mod/cloth-config.
-	modImplementation("maven.modrinth:appleskin:${project.appleSkinVersion}")
+	//modImplementation("maven.modrinth:appleskin:${project.appleSkinVersion}")
 }
 
 processResources {

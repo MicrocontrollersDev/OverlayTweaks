@@ -6,7 +6,6 @@
   "client": [
     "AbstractFurnaceScreenMixin",
     "AnvilScreenMixin",
-    "AppleSkinFixMixin",
     "BeaconScreenMixin",
     "BossBarHudMixin",
     "BuiltinItemModelRendererMixin",

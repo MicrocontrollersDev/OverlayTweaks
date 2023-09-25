@@ -37,19 +37,18 @@ public class BuiltinItemModelRendererMixin {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         assert player != null;
         float cooldown = player.getItemCooldownManager().getCooldownProgress(Items.SHIELD, 0);
-        // We want this to only change shields that are being held so it doesn't affect containers/dropped items.
+        // We want this to only change shields that are being held so it doesn't affect containers/dropped items, as well as first person only.
         if (mode == ModelTransformationMode.FIRST_PERSON_LEFT_HAND || mode == ModelTransformationMode.FIRST_PERSON_RIGHT_HAND) {
             args.set(7, OverlayTweaksConfig.CONFIG.instance().customShieldOpacity / 100);
+            // shield colors
             if (!OverlayTweaksConfig.CONFIG.instance().colorShieldCooldown) return;
             if (cooldown <= 1.0F && cooldown > 0.75F) {
                 args.set(5, 0F);
                 args.set(6, 0F);
-            }
-            if (cooldown <= 0.75F && cooldown > 0.35F) {
+            } else if (cooldown <= 0.75F && cooldown > 0.35F) {
                 args.set(5, 0.37F);
                 args.set(6, 0.2F);
-            }
-            if (cooldown <= 0.35F && cooldown > 0F) {
+            } else if (cooldown <= 0.35F && cooldown > 0F) {
                 args.set(6, 0F);
             }
         }
