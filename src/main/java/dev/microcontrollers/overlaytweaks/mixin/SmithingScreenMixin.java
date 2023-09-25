@@ -15,7 +15,7 @@ public class SmithingScreenMixin {
     @Inject(method = "drawInvalidRecipeArrow", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V"))
     private void containerOpacityStart(DrawContext context, int x, int y, CallbackInfo ci) {
         RenderSystem.enableBlend();
-        RenderSystem.setShaderColor(1F, 1F, 1F, OverlayTweaksConfig.INSTANCE.getConfig().containerTextureOpacity / 100F);
+        RenderSystem.setShaderColor(1F, 1F, 1F, OverlayTweaksConfig.CONFIG.instance().containerTextureOpacity / 100F);
     }
 
     @Inject(method = "drawInvalidRecipeArrow", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V", shift = At.Shift.AFTER))
@@ -27,7 +27,7 @@ public class SmithingScreenMixin {
     @Inject(method = "handledScreenTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/CyclingSlotIcon;updateTexture(Ljava/util/List;)V"))
     private void containerOpacityStartTick(CallbackInfo ci) {
         RenderSystem.enableBlend();
-        RenderSystem.setShaderColor(1F, 1F, 1F, OverlayTweaksConfig.INSTANCE.getConfig().containerTextureOpacity / 100F);
+        RenderSystem.setShaderColor(1F, 1F, 1F, OverlayTweaksConfig.CONFIG.instance().containerTextureOpacity / 100F);
     }
 
     @Inject(method = "handledScreenTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/CyclingSlotIcon;updateTexture(Ljava/util/List;)V", shift = At.Shift.AFTER))

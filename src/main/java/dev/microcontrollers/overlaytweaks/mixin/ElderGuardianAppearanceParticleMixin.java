@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ElderGuardianAppearanceParticleMixin {
     @Inject(method = "buildGeometry", at = @At("HEAD"), cancellable = true)
     private void removeElderGuardianJumpscare(VertexConsumer vertexConsumer, Camera camera, float tickDelta, CallbackInfo ci) {
-        if (OverlayTweaksConfig.INSTANCE.getConfig().removeElderGuardianJumpscare) ci.cancel();
+        if (OverlayTweaksConfig.CONFIG.instance().removeElderGuardianJumpscare) ci.cancel();
     }
 
 }

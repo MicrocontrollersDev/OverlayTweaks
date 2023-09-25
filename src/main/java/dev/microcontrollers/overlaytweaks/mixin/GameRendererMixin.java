@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class GameRendererMixin {
     @ModifyExpressionValue(method = "getFov", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/MathHelper;lerp(DDD)D"))
     private double removeWaterFov(double original) {
-        if (OverlayTweaksConfig.INSTANCE.getConfig().removeWaterFov) return 1.0;
+        if (OverlayTweaksConfig.CONFIG.instance().removeWaterFov) return 1.0;
         else return original;
     }
 
@@ -29,19 +29,19 @@ public class GameRendererMixin {
     private static void cleanerNightVision(LivingEntity entity, float tickDelta, CallbackInfoReturnable<Float> cir) {
         StatusEffectInstance statusEffectInstance = entity.getStatusEffect(StatusEffects.NIGHT_VISION);
         assert statusEffectInstance != null;
-        if (OverlayTweaksConfig.INSTANCE.getConfig().cleanerNightVision)
+        if (OverlayTweaksConfig.CONFIG.instance().cleanerNightVision)
             cir.setReturnValue(!statusEffectInstance.isDurationBelow(200) ? 1.0F : (float) statusEffectInstance.getDuration() / 200F);
     }
 
     @WrapWithCondition(method = "renderWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/GameRenderer;bobView(Lnet/minecraft/client/util/math/MatrixStack;F)V"))
     public boolean disableScreenBobbing(GameRenderer instance, MatrixStack matrices, float tickDelta) {
-        return !OverlayTweaksConfig.INSTANCE.getConfig().disableScreenBobbing;
+        return !OverlayTweaksConfig.CONFIG.instance().disableScreenBobbing;
     }
 
     @WrapWithCondition(method = "renderHand", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/GameRenderer;bobView(Lnet/minecraft/client/util/math/MatrixStack;F)V"))
     public boolean disableHandBobbing(GameRenderer instance, MatrixStack matrices, float tickDelta) {
-        if (OverlayTweaksConfig.INSTANCE.getConfig().disableHandBobbing) return false;
-        if (OverlayTweaksConfig.INSTANCE.getConfig().disableMapBobbing) {
+        if (OverlayTweaksConfig.CONFIG.instance().disableHandBobbing) return false;
+        if (OverlayTweaksConfig.CONFIG.instance().disableMapBobbing) {
             ClientPlayerEntity entity = MinecraftClient.getInstance().player;
             if (entity != null) {
                 ItemStack mainHand = entity.getMainHandStack();
@@ -55,12 +55,12 @@ public class GameRendererMixin {
 
     @WrapWithCondition(method = "renderHand", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/GameRenderer;tiltViewWhenHurt(Lnet/minecraft/client/util/math/MatrixStack;F)V"))
     public boolean disableHandDamageTilt(GameRenderer instance, MatrixStack matrices, float tickDelta) {
-        return !OverlayTweaksConfig.INSTANCE.getConfig().disableHandDamage;
+        return !OverlayTweaksConfig.CONFIG.instance().disableHandDamage;
     }
 
     @WrapWithCondition(method = "renderWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/GameRenderer;tiltViewWhenHurt(Lnet/minecraft/client/util/math/MatrixStack;F)V"))
     public boolean disableScreenDamageTilt(GameRenderer instance, MatrixStack matrices, float tickDelta) {
-        return !OverlayTweaksConfig.INSTANCE.getConfig().disableScreenDamage;
+        return !OverlayTweaksConfig.CONFIG.instance().disableScreenDamage;
     }
 
 }

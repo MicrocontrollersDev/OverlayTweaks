@@ -15,7 +15,7 @@ public class AnvilScreenMixin {
     @Inject(method = "drawBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V"))
     private void containerOpacityStart(DrawContext context, float delta, int mouseX, int mouseY, CallbackInfo ci) {
         RenderSystem.enableBlend();
-        RenderSystem.setShaderColor(1F, 1F, 1F, OverlayTweaksConfig.INSTANCE.getConfig().containerTextureOpacity / 100F);
+        RenderSystem.setShaderColor(1F, 1F, 1F, OverlayTweaksConfig.CONFIG.instance().containerTextureOpacity / 100F);
     }
 
     @Inject(method = "drawBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V", shift = At.Shift.AFTER))
@@ -27,7 +27,7 @@ public class AnvilScreenMixin {
     @Inject(method = "drawInvalidRecipeArrow", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V"))
     private void containerOpacityStartInvalid(DrawContext context, int x, int y, CallbackInfo ci) {
         RenderSystem.enableBlend();
-        RenderSystem.setShaderColor(1F, 1F, 1F, OverlayTweaksConfig.INSTANCE.getConfig().containerTextureOpacity / 100F);
+        RenderSystem.setShaderColor(1F, 1F, 1F, OverlayTweaksConfig.CONFIG.instance().containerTextureOpacity / 100F);
     }
 
     @Inject(method = "drawInvalidRecipeArrow", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V", shift = At.Shift.AFTER))

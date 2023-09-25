@@ -16,12 +16,12 @@ public class AppleSkinFixMixin {
 
     @Redirect(method = "onPreRender", at = @At(value = "FIELD", target = "Lsqueek/appleskin/client/HUDOverlayHandler;foodIconsOffset:I", opcode = Opcodes.GETFIELD))
     private int movePreAppleSkinUp(HUDOverlayHandler instance) {
-        return this.foodIconsOffset + OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
+        return this.foodIconsOffset + OverlayTweaksConfig.CONFIG.instance().moveHotbarBy;
     }
 
     @Redirect(method = "onRender", at = @At(value = "FIELD", target = "Lsqueek/appleskin/client/HUDOverlayHandler;foodIconsOffset:I", opcode = Opcodes.GETFIELD))
     private int moveAppleSkinUp(HUDOverlayHandler instance) {
-        return this.foodIconsOffset + OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
+        return this.foodIconsOffset + OverlayTweaksConfig.CONFIG.instance().moveHotbarBy;
     }
 
 }

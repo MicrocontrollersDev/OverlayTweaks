@@ -69,18 +69,18 @@ public class InGameHudMixin {
 
     @Inject(method = "updateVignetteDarkness", at = @At("TAIL"))
     private void changeVignetteDarkness(Entity entity, CallbackInfo ci) {
-        if (OverlayTweaksConfig.INSTANCE.getConfig().customVignetteDarkness)
-            this.vignetteDarkness = OverlayTweaksConfig.INSTANCE.getConfig().customVignetteDarknessValue / 100;
+        if (OverlayTweaksConfig.CONFIG.instance().customVignetteDarkness)
+            this.vignetteDarkness = OverlayTweaksConfig.CONFIG.instance().customVignetteDarknessValue / 100;
     }
 
     @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;renderOverlay(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/util/Identifier;F)V"), index = 2)
     private float changePumpkinOpacity(float opacity) {
-        return OverlayTweaksConfig.INSTANCE.getConfig().pumpkinOpacity / 100F;
+        return OverlayTweaksConfig.CONFIG.instance().pumpkinOpacity / 100F;
     }
 
     @Inject(method = "renderHeldItemTooltip", at = @At("HEAD"), cancellable = true)
     private void cancelTooltip(DrawContext context, CallbackInfo ci) {
-        if (OverlayTweaksConfig.INSTANCE.getConfig().removeItemTooltip) ci.cancel();
+        if (OverlayTweaksConfig.CONFIG.instance().removeItemTooltip) ci.cancel();
     }
 
     // these names are inspired by Patcher https://github.com/Sk1erLLC/Patcher
@@ -129,7 +129,7 @@ public class InGameHudMixin {
 
     @Inject(method = "renderHotbar", at = @At(value = "HEAD"))
     private void drawItemDamage(float tickDelta, DrawContext context, CallbackInfo ci) {
-        if (!OverlayTweaksConfig.INSTANCE.getConfig().hotbarEnchantmentGlance && !OverlayTweaksConfig.INSTANCE.getConfig().hotbarDamageGlance) return;
+        if (!OverlayTweaksConfig.CONFIG.instance().hotbarEnchantmentGlance && !OverlayTweaksConfig.CONFIG.instance().hotbarDamageGlance) return;
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         if (player == null) return;
 
@@ -156,7 +156,7 @@ public class InGameHudMixin {
                 }
             }
 
-            // https://minecraft.fandom.com/wiki/Sharpness
+            // https://minecraft.wiki/w/Sharpness
             itemDamage += (enchantLvl > 0) ? (0.5 * (enchantLvl - 1) + 1.0) : 0;
         }
 
@@ -176,132 +176,131 @@ public class InGameHudMixin {
         int xush = 47;
         if (player.isCreative()) xush = 31;
         int x = (context.getScaledWindowWidth() / 2) - (renderer.getWidth(itemDamageStr) / 2);
-        int y = context.getScaledWindowHeight() - xush - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
+        int y = context.getScaledWindowHeight() - xush - OverlayTweaksConfig.CONFIG.instance().moveHotbarBy;
 
         RenderSystem.enableBlend(); // without this the hotbar loses all translucency for some reason
         RenderSystem.disableDepthTest();
         context.getMatrices().scale(0.5F, 0.5F, 0.5F);
-        if (OverlayTweaksConfig.INSTANCE.getConfig().hotbarEnchantmentGlance && !itemEnchantStr.isEmpty())
+        if (OverlayTweaksConfig.CONFIG.instance().hotbarEnchantmentGlance && !itemEnchantStr.isEmpty())
             context.drawTextWithShadow(renderer, itemEnchantStr, context.getScaledWindowWidth() - (renderer.getWidth(itemEnchantStr) / 2), 2 * y - 15, 16777215); // white color
-        if (OverlayTweaksConfig.INSTANCE.getConfig().hotbarDamageGlance && !itemDamageStr.isEmpty())
+        if (OverlayTweaksConfig.CONFIG.instance().hotbarDamageGlance && !itemDamageStr.isEmpty())
             context.drawTextWithShadow(renderer, itemDamageStr, 2 * x + 7, 2 * y + 3, 16777215); // white color
         context.getMatrices().scale(2F, 2F, 2F);
     }
 
     @ModifyArg(method = "renderHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V"), index = 2)
     private int moveHotbarUp(int y) {
-        return y - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
+        return y - OverlayTweaksConfig.CONFIG.instance().moveHotbarBy;
     }
 
     @ModifyArg(method = "renderHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;renderHotbarItem(Lnet/minecraft/client/gui/DrawContext;IIFLnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/item/ItemStack;I)V"), index = 2)
     private int moveHotbarUp2(int o) {
-        return o - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
+        return o - OverlayTweaksConfig.CONFIG.instance().moveHotbarBy;
     }
 
     @ModifyArg(method = "renderMountJumpBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V"), index = 2)
     private int moveMountJumpUp(int k) {
-        return k - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
+        return k - OverlayTweaksConfig.CONFIG.instance().moveHotbarBy;
     }
 
     @ModifyArg(method = "renderExperienceBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V"), index = 2)
     private int moveExperienceUp(int l) {
-        return l - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
+        return l - OverlayTweaksConfig.CONFIG.instance().moveHotbarBy;
     }
 
     @ModifyArg(method = "renderExperienceBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIIIIIII)V"), index = 6)
     private int moveExperienceUp2(int l) {
-        return l - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
+        return l - OverlayTweaksConfig.CONFIG.instance().moveHotbarBy;
     }
 
     @ModifyArg(method = "renderExperienceBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawText(Lnet/minecraft/client/font/TextRenderer;Ljava/lang/String;IIIZ)I"), index = 3)
     private int moveExperienceUp3(int l) {
-        return l - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
+        return l - OverlayTweaksConfig.CONFIG.instance().moveHotbarBy;
     }
 
     @ModifyArg(method = "renderHeldItemTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTextWithShadow(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/text/Text;III)I"), index = 3)
     private int moveTooltipUp(int y) {
         int xextra = 0;
-        if (OverlayTweaksConfig.INSTANCE.getConfig().hotbarEnchantmentGlance) xextra = 7;
-        return y - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy - xextra;
+        if (OverlayTweaksConfig.CONFIG.instance().hotbarEnchantmentGlance) xextra = 7;
+        return y - OverlayTweaksConfig.CONFIG.instance().moveHotbarBy - xextra;
     }
 
     @ModifyArg(method = "renderStatusBars", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V"), index = 2)
     private int moveStatusUp(int s) {
-        return s - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
+        return s - OverlayTweaksConfig.CONFIG.instance().moveHotbarBy;
     }
 
     @ModifyArg(method = "renderStatusBars", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;renderHealthBar(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/entity/player/PlayerEntity;IIIIFIIIZ)V"), index = 3)
     private int moveStatusUp2(int o) {
-        return o - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
+        return o - OverlayTweaksConfig.CONFIG.instance().moveHotbarBy;
     }
 
     @ModifyArg(method = "renderMountHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V"), index = 2)
     private int moveMountHealthUp(int m) {
-        return m - OverlayTweaksConfig.INSTANCE.getConfig().moveHotbarBy;
+        return m - OverlayTweaksConfig.CONFIG.instance().moveHotbarBy;
     }
 
     @Inject(method = "renderCrosshair", at = @At("HEAD"), cancellable = true)
     private void isInContainer(DrawContext context, CallbackInfo ci) {
-        if (MinecraftClient.getInstance().currentScreen != null && OverlayTweaksConfig.INSTANCE.getConfig().hideCrosshairInContainers)
+        if (MinecraftClient.getInstance().currentScreen != null && OverlayTweaksConfig.CONFIG.instance().hideCrosshairInContainers)
             ci.cancel();
     }
 
     @ModifyExpressionValue(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/option/Perspective;isFirstPerson()Z"))
     private boolean removeFirstPersonCheck(boolean original) {
-        if (OverlayTweaksConfig.INSTANCE.getConfig().showCrosshairInPerspective) return true;
+        if (OverlayTweaksConfig.CONFIG.instance().showCrosshairInPerspective) return true;
         else return original;
     }
 
     @WrapWithCondition(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;blendFuncSeparate(Lcom/mojang/blaze3d/platform/GlStateManager$SrcFactor;Lcom/mojang/blaze3d/platform/GlStateManager$DstFactor;Lcom/mojang/blaze3d/platform/GlStateManager$SrcFactor;Lcom/mojang/blaze3d/platform/GlStateManager$DstFactor;)V"))
     private boolean removeBlending(GlStateManager.SrcFactor srcFactor, GlStateManager.DstFactor dstFactor, GlStateManager.SrcFactor srcAlpha, GlStateManager.DstFactor dstAlpha) {
-        return !OverlayTweaksConfig.INSTANCE.getConfig().removeCrosshairBlending;
+        return !OverlayTweaksConfig.CONFIG.instance().removeCrosshairBlending;
     }
 
     @Inject(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;blendFuncSeparate(Lcom/mojang/blaze3d/platform/GlStateManager$SrcFactor;Lcom/mojang/blaze3d/platform/GlStateManager$DstFactor;Lcom/mojang/blaze3d/platform/GlStateManager$SrcFactor;Lcom/mojang/blaze3d/platform/GlStateManager$DstFactor;)V", shift = At.Shift.AFTER))
     private void changeCrosshairOpacity(DrawContext context, CallbackInfo ci) {
-        if (OverlayTweaksConfig.INSTANCE.getConfig().removeCrosshairBlending) RenderSystem.setShaderColor(1F, 1F, 1F, OverlayTweaksConfig.INSTANCE.getConfig().crosshairOpacity / 100F);
+        if (OverlayTweaksConfig.CONFIG.instance().removeCrosshairBlending) RenderSystem.setShaderColor(1F, 1F, 1F, OverlayTweaksConfig.CONFIG.instance().crosshairOpacity / 100F);
     }
 
     @ModifyArg(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;renderCrosshair(I)V"))
     private int changeDebugCrosshairSize(int size) {
-        return OverlayTweaksConfig.INSTANCE.getConfig().debugCrosshairSize;
+        return OverlayTweaksConfig.CONFIG.instance().debugCrosshairSize;
     }
 
     @ModifyExpressionValue(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/DebugHud;shouldShowDebugHud()Z"))
     private boolean cancelDebugCrosshair(boolean original) {
-        if (OverlayTweaksConfig.INSTANCE.getConfig().useNormalCrosshair) return false;
-        else if (OverlayTweaksConfig.INSTANCE.getConfig().useDebugCrosshair) return true;
+        if (OverlayTweaksConfig.CONFIG.instance().useNormalCrosshair) return false;
+        else if (OverlayTweaksConfig.CONFIG.instance().useDebugCrosshair) return true;
         return original;
     }
 
     @Inject(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;applyModelViewMatrix()V"))
     private void showCooldownOnDebug(DrawContext context, CallbackInfo ci) {
-        if (!OverlayTweaksConfig.INSTANCE.getConfig().fixDebugCooldown) return;
+        if (!OverlayTweaksConfig.CONFIG.instance().fixDebugCooldown) return;
         if (this.client.options.getAttackIndicator().getValue() == AttackIndicator.CROSSHAIR) {
             assert this.client.player != null;
-            float f = this.client.player.getAttackCooldownProgress(0.0F);
-            boolean bl = false;
-            if (this.client.targetedEntity != null && this.client.targetedEntity instanceof LivingEntity && f >= 1.0F) {
-                bl = this.client.player.getAttackCooldownProgressPerTick() > 5.0F;
-                bl &= this.client.targetedEntity.isAlive();
+            float attackCooldownProgress = this.client.player.getAttackCooldownProgress(0.0F);
+            boolean bool = false;
+            if (this.client.targetedEntity != null && this.client.targetedEntity instanceof LivingEntity && attackCooldownProgress >= 1.0F) {
+                bool = this.client.player.getAttackCooldownProgressPerTick() > 5.0F;
+                bool &= this.client.targetedEntity.isAlive();
             }
-            int j = this.scaledHeight / 2 - 7 + 16;
-            int k = this.scaledWidth / 2 - 8;
-            if (bl) {
-                context.drawTexture(CROSSHAIR_ATTACK_INDICATOR_FULL_TEXTURE, k, j, 68, 94, 16, 16);
-            } else if (f < 1.0F) {
-                int l = (int)(f * 17.0F);
-                RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.ONE_MINUS_DST_COLOR, GlStateManager.DstFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
-                context.drawTexture(CROSSHAIR_ATTACK_INDICATOR_BACKGROUND_TEXTURE, k, j, 36, 94, 16, 4);
-                context.drawTexture(CROSSHAIR_ATTACK_INDICATOR_PROGRESS_TEXTURE, k, j, 52, 94, l, 4);
+            int height = this.scaledHeight / 2 - 7 + 16;
+            int width = this.scaledWidth / 2 - 8;
+            if (bool) {
+                context.drawGuiTexture(CROSSHAIR_ATTACK_INDICATOR_FULL_TEXTURE, width, height, 16, 16);
+            } else if (attackCooldownProgress < 1.0F) {
+                int l = (int)(attackCooldownProgress * 17.0F);
+                context.drawGuiTexture(CROSSHAIR_ATTACK_INDICATOR_BACKGROUND_TEXTURE, width, height, 16, 4);
+                context.drawGuiTexture(CROSSHAIR_ATTACK_INDICATOR_PROGRESS_TEXTURE, 16, 4, 0, 0, width, height, l, 4);
             }
-            RenderSystem.defaultBlendFunc();
         }
+        RenderSystem.defaultBlendFunc();
     }
 
     @Inject(method = "shouldRenderSpectatorCrosshair", at = @At("HEAD"), cancellable = true)
     private void showInSpectator(HitResult hitResult, CallbackInfoReturnable<Boolean> cir) {
-        if (OverlayTweaksConfig.INSTANCE.getConfig().showCrosshairInSpectator) cir.setReturnValue(true);
+        if (OverlayTweaksConfig.CONFIG.instance().showCrosshairInSpectator) cir.setReturnValue(true);
     }
 
     /*
@@ -312,7 +311,7 @@ public class InGameHudMixin {
 
     @ModifyExpressionValue(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/MathHelper;clamp(III)I"))
     private int clamp(int value) {
-        if (OverlayTweaksConfig.INSTANCE.getConfig().disableTitles) {
+        if (OverlayTweaksConfig.CONFIG.instance().disableTitles) {
             return 0;
         } else {
             return value;
@@ -321,12 +320,12 @@ public class InGameHudMixin {
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;scale(FFF)V", ordinal = 0, shift = At.Shift.AFTER))
     private void modifyTitle(DrawContext context, float tickDelta, CallbackInfo ci) {
-        float titleScale = OverlayTweaksConfig.INSTANCE.getConfig().titleScale / 100;
+        float titleScale = OverlayTweaksConfig.CONFIG.instance().titleScale / 100;
         // MCCIsland uses a giant title to black out your screen when switching worlds, so let's keep that
-        if (OverlayTweaksConfig.INSTANCE.getConfig().autoTitleScale && (MinecraftClient.getInstance().getCurrentServerEntry() != null && !MinecraftClient.getInstance().getCurrentServerEntry().address.contains("mccisland.net"))) {
+        if (OverlayTweaksConfig.CONFIG.instance().autoTitleScale && (MinecraftClient.getInstance().getCurrentServerEntry() != null && !MinecraftClient.getInstance().getCurrentServerEntry().address.contains("mccisland.net"))) {
             final float width = MinecraftClient.getInstance().textRenderer.getWidth(title) * 4.0F;
             if (width > context.getScaledWindowWidth()) {
-                titleScale = (context.getScaledWindowWidth() / width) * OverlayTweaksConfig.INSTANCE.getConfig().titleScale / 100;
+                titleScale = (context.getScaledWindowWidth() / width) * OverlayTweaksConfig.CONFIG.instance().titleScale / 100;
             }
         }
         context.getMatrices().scale(titleScale, titleScale, titleScale);
@@ -334,12 +333,12 @@ public class InGameHudMixin {
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;scale(FFF)V", ordinal = 1, shift = At.Shift.AFTER))
     private void modifySubtitle(DrawContext context, float tickDelta, CallbackInfo ci) {
-        float titleScale = OverlayTweaksConfig.INSTANCE.getConfig().titleScale / 100;
+        float titleScale = OverlayTweaksConfig.CONFIG.instance().titleScale / 100;
         // MCCIsland uses a giant title to black out your screen when switching worlds, so let's keep that
-        if (OverlayTweaksConfig.INSTANCE.getConfig().autoTitleScale && (MinecraftClient.getInstance().getCurrentServerEntry() != null && !MinecraftClient.getInstance().getCurrentServerEntry().address.contains("mccisland.net"))) {
+        if (OverlayTweaksConfig.CONFIG.instance().autoTitleScale && (MinecraftClient.getInstance().getCurrentServerEntry() != null && !MinecraftClient.getInstance().getCurrentServerEntry().address.contains("mccisland.net"))) {
             final float width = MinecraftClient.getInstance().textRenderer.getWidth(subtitle) * 2.0F;
             if (width > context.getScaledWindowWidth()) {
-                titleScale = (context.getScaledWindowWidth() / width) * OverlayTweaksConfig.INSTANCE.getConfig().titleScale / 100;
+                titleScale = (context.getScaledWindowWidth() / width) * OverlayTweaksConfig.CONFIG.instance().titleScale / 100;
             }
         }
         context.getMatrices().scale(titleScale, titleScale, titleScale);
@@ -347,7 +346,7 @@ public class InGameHudMixin {
 
     @ModifyConstant(method = "render", constant = @Constant(intValue = 255, ordinal = 3))
     private int modifyOpacity(int constant) {
-        return (int) (OverlayTweaksConfig.INSTANCE.getConfig().titleOpacity / 100 * 255);
+        return (int) (OverlayTweaksConfig.CONFIG.instance().titleOpacity / 100 * 255);
     }
 
 }

@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ToastManagerMixin {
     @Inject(method = "draw", at = @At("HEAD"), cancellable = true)
     private void cancelToast(DrawContext context, CallbackInfo ci) {
-        if (OverlayTweaksConfig.INSTANCE.getConfig().removeAllToasts) ci.cancel();
+        if (OverlayTweaksConfig.CONFIG.instance().removeAllToasts) ci.cancel();
     }
 
 }

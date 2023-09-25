@@ -6,7 +6,7 @@ import net.fabricmc.api.ModInitializer;
 public class OverlayTweaks implements ModInitializer {
 	@Override
 	public void onInitialize() {
-		OverlayTweaksConfig.INSTANCE.load();
+		OverlayTweaksConfig.load();
 	}
 
 }

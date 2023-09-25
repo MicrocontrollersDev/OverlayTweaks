@@ -20,13 +20,13 @@ public class LivingEntityRendererMixin<T extends LivingEntity> {
 //    @ModifyArgs(method = "render(Lnet/minecraft/entity/LivingEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/entity/model/EntityModel;render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;IIFFFF)V"))
 //    private void transparentHorse(Args args, T livingEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
 //        if (livingEntity instanceof AbstractHorseEntity && livingEntity.hasPassenger(MinecraftClient.getInstance().player)) {
-//            args.set(7, OverlayTweaksConfig.INSTANCE.getConfig().horseOpacity / 100F);
+//            args.set(7, OverlayTweaksConfig.CONFIG.instance().horseOpacity / 100F);
 //        }
 //    }
 
     @Inject(method = "render(Lnet/minecraft/entity/LivingEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", at = @At("HEAD"), cancellable = true)
     private void cancelHorse(T livingEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci) {
-        if (livingEntity instanceof AbstractHorseEntity && livingEntity.hasPassenger(MinecraftClient.getInstance().player) && OverlayTweaksConfig.INSTANCE.getConfig().cancelHorse) {
+        if (livingEntity instanceof AbstractHorseEntity && livingEntity.hasPassenger(MinecraftClient.getInstance().player) && OverlayTweaksConfig.CONFIG.instance().cancelHorse) {
             ci.cancel();
         }
     }

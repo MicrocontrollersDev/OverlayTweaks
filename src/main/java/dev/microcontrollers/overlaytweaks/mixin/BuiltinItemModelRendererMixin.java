@@ -39,8 +39,8 @@ public class BuiltinItemModelRendererMixin {
         float cooldown = player.getItemCooldownManager().getCooldownProgress(Items.SHIELD, 0);
         // We want this to only change shields that are being held so it doesn't affect containers/dropped items.
         if (mode == ModelTransformationMode.FIRST_PERSON_LEFT_HAND || mode == ModelTransformationMode.FIRST_PERSON_RIGHT_HAND) {
-            args.set(7, OverlayTweaksConfig.INSTANCE.getConfig().customShieldOpacity / 100);
-            if (!OverlayTweaksConfig.INSTANCE.getConfig().colorShieldCooldown) return;
+            args.set(7, OverlayTweaksConfig.CONFIG.instance().customShieldOpacity / 100);
+            if (!OverlayTweaksConfig.CONFIG.instance().colorShieldCooldown) return;
             if (cooldown <= 1.0F && cooldown > 0.75F) {
                 args.set(5, 0F);
                 args.set(6, 0F);

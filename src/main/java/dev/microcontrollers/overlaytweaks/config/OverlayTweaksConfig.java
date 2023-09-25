@@ -5,81 +5,83 @@ import dev.isxander.yacl3.api.controller.DoubleSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.FloatSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
-import dev.isxander.yacl3.config.ConfigEntry;
-import dev.isxander.yacl3.config.ConfigInstance;
-import dev.isxander.yacl3.config.GsonConfigInstance;
+import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
+import dev.isxander.yacl3.config.v2.api.SerialEntry;
+import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 
 public class OverlayTweaksConfig {
-    public static final ConfigInstance<OverlayTweaksConfig> INSTANCE = GsonConfigInstance.createBuilder(OverlayTweaksConfig.class)
-            .setPath(FabricLoader.getInstance().getConfigDir().resolve("overlaytweaks.json"))
+    public static final ConfigClassHandler<OverlayTweaksConfig> CONFIG = ConfigClassHandler.createBuilder(OverlayTweaksConfig.class)
+            .serializer(config -> GsonConfigSerializerBuilder.create(config)
+                    .setPath(FabricLoader.getInstance().getConfigDir().resolve("overlaytweaks.json"))
+                    .build())
             .build();
 
     // Screens
 
-    @ConfigEntry public float containerOpacity = (208/255F) * 100F;
-    @ConfigEntry public float containerTextureOpacity = 100F;
-    @ConfigEntry public float tabPlayerListOpacity = (32/255F) * 100F;
-    @ConfigEntry public float moveTabDown = 10F;
-    @ConfigEntry public boolean moveTabBelowBossBars = false;
-    @ConfigEntry public boolean showPingInTab = false;
-    @ConfigEntry public boolean scalePingDisplay = false;
-    @ConfigEntry public boolean hideFalsePing = false;
-    @ConfigEntry public boolean disableScreenBobbing = false;
-    @ConfigEntry public boolean disableHandBobbing = false;
-    @ConfigEntry public boolean disableMapBobbing = true;
-    @ConfigEntry public boolean disableScreenDamage = false;
-    @ConfigEntry public boolean disableHandDamage = false;
+    @SerialEntry public float containerOpacity = (208/255F) * 100F;
+    @SerialEntry public float containerTextureOpacity = 100F;
+    @SerialEntry public float tabPlayerListOpacity = (32/255F) * 100F;
+    @SerialEntry public float moveTabDown = 10F;
+    @SerialEntry public boolean moveTabBelowBossBars = false;
+    @SerialEntry public boolean showPingInTab = false;
+    @SerialEntry public boolean scalePingDisplay = false;
+    @SerialEntry public boolean hideFalsePing = false;
+    @SerialEntry public boolean disableScreenBobbing = false;
+    @SerialEntry public boolean disableHandBobbing = false;
+    @SerialEntry public boolean disableMapBobbing = true;
+    @SerialEntry public boolean disableScreenDamage = false;
+    @SerialEntry public boolean disableHandDamage = false;
 
     // HUD
 
-    @ConfigEntry public float customShieldHeight = 0F;
-    @ConfigEntry public float customShieldOpacity = 100F;
-    @ConfigEntry public boolean colorShieldCooldown = false;
-    @ConfigEntry public boolean removeWaterOverlay = true;
-    @ConfigEntry public boolean removeWaterFov = true;
-    @ConfigEntry public boolean removeFireOverlay = true;
-    @ConfigEntry public double fireOverlayHeight = 0.0;
-    @ConfigEntry public float customFireOverlayOpacity = 100F;
-    @ConfigEntry public int moveHotbarBy = 2;
-    @ConfigEntry public boolean removeItemTooltip = false;
-    @ConfigEntry public boolean hotbarEnchantmentGlance = false;
-    @ConfigEntry public boolean hotbarDamageGlance = false;
-    @ConfigEntry public boolean disableTitles = false;
-    @ConfigEntry public float titleScale = 100F;
-    @ConfigEntry public boolean autoTitleScale = true;
-    @ConfigEntry public float titleOpacity = 100F;
-    @ConfigEntry public boolean removeAllToasts = false;
-    @ConfigEntry public boolean removeTutorialToasts = true;
+    @SerialEntry public float customShieldHeight = 0F;
+    @SerialEntry public float customShieldOpacity = 100F;
+    @SerialEntry public boolean colorShieldCooldown = false;
+    @SerialEntry public boolean removeWaterOverlay = true;
+    @SerialEntry public boolean removeWaterFov = true;
+    @SerialEntry public boolean removeFireOverlay = true;
+    @SerialEntry public double fireOverlayHeight = 0.0;
+    @SerialEntry public float customFireOverlayOpacity = 100F;
+    @SerialEntry public int moveHotbarBy = 2;
+    @SerialEntry public boolean removeItemTooltip = false;
+    @SerialEntry public boolean hotbarEnchantmentGlance = false;
+    @SerialEntry public boolean hotbarDamageGlance = false;
+    @SerialEntry public boolean disableTitles = false;
+    @SerialEntry public float titleScale = 100F;
+    @SerialEntry public boolean autoTitleScale = true;
+    @SerialEntry public float titleOpacity = 100F;
+    @SerialEntry public boolean removeAllToasts = false;
+    @SerialEntry public boolean removeTutorialToasts = true;
 
     // Crosshair
 
-    @ConfigEntry public boolean hideCrosshairInContainers = true;
-    @ConfigEntry public boolean showCrosshairInPerspective = false;
-    @ConfigEntry public boolean showCrosshairInSpectator = false;
-    @ConfigEntry public boolean removeCrosshairBlending = false;
-    @ConfigEntry public float crosshairOpacity = 100F;
-    @ConfigEntry public boolean useNormalCrosshair = false;
-    @ConfigEntry public boolean useDebugCrosshair = false;
-    @ConfigEntry public boolean fixDebugCooldown = true;
-    @ConfigEntry public int debugCrosshairSize = 10;
+    @SerialEntry public boolean hideCrosshairInContainers = true;
+    @SerialEntry public boolean showCrosshairInPerspective = false;
+    @SerialEntry public boolean showCrosshairInSpectator = false;
+    @SerialEntry public boolean removeCrosshairBlending = false;
+    @SerialEntry public float crosshairOpacity = 100F;
+    @SerialEntry public boolean useNormalCrosshair = false;
+    @SerialEntry public boolean useDebugCrosshair = false;
+    @SerialEntry public boolean fixDebugCooldown = true;
+    @SerialEntry public int debugCrosshairSize = 10;
 
     // Effects
 
-    @ConfigEntry public boolean cleanerNightVision = true;
-    @ConfigEntry public boolean removeElderGuardianJumpscare = false;
-    @ConfigEntry public boolean cancelHorse = false;
-    //@ConfigEntry public float horseOpacity = 100F;
-    @ConfigEntry public boolean potionGlint = false;
-    @ConfigEntry public float pumpkinOpacity = 100F;
-    @ConfigEntry public boolean customVignetteDarkness = false;
-    @ConfigEntry public float customVignetteDarknessValue = 0F;
+    @SerialEntry public boolean cleanerNightVision = true;
+    @SerialEntry public boolean removeElderGuardianJumpscare = false;
+    @SerialEntry public boolean cancelHorse = false;
+    //@SerialEntry public float horseOpacity = 100F;
+    @SerialEntry public boolean potionGlint = false;
+    @SerialEntry public float pumpkinOpacity = 100F;
+    @SerialEntry public boolean customVignetteDarkness = false;
+    @SerialEntry public float customVignetteDarknessValue = 0F;
 
     @SuppressWarnings("deprecation")
     public static Screen configScreen(Screen parent) {
-        return YetAnotherConfigLib.create(INSTANCE, ((defaults, config, builder) -> builder
+        return YetAnotherConfigLib.create(CONFIG, ((defaults, config, builder) -> builder
                 .title(Text.literal("Overlay Tweaks"))
 
                 // Screens
@@ -523,6 +525,14 @@ public class OverlayTweaksConfig {
                                 .build())
                         .build())
         )).generateScreen(parent);
+    }
+
+    public static void save() {
+        OverlayTweaksConfig.CONFIG.serializer().save();
+    }
+
+    public static void load() {
+        OverlayTweaksConfig.CONFIG.serializer().load();
     }
 
 }

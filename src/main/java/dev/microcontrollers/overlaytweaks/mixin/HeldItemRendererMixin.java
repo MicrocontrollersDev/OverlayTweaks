@@ -18,10 +18,10 @@ public class HeldItemRendererMixin {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         assert player != null;
         if (player.getMainHandStack().isOf(Items.SHIELD) && args.get(3).equals(Hand.MAIN_HAND)) {
-            args.set(6, (float) args.get(6) - OverlayTweaksConfig.INSTANCE.getConfig().customShieldHeight);
+            args.set(6, (float) args.get(6) - OverlayTweaksConfig.CONFIG.instance().customShieldHeight);
         }
         else if (player.getOffHandStack().isOf(Items.SHIELD) && args.get(3).equals(Hand.OFF_HAND)) {
-            args.set(6, (float) args.get(6) - OverlayTweaksConfig.INSTANCE.getConfig().customShieldHeight);
+            args.set(6, (float) args.get(6) - OverlayTweaksConfig.CONFIG.instance().customShieldHeight);
         }
     }
 

@@ -15,7 +15,7 @@ public class PotionItemMixin extends Item {
 
     @Override
     public boolean hasGlint(ItemStack stack) {
-        return OverlayTweaksConfig.INSTANCE.getConfig().potionGlint && !PotionUtil.getPotionEffects(stack).isEmpty();
+        return OverlayTweaksConfig.CONFIG.instance().potionGlint && !PotionUtil.getPotionEffects(stack).isEmpty();
     }
 
 }

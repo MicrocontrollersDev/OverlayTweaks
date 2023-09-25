@@ -26,7 +26,7 @@ public class PlayerListHudMixin {
 
     @ModifyConstant(method = "render", constant = @Constant(intValue = 553648127))
     private int tabOpacity(int opacity) {
-        return withTabOpacity(opacity, OverlayTweaksConfig.INSTANCE.getConfig().tabPlayerListOpacity / 100F);
+        return withTabOpacity(opacity, OverlayTweaksConfig.CONFIG.instance().tabPlayerListOpacity / 100F);
     }
 
     @Unique
@@ -45,9 +45,9 @@ public class PlayerListHudMixin {
         else if (ping >= 300 && ping < 400) color = -6458098;
         else if (ping >= 400) color = -4318437;
         String pingString = String.valueOf(ping);
-        if (OverlayTweaksConfig.INSTANCE.getConfig().hideFalsePing && (ping <= 1 || ping >= 999)) pingString = "";
-        if (OverlayTweaksConfig.INSTANCE.getConfig().showPingInTab) {
-            if (OverlayTweaksConfig.INSTANCE.getConfig().scalePingDisplay) {
+        if (OverlayTweaksConfig.CONFIG.instance().hideFalsePing && (ping <= 1 || ping >= 999)) pingString = "";
+        if (OverlayTweaksConfig.CONFIG.instance().showPingInTab) {
+            if (OverlayTweaksConfig.CONFIG.instance().scalePingDisplay) {
                 context.getMatrices().scale(0.5F, 0.5F, 0.5F);
                 context.drawTextWithShadow(MinecraftClient.getInstance().textRenderer, pingString, 2 * (x + width) - MinecraftClient.getInstance().textRenderer.getWidth(String.valueOf(ping)) - 4, 2 * y + 4, color);
                 context.getMatrices().scale(2F, 2F, 2F);
@@ -58,9 +58,9 @@ public class PlayerListHudMixin {
 
     @Inject(method = "render", at = @At("HEAD"))
     private void moveTabDown(DrawContext context, int scaledWindowWidth, Scoreboard scoreboard, ScoreboardObjective objective, CallbackInfo ci) {
-        float distance = OverlayTweaksConfig.INSTANCE.getConfig().moveTabBelowBossBars
+        float distance = OverlayTweaksConfig.CONFIG.instance().moveTabBelowBossBars
                 ? ((Shifter) client.inGameHud.getBossBarHud()).overlayTweaks$getShift()
-                : OverlayTweaksConfig.INSTANCE.getConfig().moveTabDown;
+                : OverlayTweaksConfig.CONFIG.instance().moveTabDown;
         context.getMatrices().translate(0, distance, 0);
     }
 

@@ -25,12 +25,12 @@ public class InGameOverlayRendererMixin {
 
     @Inject(method = "renderUnderwaterOverlay", at = @At("HEAD"), cancellable = true)
     private static void cancelWaterOverlay(MinecraftClient client, MatrixStack matrices, CallbackInfo ci) {
-        if (OverlayTweaksConfig.INSTANCE.getConfig().removeWaterOverlay) ci.cancel();
+        if (OverlayTweaksConfig.CONFIG.instance().removeWaterOverlay) ci.cancel();
     }
 
     @Inject(method = "renderFireOverlay", at = @At("HEAD"), cancellable = true)
     private static void cancelFireOverlay(MinecraftClient client, MatrixStack matrices, CallbackInfo ci) {
-        if (OverlayTweaksConfig.INSTANCE.getConfig().removeFireOverlay && client.player != null && (client.player.isCreative() || client.player.hasStatusEffect(FIRE_RESISTANCE)))
+        if (OverlayTweaksConfig.CONFIG.instance().removeFireOverlay && client.player != null && (client.player.isCreative() || client.player.hasStatusEffect(FIRE_RESISTANCE)))
             ci.cancel();
     }
 
@@ -38,7 +38,7 @@ public class InGameOverlayRendererMixin {
     private static void moveFireOverlay(MinecraftClient client, MatrixStack matrices, CallbackInfo ci) {
         hasPushed = true;
         matrices.push();
-        matrices.translate(0, OverlayTweaksConfig.INSTANCE.getConfig().fireOverlayHeight, 0);
+        matrices.translate(0, OverlayTweaksConfig.CONFIG.instance().fireOverlayHeight, 0);
     }
 
     @Inject(method = "renderFireOverlay", at = @At("RETURN"))
@@ -51,7 +51,7 @@ public class InGameOverlayRendererMixin {
 
     @ModifyArg(method = "renderFireOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/VertexConsumer;color(FFFF)Lnet/minecraft/client/render/VertexConsumer;"), index = 3)
     private static float enableFireOverlayOpacity(float opacity) {
-        return OverlayTweaksConfig.INSTANCE.getConfig().customFireOverlayOpacity / 100;
+        return OverlayTweaksConfig.CONFIG.instance().customFireOverlayOpacity / 100;
     }
 
 }

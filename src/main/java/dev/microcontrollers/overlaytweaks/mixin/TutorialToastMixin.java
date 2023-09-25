@@ -14,6 +14,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class TutorialToastMixin {
     @Inject(method = "draw", at = @At("HEAD"), cancellable = true)
     private void removeTutorialToast(DrawContext context, ToastManager manager, long startTime, CallbackInfoReturnable<Toast.Visibility> cir) {
-        if (OverlayTweaksConfig.INSTANCE.getConfig().removeTutorialToasts) cir.setReturnValue(Toast.Visibility.HIDE);
+        if (OverlayTweaksConfig.CONFIG.instance().removeTutorialToasts) cir.setReturnValue(Toast.Visibility.HIDE);
     }
 }
