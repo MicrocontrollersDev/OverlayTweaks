@@ -303,6 +303,11 @@ public class InGameHudMixin {
         if (OverlayTweaksConfig.CONFIG.instance().showCrosshairInSpectator) cir.setReturnValue(true);
     }
 
+    @Inject(method = "renderScoreboardSidebar", at = @At("HEAD"), cancellable = true)
+    private void removeScoreboardInDebug(CallbackInfo ci) {
+        if (OverlayTweaksConfig.CONFIG.instance().hideScoreboardInDebug && client.getDebugHud().shouldShowDebugHud()) ci.cancel();
+    }
+
     /*
         The following methods were taken from Easeify under LGPLV3
         https://github.com/Polyfrost/Easeify/blob/main/LICENSE

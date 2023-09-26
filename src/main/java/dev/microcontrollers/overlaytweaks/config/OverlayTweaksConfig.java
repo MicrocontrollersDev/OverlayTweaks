@@ -49,6 +49,8 @@ public class OverlayTweaksConfig {
     @SerialEntry public boolean removeItemTooltip = false;
     @SerialEntry public boolean hotbarEnchantmentGlance = false;
     @SerialEntry public boolean hotbarDamageGlance = false;
+    @SerialEntry public boolean hideScoreboardInDebug = false;
+    @SerialEntry public boolean classicDebugStyle = false;
     @SerialEntry public boolean disableTitles = false;
     @SerialEntry public float titleScale = 100F;
     @SerialEntry public boolean autoTitleScale = true;
@@ -104,7 +106,7 @@ public class OverlayTweaksConfig {
                                         .build())
                                 .option(Option.createBuilder(float.class)
                                         .name(Text.literal("Container Texture Opacity"))
-                                        .description(OptionDescription.of(Text.of("Set the transparency of container textures. Set to 0 to make it completely transparent. Currently does not work for anvils and smithing tables.")))
+                                        .description(OptionDescription.of(Text.of("Set the transparency of container textures. Set to 0 to make it completely transparent.")))
                                         .binding(100F, () -> config.containerTextureOpacity, newVal -> config.containerTextureOpacity = newVal)
                                         .controller(opt -> FloatSliderControllerBuilder.create(opt)
                                                 .valueFormatter(value -> Text.of(String.format("%,.0f", value) + "%"))
@@ -218,7 +220,7 @@ public class OverlayTweaksConfig {
                                         .build())
                                 .option(Option.createBuilder(float.class)
                                         .name(Text.literal("Shield Opacity"))
-                                        .description(OptionDescription.of(Text.of("The value for shield opacity.")))
+                                        .description(OptionDescription.of(Text.of("The value for shield opacity. Currently does not work for shields with banner designs.")))
                                         .binding(100F, () -> config.customShieldOpacity, newVal -> config.customShieldOpacity = newVal)
                                         .controller(opt -> FloatSliderControllerBuilder.create(opt)
                                                 .valueFormatter(value -> Text.of(String.format("%,.0f", value) + "%"))
@@ -308,6 +310,22 @@ public class OverlayTweaksConfig {
                                         .name(Text.literal("Damage Glance"))
                                         .description(OptionDescription.of(Text.of("Shows the attack damage of a held item above the hotbar.")))
                                         .binding(defaults.hotbarDamageGlance, () -> config.hotbarDamageGlance, newVal -> config.hotbarDamageGlance = newVal)
+                                        .controller(TickBoxControllerBuilder::create)
+                                        .build())
+                                .build())
+
+                        .group(OptionGroup.createBuilder()
+                                .name(Text.literal("Debug"))
+                                .option(Option.createBuilder(boolean.class)
+                                        .name(Text.literal("Hide Scoreboard When Debug Menu"))
+                                        .description(OptionDescription.of(Text.of("Removes the scoreboard when you have the F3 menu open.")))
+                                        .binding(defaults.hideScoreboardInDebug, () -> config.hideScoreboardInDebug, newVal -> config.hideScoreboardInDebug = newVal)
+                                        .controller(TickBoxControllerBuilder::create)
+                                        .build())
+                                .option(Option.createBuilder(boolean.class)
+                                        .name(Text.literal("Classic Debug Style"))
+                                        .description(OptionDescription.of(Text.of("Removes the background of the F3 text and renders the text with a shadow instead.")))
+                                        .binding(defaults.classicDebugStyle, () -> config.classicDebugStyle, newVal -> config.classicDebugStyle = newVal)
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
                                 .build())

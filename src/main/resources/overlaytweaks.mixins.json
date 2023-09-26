@@ -12,6 +12,7 @@
     "CartographyTableScreenMixin",
     "CraftingScreenMixin",
     "CreativeInventoryScreenMixin",
+    "DebugHudMixin",
     "ElderGuardianAppearanceParticleMixin",
     "EnchantmentScreenMixin",
     "ForgingScreenMixin",
