@@ -319,7 +319,7 @@ public class OverlayTweaksConfig {
                         .group(OptionGroup.createBuilder()
                                 .name(Text.literal("Debug"))
                                 .option(Option.createBuilder(boolean.class)
-                                        .name(Text.literal("Hide Scoreboard When Debug Menu"))
+                                        .name(Text.literal("Hide Scoreboard In Debug Menu"))
                                         .description(OptionDescription.of(Text.of("Removes the scoreboard when you have the F3 menu open.")))
                                         .binding(defaults.hideScoreboardInDebug, () -> config.hideScoreboardInDebug, newVal -> config.hideScoreboardInDebug = newVal)
                                         .controller(TickBoxControllerBuilder::create)
@@ -547,12 +547,7 @@ public class OverlayTweaksConfig {
         )).generateScreen(parent);
     }
 
-    public static void save() {
-        OverlayTweaksConfig.CONFIG.serializer().save();
-    }
-
     public static void load() {
         OverlayTweaksConfig.CONFIG.serializer().load();
     }
-
 }
