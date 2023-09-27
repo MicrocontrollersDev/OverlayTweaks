@@ -314,6 +314,8 @@ public class OverlayTweaksConfig {
                                         .build())
                                 .build())
 
+                        // F3 Debug
+
                         .group(OptionGroup.createBuilder()
                                 .name(Text.literal("Debug"))
                                 .option(Option.createBuilder(boolean.class)
@@ -429,7 +431,7 @@ public class OverlayTweaksConfig {
                                         .build())
                                 .build())
 
-                        // Debug
+                        // Debug Crosshair
 
                         .group(OptionGroup.createBuilder()
                                 .name(Text.literal("Debug"))

@@ -46,7 +46,7 @@ dependencies {
 	modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:${project.devauthVersion}")
 
 	// To test AppleSkin compatability. Remember to add ClothConfig to your run/mods https://modrinth.com/mod/cloth-config.
-	//modImplementation("maven.modrinth:appleskin:${project.appleSkinVersion}")
+	modImplementation("maven.modrinth:appleskin:${project.appleSkinVersion}")
 }
 
 processResources {

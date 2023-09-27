@@ -6,6 +6,7 @@
   "client": [
     "AbstractFurnaceScreenMixin",
     "AnvilScreenMixin",
+    "AppleSkinFixMixin",
     "BeaconScreenMixin",
     "BossBarHudMixin",
     "BuiltinItemModelRendererMixin",
@@ -35,5 +36,5 @@
   ],
   "injectors": {
     "defaultRequire": 1
-	}
+  }
 }
