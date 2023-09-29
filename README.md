@@ -101,6 +101,7 @@ Downloads can be found on the [Modrinth page](https://modrinth.com/mod/overlaytw
 - Cleaner Night Vision Decay
 - Remove Elder Guardian Jumpscare
 - Ridden Horse Opacity
+- Ridden Pig Opacity
 
 #### Full Screen Effects
 

@@ -203,6 +203,11 @@ public class InGameHudMixin {
         return k - OverlayTweaksConfig.CONFIG.instance().moveHotbarBy;
     }
 
+    @ModifyArg(method = "renderMountJumpBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIIIIIII)V"), index = 6)
+    private int moveMountJumpUp2(int k) {
+        return k - OverlayTweaksConfig.CONFIG.instance().moveHotbarBy;
+    }
+
     @ModifyArg(method = "renderExperienceBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V"), index = 2)
     private int moveExperienceUp(int l) {
         return l - OverlayTweaksConfig.CONFIG.instance().moveHotbarBy;

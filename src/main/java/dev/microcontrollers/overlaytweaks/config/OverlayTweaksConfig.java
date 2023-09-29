@@ -75,6 +75,7 @@ public class OverlayTweaksConfig {
     @SerialEntry public boolean cleanerNightVision = true;
     @SerialEntry public boolean removeElderGuardianJumpscare = false;
     @SerialEntry public float horseOpacity = 100F;
+    @SerialEntry public float pigOpacity = 100F;
     @SerialEntry public boolean potionGlint = false;
     @SerialEntry public float pumpkinOpacity = 100F;
     @SerialEntry public boolean customVignetteDarkness = false;
@@ -500,6 +501,15 @@ public class OverlayTweaksConfig {
                                         .name(Text.literal("Ridden Horse Opacity"))
                                         .description(OptionDescription.of(Text.of("Changes the opacity of the horse you are currently riding.")))
                                         .binding(100F, () -> config.horseOpacity, newVal -> config.horseOpacity = newVal)
+                                        .controller(opt -> FloatSliderControllerBuilder.create(opt)
+                                                .valueFormatter(value -> Text.of(String.format("%,.0f", value) + "%"))
+                                                .range(0F, 100F)
+                                                .step(1F))
+                                        .build())
+                                .option(Option.createBuilder(float.class)
+                                        .name(Text.literal("Ridden Pig Opacity"))
+                                        .description(OptionDescription.of(Text.of("Changes the opacity of the pig you are currently riding.")))
+                                        .binding(100F, () -> config.pigOpacity, newVal -> config.pigOpacity = newVal)
                                         .controller(opt -> FloatSliderControllerBuilder.create(opt)
                                                 .valueFormatter(value -> Text.of(String.format("%,.0f", value) + "%"))
                                                 .range(0F, 100F)
