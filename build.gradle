@@ -27,14 +27,13 @@ loom {
 	}
 }
 
-dependencies {
+dependencies { // To change the versions see the gradle.properties file
 	include(implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-fabric:${mixinExtrasVersion}")))
 
 	modImplementation("dev.isxander.yacl:yet-another-config-lib-fabric:${yaclVersion}")
 
 	modImplementation("com.terraformersmc:modmenu:${project.modMenuVersion}")
 
-	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
@@ -45,8 +44,9 @@ dependencies {
 	// DevAuth. Lets us log in with our own Minecraft account. Useful for testing tab features.
 	modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:${project.devauthVersion}")
 
-	// To test AppleSkin compatability. Remember to add ClothConfig to your run/mods https://modrinth.com/mod/cloth-config.
+	// To test AppleSkin compatability.
 	modImplementation("maven.modrinth:appleskin:${project.appleSkinVersion}")
+	modImplementation("maven.modrinth:cloth-config:${project.clothConfigVersion}")
 
 	// To test Detail Armor Bar compatability.
 	modImplementation("maven.modrinth:detail-armor-bar:${project.detailArmorBarVersion}")
