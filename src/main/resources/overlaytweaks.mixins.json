@@ -6,7 +6,6 @@
   "client": [
     "AbstractFurnaceScreenMixin",
     "AnvilScreenMixin",
-    "AppleSkinFixMixin",
     "BeaconScreenMixin",
     "BossBarHudMixin",
     "BuiltinItemModelRendererMixin",
@@ -32,7 +31,9 @@
     "ScreenMixin",
     "StonecutterScreenMixin",
     "ToastManagerMixin",
-    "TutorialToastMixin"
+    "TutorialToastMixin",
+    "compat.AppleSkinFixMixin",
+    "compat.ArmorBarRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

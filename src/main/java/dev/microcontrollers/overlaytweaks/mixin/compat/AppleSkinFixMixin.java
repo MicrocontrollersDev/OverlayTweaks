@@ -1,4 +1,4 @@
-package dev.microcontrollers.overlaytweaks.mixin;
+package dev.microcontrollers.overlaytweaks.mixin.compat;
 
 import dev.microcontrollers.overlaytweaks.config.OverlayTweaksConfig;
 import org.objectweb.asm.Opcodes;

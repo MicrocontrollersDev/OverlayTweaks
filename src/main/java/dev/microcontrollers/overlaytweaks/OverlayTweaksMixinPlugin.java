@@ -10,10 +10,12 @@ import java.util.Set;
 
 public class OverlayTweaksMixinPlugin implements IMixinConfigPlugin {
     private boolean isAppleSkin = false;
+    private boolean isDetailArmorBar = false;
 
     @Override
     public void onLoad(String mixinPackage) {
         if (FabricLoader.getInstance().isModLoaded("appleskin")) isAppleSkin = true;
+        if (FabricLoader.getInstance().isModLoaded("detailab")) isDetailArmorBar = true;
     }
 
     @Override
@@ -24,6 +26,7 @@ public class OverlayTweaksMixinPlugin implements IMixinConfigPlugin {
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         if (mixinClassName.equals("AppleSkinFixMixin")) return isAppleSkin;
+        if (mixinClassName.equals("ArmorBarRendererMixin")) return isDetailArmorBar;
         return true;
     }
 

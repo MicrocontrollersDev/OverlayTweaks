@@ -47,6 +47,9 @@ dependencies {
 
 	// To test AppleSkin compatability. Remember to add ClothConfig to your run/mods https://modrinth.com/mod/cloth-config.
 	modImplementation("maven.modrinth:appleskin:${project.appleSkinVersion}")
+
+	// To test Detail Armor Bar compatability.
+	modImplementation("maven.modrinth:detail-armor-bar:${project.detailArmorBarVersion}")
 }
 
 processResources {
