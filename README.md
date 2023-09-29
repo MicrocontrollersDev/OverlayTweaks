@@ -57,6 +57,11 @@ Downloads can be found on the [Modrinth page](https://modrinth.com/mod/overlaytw
 - Enchantment Glance
 - Damage Glance
 
+#### Debug
+
+- Hide Scoreboard in Debug
+- Classic Debug Style
+
 #### Titles
 
 - Disable Titles
@@ -95,11 +100,10 @@ Downloads can be found on the [Modrinth page](https://modrinth.com/mod/overlaytw
 
 - Cleaner Night Vision Decay
 - Remove Elder Guardian Jumpscare
-- Hide Ridden Horse
+- Ridden Horse Opacity
 
 #### Full Screen Effects
 
 - Pumpkin Overlay Opacity
 - Constant Vignette Darkness
 - Custom Vignette Darkness Value
-- 

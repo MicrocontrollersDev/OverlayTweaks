@@ -74,8 +74,7 @@ public class OverlayTweaksConfig {
 
     @SerialEntry public boolean cleanerNightVision = true;
     @SerialEntry public boolean removeElderGuardianJumpscare = false;
-    @SerialEntry public boolean cancelHorse = false;
-    //@SerialEntry public float horseOpacity = 100F;
+    @SerialEntry public float horseOpacity = 100F;
     @SerialEntry public boolean potionGlint = false;
     @SerialEntry public float pumpkinOpacity = 100F;
     @SerialEntry public boolean customVignetteDarkness = false;
@@ -497,21 +496,15 @@ public class OverlayTweaksConfig {
                                         .binding(defaults.removeElderGuardianJumpscare, () -> config.removeElderGuardianJumpscare, newVal -> config.removeElderGuardianJumpscare = newVal)
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
-                                .option(Option.createBuilder(boolean.class)
-                                        .name(Text.literal("Hide Ridden Horse"))
-                                        .description(OptionDescription.of(Text.of("Hides the horse you are currently riding for visibility.")))
-                                        .binding(defaults.cancelHorse, () -> config.cancelHorse, newVal -> config.cancelHorse = newVal)
-                                        .controller(TickBoxControllerBuilder::create)
+                                .option(Option.createBuilder(float.class)
+                                        .name(Text.literal("Ridden Horse Opacity"))
+                                        .description(OptionDescription.of(Text.of("Changes the opacity of the horse you are currently riding.")))
+                                        .binding(100F, () -> config.horseOpacity, newVal -> config.horseOpacity = newVal)
+                                        .controller(opt -> FloatSliderControllerBuilder.create(opt)
+                                                .valueFormatter(value -> Text.of(String.format("%,.0f", value) + "%"))
+                                                .range(0F, 100F)
+                                                .step(1F))
                                         .build())
-//                                .option(Option.createBuilder(float.class)
-//                                        .name(Text.literal("Ridden Horse Opacity"))
-//                                        .description(OptionDescription.of(Text.of("Changes the opacity of the horse you are currently riding.")))
-//                                        .binding(100F, () -> config.horseOpacity, newVal -> config.horseOpacity = newVal)
-//                                        .controller(opt -> FloatSliderControllerBuilder.create(opt)
-//                                                .valueFormatter(value -> Text.of(String.format("%,.0f", value) + "%"))
-//                                                .range(0F, 100F)
-//                                                .step(1F))
-//                                        .build())
                                 .build())
 
                         // Full Screen Effects
