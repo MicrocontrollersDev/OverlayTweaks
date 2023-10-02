@@ -10,6 +10,7 @@
     "BossBarHudMixin",
     "BuiltinItemModelRendererMixin",
     "CartographyTableScreenMixin",
+    "ClientWorldMixin",
     "CraftingScreenMixin",
     "CreativeInventoryScreenMixin",
     "DebugHudMixin",

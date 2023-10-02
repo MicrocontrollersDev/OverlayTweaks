@@ -73,6 +73,7 @@ public class OverlayTweaksConfig {
     // Effects
 
     @SerialEntry public boolean cleanerNightVision = true;
+    @SerialEntry public boolean cleanerSkyDarkness = true;
     @SerialEntry public boolean removeElderGuardianJumpscare = false;
     @SerialEntry public float horseOpacity = 100F;
     @SerialEntry public float pigOpacity = 100F;
@@ -489,6 +490,13 @@ public class OverlayTweaksConfig {
                                         .name(Text.literal("Cleaner Night Vision Decay"))
                                         .description(OptionDescription.of(Text.of("Makes the night vision loss a gradual effect instead of an on and off flicker.")))
                                         .binding(defaults.cleanerNightVision, () -> config.cleanerNightVision, newVal -> config.cleanerNightVision = newVal)
+                                        .controller(TickBoxControllerBuilder::create)
+                                        .build())
+                                .name(Text.literal("World"))
+                                .option(Option.createBuilder(boolean.class)
+                                        .name(Text.literal("Cleaner Sky Void Darkness"))
+                                        .description(OptionDescription.of(Text.of("Lowers the required height for the sky to turn black before getting closer to the void. This prevents the sky turning black at a high Y value.")))
+                                        .binding(defaults.cleanerSkyDarkness, () -> config.cleanerSkyDarkness, newVal -> config.cleanerSkyDarkness = newVal)
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
                                 .option(Option.createBuilder(boolean.class)
