@@ -16,7 +16,9 @@ import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 /*
@@ -27,8 +29,14 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 public class BuiltinItemModelRendererMixin {
     @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/entity/model/ShieldEntityModel;getLayer(Lnet/minecraft/util/Identifier;)Lnet/minecraft/client/render/RenderLayer;", ordinal = 0))
     private RenderLayer enableShieldTransparency(ShieldEntityModel model, Identifier texture, Operation<RenderLayer> original) {
-        // Might as well force this to be enabled since it doesn't seem to cause any issues.
-        return RenderLayer.getEntityTranslucent(texture);
+        if (OverlayTweaksConfig.CONFIG.instance().customShieldOpacity != 100) return RenderLayer.getEntityTranslucent(texture); // if 0, let's skip the consequences of translucency
+        return original.call (model, texture);
+    }
+
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/ModelPart;render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;IIFFFF)V"), cancellable = true)
+    private void cancelShieldRendering(ItemStack stack, ModelTransformationMode mode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, CallbackInfo ci) {
+        if (stack.isOf(Items.SHIELD) && (mode == ModelTransformationMode.FIRST_PERSON_LEFT_HAND || mode == ModelTransformationMode.FIRST_PERSON_RIGHT_HAND)
+                && OverlayTweaksConfig.CONFIG.instance().customShieldOpacity == 0) ci.cancel(); // if 0, just cancel it
     }
 
     // We need to get the parent method parameters for mode, so we need to use @ModifyArgs.
@@ -38,7 +46,8 @@ public class BuiltinItemModelRendererMixin {
         assert player != null;
         float cooldown = player.getItemCooldownManager().getCooldownProgress(Items.SHIELD, 0);
         // We want this to only change shields that are being held so it doesn't affect containers/dropped items, as well as first person only.
-        if (mode == ModelTransformationMode.FIRST_PERSON_LEFT_HAND || mode == ModelTransformationMode.FIRST_PERSON_RIGHT_HAND) {
+        if (mode == ModelTransformationMode.FIRST_PERSON_LEFT_HAND || mode == ModelTransformationMode.FIRST_PERSON_RIGHT_HAND
+                && OverlayTweaksConfig.CONFIG.instance().customShieldOpacity != 0) {
             args.set(7, OverlayTweaksConfig.CONFIG.instance().customShieldOpacity / 100);
             // shield colors
             if (!OverlayTweaksConfig.CONFIG.instance().colorShieldCooldown) return;

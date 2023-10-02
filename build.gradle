@@ -1,6 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.3-SNAPSHOT'
-	id 'io.github.juuxel.loom-vineflower' version '1.11.0'
+	id 'fabric-loom' version '1.4-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -28,17 +27,21 @@ loom {
 }
 
 dependencies { // To change the versions see the gradle.properties file
+	// Mixin Extras
 	include(implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-fabric:${mixinExtrasVersion}")))
 
+	// YACL
 	modImplementation("dev.isxander.yacl:yet-another-config-lib-fabric:${yaclVersion}")
 
+	// Mod Menu
 	modImplementation("com.terraformersmc:modmenu:${project.modMenuVersion}")
 
+	// Minecraft/Fabric
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	// Fabric API.
+	// Fabric API. Required for YACL
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	// DevAuth. Lets us log in with our own Minecraft account. Useful for testing tab features.
