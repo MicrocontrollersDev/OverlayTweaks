@@ -25,6 +25,7 @@
     "InGameHudMixin",
     "InGameOverlayRendererMixin",
     "InventoryScreenMixin",
+    "ItemEntityRendererMixin",
     "LivingEntityRendererMixin",
     "LoomScreenMixin",
     "PlayerListHudMixin",

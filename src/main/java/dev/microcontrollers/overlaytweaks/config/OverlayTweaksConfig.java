@@ -72,12 +72,14 @@ public class OverlayTweaksConfig {
 
     // Effects
 
+    @SerialEntry public boolean potionGlint = false;
+    @SerialEntry public boolean staticItems = false;
+    @SerialEntry public boolean unstackedItems = false;
     @SerialEntry public boolean cleanerNightVision = true;
     @SerialEntry public boolean cleanerSkyDarkness = true;
     @SerialEntry public boolean removeElderGuardianJumpscare = false;
     @SerialEntry public float horseOpacity = 100F;
     @SerialEntry public float pigOpacity = 100F;
-    @SerialEntry public boolean potionGlint = false;
     @SerialEntry public float pumpkinOpacity = 100F;
     @SerialEntry public boolean customVignetteDarkness = false;
     @SerialEntry public float customVignetteDarknessValue = 0F;
@@ -480,6 +482,18 @@ public class OverlayTweaksConfig {
                                         .binding(defaults.potionGlint, () -> config.potionGlint, newVal -> config.potionGlint = newVal)
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
+                                .option(Option.createBuilder(boolean.class)
+                                        .name(Text.literal("Static Items"))
+                                        .description(OptionDescription.of(Text.of("Remove the bobbing of items dropping in the ground.")))
+                                        .binding(defaults.staticItems, () -> config.staticItems, newVal -> config.staticItems = newVal)
+                                        .controller(TickBoxControllerBuilder::create)
+                                        .build())
+                                .option(Option.createBuilder(boolean.class)
+                                        .name(Text.literal("Unstacked Items"))
+                                        .description(OptionDescription.of(Text.of("Always render one item per stack of item.")))
+                                        .binding(defaults.unstackedItems, () -> config.unstackedItems, newVal -> config.unstackedItems = newVal)
+                                        .controller(TickBoxControllerBuilder::create)
+                                        .build())
                                 .build())
 
                         // World
@@ -492,7 +506,6 @@ public class OverlayTweaksConfig {
                                         .binding(defaults.cleanerNightVision, () -> config.cleanerNightVision, newVal -> config.cleanerNightVision = newVal)
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
-                                .name(Text.literal("World"))
                                 .option(Option.createBuilder(boolean.class)
                                         .name(Text.literal("Cleaner Sky Void Darkness"))
                                         .description(OptionDescription.of(Text.of("Lowers the required height for the sky to turn black before getting closer to the void. This prevents the sky turning black at a high Y value.")))
