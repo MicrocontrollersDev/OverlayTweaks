@@ -95,6 +95,8 @@ Downloads can be found on the [Modrinth page](https://modrinth.com/mod/overlaytw
 #### Items
 
 - Potion Glint
+- Static Items
+- Unstacked Items
 
 #### World
 
