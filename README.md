@@ -18,6 +18,7 @@ Contributing software and their licenses can be found at [OPEN_SOURCE_SOFTWARE.m
 
 - Container Background Opacity
 - Container Texture Opacity
+- Container Scale
 
 #### Tab List
 
