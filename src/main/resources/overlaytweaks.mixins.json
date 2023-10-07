@@ -28,6 +28,7 @@
     "ItemEntityRendererMixin",
     "LivingEntityRendererMixin",
     "LoomScreenMixin",
+    "MouseMixin",
     "PlayerListHudMixin",
     "PotionItemMixin",
     "ScreenMixin",

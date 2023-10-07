@@ -23,6 +23,7 @@ public class OverlayTweaksConfig {
 
     @SerialEntry public float containerOpacity = (208/255F) * 100F;
     @SerialEntry public float containerTextureOpacity = 100F;
+    @SerialEntry public int containerSize = 1;
     @SerialEntry public float tabPlayerListOpacity = (32/255F) * 100F;
     @SerialEntry public float moveTabDown = 10F;
     @SerialEntry public boolean moveTabBelowBossBars = false;
@@ -115,6 +116,15 @@ public class OverlayTweaksConfig {
                                                 .valueFormatter(value -> Text.of(String.format("%,.0f", value) + "%"))
                                                 .range(0F, 100F)
                                                 .step(1F))
+                                        .build())
+                                .option(Option.createBuilder(int.class)
+                                        .name(Text.literal("Container Size"))
+                                        .description(OptionDescription.of(Text.of("Change container size.")))
+                                        .binding(2, () -> config.containerSize, newVal -> config.containerSize = newVal)
+                                        .controller(opt -> IntegerSliderControllerBuilder.create(opt)
+                                                .valueFormatter(value -> Text.of(String.format("%01d", value) + "x"))
+                                                .range(1, 4)
+                                                .step(1))
                                         .build())
                                 .build())
 

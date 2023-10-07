@@ -22,4 +22,5 @@ public class BossBarHudMixin implements Shifter {
     public int overlayTweaks$getShift() {
         return distance;
     }
+
 }

@@ -22,4 +22,5 @@ public class Generic3x3ContainerScreenMixin {
         RenderSystem.disableBlend();
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
     }
+
 }

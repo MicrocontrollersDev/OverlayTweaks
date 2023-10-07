@@ -22,4 +22,5 @@ public class StonecutterScreenMixin {
         RenderSystem.disableBlend();
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
     }
+
 }

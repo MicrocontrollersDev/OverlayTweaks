@@ -14,4 +14,5 @@ public class ClientWorldMixin {
         if (world != null && OverlayTweaksConfig.CONFIG.instance().cleanerSkyDarkness) return world.getBottomY();
         return original;
     }
+
 }

@@ -35,4 +35,5 @@ public class CreativeInventoryScreenMixin {
         RenderSystem.disableBlend();
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
     }
+
 }

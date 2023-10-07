@@ -47,4 +47,5 @@ public class LivingEntityRendererMixin<T extends LivingEntity> {
             ci.cancel();
         }
     }
+
 }

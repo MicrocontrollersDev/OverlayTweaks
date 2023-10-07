@@ -25,4 +25,5 @@ public class ItemEntityRendererMixin {
     private void forceAmount(ItemStack stack, CallbackInfoReturnable<Integer> cir) {
         if (OverlayTweaksConfig.CONFIG.instance().unstackedItems) cir.setReturnValue(1);
     }
+
 }

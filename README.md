@@ -6,6 +6,10 @@ A small QOL mod that lets you alter vanilla's overlays in small ways.
 
 Downloads can be found on the [Modrinth page](https://modrinth.com/mod/overlaytweaks).
 
+## Licenses
+
+Contributing software and their licenses can be found at [OPEN_SOURCE_SOFTWARE.md](OPEN_SOURCE_SOFTWARE.md)
+
 ## Features
 
 ### Screens

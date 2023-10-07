@@ -16,4 +16,5 @@ public class TutorialToastMixin {
     private void removeTutorialToast(DrawContext context, ToastManager manager, long startTime, CallbackInfoReturnable<Toast.Visibility> cir) {
         if (OverlayTweaksConfig.CONFIG.instance().removeTutorialToasts) cir.setReturnValue(Toast.Visibility.HIDE);
     }
+
 }
