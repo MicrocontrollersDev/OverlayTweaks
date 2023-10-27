@@ -1,6 +1,6 @@
 # Open Source Software
 
-The following software is used in Overlay Tweaks.
+Code from the following software is used in Overlay Tweaks.
 
 | Software                                                              | License                                                                          |
 |-----------------------------------------------------------------------|----------------------------------------------------------------------------------|
