@@ -33,8 +33,6 @@
     "PotionItemMixin",
     "ScreenMixin",
     "StonecutterScreenMixin",
-    "ToastManagerMixin",
-    "TutorialToastMixin",
     "compat.AppleSkinFixMixin",
     "compat.ArmorBarRendererMixin"
   ],

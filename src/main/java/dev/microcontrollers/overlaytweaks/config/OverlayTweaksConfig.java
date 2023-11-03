@@ -56,8 +56,6 @@ public class OverlayTweaksConfig {
     @SerialEntry public float titleScale = 100F;
     @SerialEntry public boolean autoTitleScale = true;
     @SerialEntry public float titleOpacity = 100F;
-    @SerialEntry public boolean removeAllToasts = false;
-    @SerialEntry public boolean removeTutorialToasts = true;
 
     // Crosshair
 
@@ -378,24 +376,6 @@ public class OverlayTweaksConfig {
                                                 .valueFormatter(value -> Text.of(String.format("%,.0f", value) + "%"))
                                                 .range(0F, 100F)
                                                 .step(1F))
-                                        .build())
-                                .build())
-
-                        // Toasts
-
-                        .group(OptionGroup.createBuilder()
-                                .name(Text.literal("Toasts"))
-                                .option(Option.createBuilder(boolean.class)
-                                        .name(Text.literal("Remove All Toasts"))
-                                        .description(OptionDescription.of(Text.of("Prevents all toasts from rendering.")))
-                                        .binding(defaults.removeAllToasts, () -> config.removeAllToasts, newVal -> config.removeAllToasts = newVal)
-                                        .controller(TickBoxControllerBuilder::create)
-                                        .build())
-                                .option(Option.createBuilder(boolean.class)
-                                        .name(Text.literal("Remove Tutorial Toasts"))
-                                        .description(OptionDescription.of(Text.of("Removes only tutorial toasts when entering a world in a new instance. Does nothing if \"Remove all Toasts\" is enabled.")))
-                                        .binding(defaults.removeTutorialToasts, () -> config.removeTutorialToasts, newVal -> config.removeTutorialToasts = newVal)
-                                        .controller(TickBoxControllerBuilder::create)
                                         .build())
                                 .build())
                         .build())
