@@ -71,6 +71,12 @@ public class GameRendererMixin {
         return !OverlayTweaksConfig.CONFIG.instance().disableScreenDamage;
     }
 
+    /*
+        The following methods were taken from DulkirMod-Fabric under MPL 2.0
+        https://github.com/inglettronald/DulkirMod-Fabric/blob/master/LICENSE
+        No changes of note have been made other than adapting to this project
+     */
+
     @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;renderWithTooltip(Lnet/minecraft/client/gui/DrawContext;IIF)V"), index = 1)
     public int fixMouseX(int mouseX) {
         return (int) (mouseX / InvScale.getScale());
@@ -81,22 +87,16 @@ public class GameRendererMixin {
         return (int) (mouseY / InvScale.getScale());
     }
 
-    /*
-        The following methods were taken from DulkirMod-Fabric under MPL 2.0
-        https://github.com/inglettronald/DulkirMod-Fabric/blob/master/LICENSE
-        No changes of note have been made other than adapting to this project
-     */
-
     // ignore the error about method params
     @Inject(method = "render", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/MinecraftClient;currentScreen:Lnet/minecraft/client/gui/screen/Screen;", shift = At.Shift.BEFORE, ordinal = 1), locals = LocalCapture.CAPTURE_FAILHARD)
-    public void onScreenRenderPre(float tickDelta, long startTime, boolean tick, CallbackInfo ci, boolean bl, int i, int j, Window window, Matrix4f matrix4f, MatrixStack matrixStack, DrawContext drawContext) {
+    public void onScreenRenderPre(float tickDelta, long startTime, boolean tick, CallbackInfo ci, int i, int j, Window window, Matrix4f matrix4f, MatrixStack matrixStack, DrawContext drawContext) {
         drawContext.getMatrices().push();
         drawContext.getMatrices().scale(InvScale.getScale(), InvScale.getScale(), 1f);
     }
 
     // ignore the error about method params
     @Inject(method = "render", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/MinecraftClient;currentScreen:Lnet/minecraft/client/gui/screen/Screen;", shift = At.Shift.AFTER, ordinal = 3), locals = LocalCapture.CAPTURE_FAILHARD)
-    public void onScreenRenderPost(float tickDelta, long startTime, boolean tick, CallbackInfo ci, boolean bl, int i, int j, Window window, Matrix4f matrix4f, MatrixStack matrixStack, DrawContext drawContext) {
+    public void onScreenRenderPost(float tickDelta, long startTime, boolean tick, CallbackInfo ci, int i, int j, Window window, Matrix4f matrix4f, MatrixStack matrixStack, DrawContext drawContext) {
         drawContext.getMatrices().pop();
     }
 
