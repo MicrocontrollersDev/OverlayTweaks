@@ -142,7 +142,7 @@ public class InGameHudMixin {
         if ((stack.getItem() instanceof ToolItem item)) {
             itemDamage = item.getAttributeModifiers(stack, EquipmentSlot.MAINHAND).entries().stream()
                     .filter(entry -> entry.getValue().getOperation() == EntityAttributeModifier.Operation.ADDITION)
-                    .filter(entry -> "Weapon modifier".contains(entry.getValue().toString()) || "Tool modifier".contains(entry.getValue().toString())) // TODO: fix this cuz it doesnt work at all idk this stuff
+                    .filter(entry -> "Weapon modifier".contains(entry.getValue().getOperation().asString()) || "Tool modifier".contains(entry.getValue().getOperation().asString())) // TODO: fix this cuz it doesnt work at all idk this stuff
                     .mapToDouble(entry -> entry.getValue().getValue() + 1)
                     .findFirst().orElse(0d);
 
@@ -175,18 +175,17 @@ public class InGameHudMixin {
         int x = (context.getScaledWindowWidth() / 2) - (renderer.getWidth(itemDamageStr) / 2);
         int y = context.getScaledWindowHeight() - (player.isCreative() ? 31 : 47);
 
-        RenderSystem.enableBlend(); // without this the hotbar loses all translucency for some reason
-        RenderSystem.disableDepthTest();
         context.getMatrices().scale(0.5F, 0.5F, 0.5F);
         if (OverlayTweaksConfig.CONFIG.instance().hotbarEnchantmentGlance && !itemEnchantStr.isEmpty())
-            context.drawTextWithShadow(renderer, itemEnchantStr, context.getScaledWindowWidth() - (renderer.getWidth(itemEnchantStr) / 2), 2 * y - 15, 16777215); // white color
+            context.drawTextWithShadow(renderer, itemEnchantStr, context.getScaledWindowWidth() - (renderer.getWidth(itemEnchantStr) / 2), 2 * y - 5, 16777215); // white color
         if (OverlayTweaksConfig.CONFIG.instance().hotbarDamageGlance && !itemDamageStr.isEmpty())
-            context.drawTextWithShadow(renderer, itemDamageStr, 2 * x + 7, 2 * y + 3, 16777215); // white color
+            context.drawTextWithShadow(renderer, itemDamageStr, 2 * x + 7, 2 * y + 10, 16777215); // white color
         context.getMatrices().scale(2F, 2F, 2F);
+        RenderSystem.enableBlend(); // without this the hotbar loses all translucency for some reason
     }
 
     @Inject(method = "renderCrosshair", at = @At("HEAD"), cancellable = true)
-    private void isInContainer(DrawContext context, CallbackInfo ci) {
+    private void removeCrosshairInContainer(DrawContext context, CallbackInfo ci) {
         if (MinecraftClient.getInstance().currentScreen != null && OverlayTweaksConfig.CONFIG.instance().hideCrosshairInContainers)
             ci.cancel();
     }
