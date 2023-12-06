@@ -89,14 +89,14 @@ public class GameRendererMixin {
 
     // ignore the error about method params
     @Inject(method = "render", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/MinecraftClient;currentScreen:Lnet/minecraft/client/gui/screen/Screen;", shift = At.Shift.BEFORE, ordinal = 1), locals = LocalCapture.CAPTURE_FAILHARD)
-    public void onScreenRenderPre(float tickDelta, long startTime, boolean tick, CallbackInfo ci, boolean bl, int i, int j, Window window, Matrix4f matrix4f, MatrixStack matrixStack, DrawContext drawContext) {
+    public void onScreenRenderPre(float tickDelta, long startTime, boolean tick, CallbackInfo ci, float f, boolean bl, int i, int j, Window window, Matrix4f matrix4f, MatrixStack matrixStack, DrawContext drawContext) {
         drawContext.getMatrices().push();
         drawContext.getMatrices().scale(InvScale.getScale(), InvScale.getScale(), 1f);
     }
 
     // ignore the error about method params
     @Inject(method = "render", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/MinecraftClient;currentScreen:Lnet/minecraft/client/gui/screen/Screen;", shift = At.Shift.AFTER, ordinal = 3), locals = LocalCapture.CAPTURE_FAILHARD)
-    public void onScreenRenderPost(float tickDelta, long startTime, boolean tick, CallbackInfo ci, boolean bl, int i, int j, Window window, Matrix4f matrix4f, MatrixStack matrixStack, DrawContext drawContext) {
+    public void onScreenRenderPost(float tickDelta, long startTime, boolean tick, CallbackInfo ci, float f, boolean bl, int i, int j, Window window, Matrix4f matrix4f, MatrixStack matrixStack, DrawContext drawContext) {
         drawContext.getMatrices().pop();
     }
 

@@ -13,11 +13,8 @@ base {
 repositories {
 	maven { url = "https://jitpack.io" }
 	maven { url = "https://maven.isxander.dev/releases" } // required for yacl
-	maven { url = "https://oss.sonatype.org/content/repositories/snapshots" } // required for yacl for some reason
 	maven { url = "https://maven.terraformersmc.com/releases" } // required for modmenu
 	maven { url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1" } // required for oauth
-	maven { url = "https://api.modrinth.com/maven" } // required for appleskin compat
-	maven { url = "https://maven.quiltmc.org/repository/release" } // required for yacl for some reason
 }
 
 loom {
@@ -27,9 +24,6 @@ loom {
 }
 
 dependencies { // To change the versions see the gradle.properties file
-	// Mixin Extras
-	include(implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-fabric:${mixinExtrasVersion}")))
-
 	// YACL
 	modImplementation("dev.isxander.yacl:yet-another-config-lib-fabric:${yaclVersion}")
 
@@ -46,13 +40,6 @@ dependencies { // To change the versions see the gradle.properties file
 
 	// DevAuth. Lets us log in with our own Minecraft account. Useful for testing tab features.
 	modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:${project.devauthVersion}")
-
-	// To test AppleSkin compatability.
-	modImplementation("maven.modrinth:appleskin:${project.appleSkinVersion}")
-	modImplementation("maven.modrinth:cloth-config:${project.clothConfigVersion}")
-
-	// To test Detail Armor Bar compatability.
-	modImplementation("maven.modrinth:detail-armor-bar:${project.detailArmorBarVersion}")
 }
 
 processResources {
@@ -68,34 +55,12 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 java {
-	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-	// if it is present.
-	// If you remove this line, sources will not be generated.
-	withSourcesJar()
-
 	sourceCompatibility = JavaVersion.VERSION_17
 	targetCompatibility = JavaVersion.VERSION_17
 }
 
 jar {
 	from("LICENSE") {
-		rename { "${it}_${project.base.archivesName.get()}"}
-	}
-}
-
-// configure the maven publication
-publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			from components.java
-		}
-	}
-
-	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-	repositories {
-		// Add repositories to publish to here.
-		// Notice: This block does NOT have the same function as the block in the top level.
-		// The repositories here will be used for publishing your artifact, not for
-		// retrieving dependencies.
+		rename { "${it}_${project.base.archivesName.get()}" }
 	}
 }

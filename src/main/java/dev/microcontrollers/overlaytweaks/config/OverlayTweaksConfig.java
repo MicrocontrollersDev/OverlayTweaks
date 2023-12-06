@@ -46,7 +46,6 @@ public class OverlayTweaksConfig {
     @SerialEntry public boolean removeFireOverlay = true;
     @SerialEntry public double fireOverlayHeight = 0.0;
     @SerialEntry public float customFireOverlayOpacity = 100F;
-    @SerialEntry public int moveHotbarBy = 2;
     @SerialEntry public boolean removeItemTooltip = false;
     @SerialEntry public boolean hotbarEnchantmentGlance = false;
     @SerialEntry public boolean hotbarDamageGlance = false;
@@ -79,6 +78,8 @@ public class OverlayTweaksConfig {
     @SerialEntry public boolean removeElderGuardianJumpscare = false;
     @SerialEntry public float horseOpacity = 100F;
     @SerialEntry public float pigOpacity = 100F;
+    @SerialEntry public float striderOpacity = 100F;
+    @SerialEntry public float camelOpacity = 100F;
     @SerialEntry public float pumpkinOpacity = 100F;
     @SerialEntry public boolean customVignetteDarkness = false;
     @SerialEntry public float customVignetteDarknessValue = 0F;
@@ -297,14 +298,6 @@ public class OverlayTweaksConfig {
 
                         .group(OptionGroup.createBuilder()
                                 .name(Text.literal("Hotbar"))
-                                .option(Option.createBuilder(int.class)
-                                        .name(Text.literal("Move Hotbar Up"))
-                                        .description(OptionDescription.of(Text.of("Move the hotbar up by the specified amount.")))
-                                        .binding(2, () -> config.moveHotbarBy, newVal -> config.moveHotbarBy = newVal)
-                                        .controller(opt -> IntegerSliderControllerBuilder.create(opt)
-                                                .range(0, 5)
-                                                .step(1))
-                                        .build())
                                 .option(Option.createBuilder(boolean.class)
                                         .name(Text.literal("Remove Held Item Name Tooltip"))
                                         .description(OptionDescription.of(Text.of("Removes the tooltip above the hotbar when holding an item.")))
@@ -526,6 +519,24 @@ public class OverlayTweaksConfig {
                                                 .range(0F, 100F)
                                                 .step(1F))
                                         .build())
+                                .option(Option.createBuilder(float.class)
+                                        .name(Text.literal("Ridden Strider Opacity"))
+                                        .description(OptionDescription.of(Text.of("Changes the opacity of the strider you are currently riding.")))
+                                        .binding(100F, () -> config.striderOpacity, newVal -> config.striderOpacity = newVal)
+                                        .controller(opt -> FloatSliderControllerBuilder.create(opt)
+                                                .valueFormatter(value -> Text.of(String.format("%,.0f", value) + "%"))
+                                                .range(0F, 100F)
+                                                .step(1F))
+                                        .build())
+                                .option(Option.createBuilder(float.class)
+                                        .name(Text.literal("Ridden Camel Opacity"))
+                                        .description(OptionDescription.of(Text.of("Changes the opacity of the camel you are currently riding.")))
+                                        .binding(100F, () -> config.camelOpacity, newVal -> config.camelOpacity = newVal)
+                                        .controller(opt -> FloatSliderControllerBuilder.create(opt)
+                                                .valueFormatter(value -> Text.of(String.format("%,.0f", value) + "%"))
+                                                .range(0F, 100F)
+                                                .step(1F))
+                                        .build())
                                 .build())
 
                         // Full Screen Effects
@@ -564,4 +575,5 @@ public class OverlayTweaksConfig {
     public static void load() {
         OverlayTweaksConfig.CONFIG.serializer().load();
     }
+
 }

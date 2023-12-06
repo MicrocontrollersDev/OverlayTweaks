@@ -10,7 +10,7 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen;
     No changes of note have been made other than adapting to this project
  */
 public class InvScale {
-    public static float getScale() {
+    public static float getScale() { // TODO: Fix player model not showing in inventory
         if (MinecraftClient.getInstance().currentScreen instanceof HandledScreen<?>) {
             return OverlayTweaksConfig.CONFIG.instance().containerSize;
         }
