@@ -38,7 +38,7 @@ dependencies { // To change the versions see the gradle.properties file
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	// DevAuth. Lets us log in with our own Minecraft account. Useful for testing tab features.
-	modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:${project.devauthVersion}")
+	// modRuntimeOnly "me.djtheredstoner:DevAuth-fabric:${project.devauthVersion}"
 }
 
 processResources {

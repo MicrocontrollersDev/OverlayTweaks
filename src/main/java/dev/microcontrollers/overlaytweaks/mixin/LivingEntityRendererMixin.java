@@ -25,11 +25,15 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 @Mixin(LivingEntityRenderer.class)
 public class LivingEntityRendererMixin<T extends LivingEntity> {
     @WrapOperation(method = "getRenderLayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/entity/model/EntityModel;getLayer(Lnet/minecraft/util/Identifier;)Lnet/minecraft/client/render/RenderLayer;"))
-    private RenderLayer transparentHorseRenderLayer(EntityModel model, Identifier texture, Operation<RenderLayer> original) {
+    private RenderLayer transparentEntityRenderLayer(EntityModel model, Identifier texture, Operation<RenderLayer> original) {
         // let's not set this unless we absolutely have to
-        if (OverlayTweaksConfig.CONFIG.instance().horseOpacity == 100 && OverlayTweaksConfig.CONFIG.instance().pigOpacity == 100
-                && OverlayTweaksConfig.CONFIG.instance().striderOpacity == 100 && OverlayTweaksConfig.CONFIG.instance().camelOpacity == 100)
+        if ((OverlayTweaksConfig.CONFIG.instance().horseOpacity != 100  && texture.toString().contains("horse")) ||
+                (OverlayTweaksConfig.CONFIG.instance().pigOpacity != 100 && texture.toString().contains("pig")) ||
+                (OverlayTweaksConfig.CONFIG.instance().striderOpacity != 100 && texture.toString().contains("strider")) ||
+                (OverlayTweaksConfig.CONFIG.instance().camelOpacity != 100 && texture.toString().contains("camel"))) {
+//            if (!texture.toString().contains("villager"))
             return RenderLayer.getEntityTranslucent(texture);
+        }
         return original.call(model, texture);
     }
 
