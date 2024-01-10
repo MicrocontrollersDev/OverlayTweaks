@@ -35,6 +35,7 @@ public class OverlayTweaksConfig {
     @SerialEntry public boolean disableMapBobbing = true;
     @SerialEntry public boolean disableScreenDamage = false;
     @SerialEntry public boolean disableHandDamage = false;
+    @SerialEntry public float tabBackgroundOpacity = 100F;
 
     // HUD
 
@@ -208,6 +209,21 @@ public class OverlayTweaksConfig {
                                         .description(OptionDescription.of(Text.of("Disables the hand shake when taking damage.")))
                                         .binding(defaults.disableHandDamage, () -> config.disableHandDamage, newVal -> config.disableHandDamage = newVal)
                                         .controller(TickBoxControllerBuilder::create)
+                                        .build())
+                                .build())
+
+                        // GUIs
+
+                        .group(OptionGroup.createBuilder()
+                                .name(Text.literal("Tab Background Opacity"))
+                                .option(Option.createBuilder(float.class)
+                                        .name(Text.literal("Change Tab Background Opacity"))
+                                        .description(OptionDescription.of(Text.of("Replaces the black bar background in tab navigation screens. Use 60% for a value similar to Benonardo's standalone mod.")))
+                                        .binding(100F, () -> config.tabBackgroundOpacity, newVal -> config.tabBackgroundOpacity = newVal)
+                                        .controller(opt -> FloatSliderControllerBuilder.create(opt)
+                                                .valueFormatter(value -> Text.of(String.format("%,.0f", value)))
+                                                .range(0F, 100F)
+                                                .step(1F))
                                         .build())
                                 .build())
                         .build())

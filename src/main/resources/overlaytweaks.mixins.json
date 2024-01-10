@@ -31,7 +31,8 @@
     "PlayerListHudMixin",
     "PotionItemMixin",
     "ScreenMixin",
-    "StonecutterScreenMixin"
+    "StonecutterScreenMixin",
+    "TabNavigationWidgetMixin"
   ],
   "injectors": {
     "defaultRequire": 1
