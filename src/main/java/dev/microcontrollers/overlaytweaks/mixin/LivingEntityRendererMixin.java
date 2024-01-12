@@ -27,11 +27,13 @@ public class LivingEntityRendererMixin<T extends LivingEntity> {
     @WrapOperation(method = "getRenderLayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/entity/model/EntityModel;getLayer(Lnet/minecraft/util/Identifier;)Lnet/minecraft/client/render/RenderLayer;"))
     private RenderLayer transparentEntityRenderLayer(EntityModel model, Identifier texture, Operation<RenderLayer> original) {
         // let's not set this unless we absolutely have to
-        if ((OverlayTweaksConfig.CONFIG.instance().horseOpacity != 100  && texture.toString().contains("horse")) ||
+        // TODO: fix pig saddles
+        assert MinecraftClient.getInstance().player != null;
+        if (MinecraftClient.getInstance().player.hasVehicle() &&
+                ((OverlayTweaksConfig.CONFIG.instance().horseOpacity != 100  && texture.toString().contains("horse")) ||
                 (OverlayTweaksConfig.CONFIG.instance().pigOpacity != 100 && texture.toString().contains("pig")) ||
                 (OverlayTweaksConfig.CONFIG.instance().striderOpacity != 100 && texture.toString().contains("strider")) ||
-                (OverlayTweaksConfig.CONFIG.instance().camelOpacity != 100 && texture.toString().contains("camel"))) {
-//            if (!texture.toString().contains("villager"))
+                (OverlayTweaksConfig.CONFIG.instance().camelOpacity != 100 && texture.toString().contains("camel")))) {
             return RenderLayer.getEntityTranslucent(texture);
         }
         return original.call(model, texture);
@@ -53,15 +55,13 @@ public class LivingEntityRendererMixin<T extends LivingEntity> {
     // if it's 0, let's just cancel the rendering. this will also help prevent translucency sorting issues
     @Inject(method = "render(Lnet/minecraft/entity/LivingEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", at = @At("HEAD"), cancellable = true)
     private void cancelRiddenEntity(T livingEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci) {
-        if (livingEntity instanceof AbstractHorseEntity && livingEntity.hasPassenger(MinecraftClient.getInstance().player) && OverlayTweaksConfig.CONFIG.instance().horseOpacity == 0) {
-            ci.cancel();
-        } else if (livingEntity instanceof PigEntity && livingEntity.hasPassenger(MinecraftClient.getInstance().player) && OverlayTweaksConfig.CONFIG.instance().pigOpacity == 0) {
-            ci.cancel();
-        } else if (livingEntity instanceof StriderEntity && livingEntity.hasPassenger(MinecraftClient.getInstance().player) && OverlayTweaksConfig.CONFIG.instance().striderOpacity == 0) {
-            ci.cancel();
-        } else if (livingEntity instanceof CamelEntity && livingEntity.hasPassenger(MinecraftClient.getInstance().player) && OverlayTweaksConfig.CONFIG.instance().camelOpacity == 0) {
+        if ((livingEntity instanceof AbstractHorseEntity && OverlayTweaksConfig.CONFIG.instance().horseOpacity == 0) ||
+                (livingEntity instanceof PigEntity && OverlayTweaksConfig.CONFIG.instance().pigOpacity == 0) ||
+                (livingEntity instanceof StriderEntity && OverlayTweaksConfig.CONFIG.instance().striderOpacity == 0) ||
+                (livingEntity instanceof CamelEntity && OverlayTweaksConfig.CONFIG.instance().camelOpacity == 0)) {
             ci.cancel();
         }
+
     }
 
 }

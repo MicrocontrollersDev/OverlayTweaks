@@ -24,7 +24,7 @@ loom {
 
 dependencies { // To change the versions see the gradle.properties file
 	// YACL
-	modImplementation("dev.isxander.yacl:yet-another-config-lib-fabric:${yaclVersion}")
+	modImplementation("dev.isxander.yacl:yet-another-config-lib-fabric:${project.yaclVersion}")
 
 	// Mod Menu
 	modImplementation("com.terraformersmc:modmenu:${project.modMenuVersion}")
@@ -38,7 +38,7 @@ dependencies { // To change the versions see the gradle.properties file
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	// DevAuth. Lets us log in with our own Minecraft account. Useful for testing tab features.
-	modRuntimeOnly "me.djtheredstoner:DevAuth-fabric:${project.devauthVersion}"
+	modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:${project.devauthVersion}")
 }
 
 processResources {
@@ -53,6 +53,20 @@ tasks.withType(JavaCompile).configureEach {
 	it.options.release = 17
 }
 
+sourceSets {
+	launchWarn {
+		java {
+			srcDir "src/desktop/java"
+			include "**/LaunchWarn.java"
+		}
+	}
+}
+
+tasks.named('compileLaunchWarnJava') {
+	sourceCompatibility = JavaVersion.VERSION_1_8
+	targetCompatibility = JavaVersion.VERSION_1_8
+}
+
 java {
 	sourceCompatibility = JavaVersion.VERSION_17
 	targetCompatibility = JavaVersion.VERSION_17
@@ -62,4 +76,7 @@ jar {
 	from("LICENSE") {
 		rename { "${it}_${project.base.archivesName.get()}" }
 	}
+
+	from sourceSets.launchWarn.output.classesDirs
+	manifest.attributes["Main-Class"] = "${project.main_class}"
 }
