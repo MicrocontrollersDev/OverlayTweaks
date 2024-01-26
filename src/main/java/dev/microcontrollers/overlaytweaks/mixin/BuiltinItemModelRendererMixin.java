@@ -51,14 +51,18 @@ public class BuiltinItemModelRendererMixin {
             args.set(7, OverlayTweaksConfig.CONFIG.instance().customShieldOpacity / 100);
             // shield colors
             if (!OverlayTweaksConfig.CONFIG.instance().colorShieldCooldown) return;
-            if (cooldown <= 1.0F && cooldown > 0.75F) {
-                args.set(5, 0F);
-                args.set(6, 0F);
-            } else if (cooldown <= 0.75F && cooldown > 0.35F) {
-                args.set(5, 0.37F);
-                args.set(6, 0.2F);
+            if (cooldown <= 1.0F && cooldown > 0.65F) {
+                args.set(4, OverlayTweaksConfig.CONFIG.instance().shieldColorHigh.getRed() / 255F);
+                args.set(5, OverlayTweaksConfig.CONFIG.instance().shieldColorHigh.getGreen() / 255F);
+                args.set(6, OverlayTweaksConfig.CONFIG.instance().shieldColorHigh.getBlue() / 255F);
+            } else if (cooldown <= 0.65F && cooldown > 0.35F) {
+                args.set(4, OverlayTweaksConfig.CONFIG.instance().shieldColorMid.getRed() / 255F);
+                args.set(5, OverlayTweaksConfig.CONFIG.instance().shieldColorMid.getGreen() / 255F);
+                args.set(6, OverlayTweaksConfig.CONFIG.instance().shieldColorMid.getBlue() / 255F);
             } else if (cooldown <= 0.35F && cooldown > 0F) {
-                args.set(6, 0F);
+                args.set(4, OverlayTweaksConfig.CONFIG.instance().shieldColorLow.getRed() / 255F);
+                args.set(5, OverlayTweaksConfig.CONFIG.instance().shieldColorLow.getGreen() / 255F);
+                args.set(6, OverlayTweaksConfig.CONFIG.instance().shieldColorLow.getBlue() / 255F);
             }
         }
     }

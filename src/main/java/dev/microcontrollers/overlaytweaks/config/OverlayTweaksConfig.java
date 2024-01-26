@@ -8,9 +8,12 @@ import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
+import dev.isxander.yacl3.gui.controllers.ColorController;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
+
+import java.awt.*;
 
 public class OverlayTweaksConfig {
     public static final ConfigClassHandler<OverlayTweaksConfig> CONFIG = ConfigClassHandler.createBuilder(OverlayTweaksConfig.class)
@@ -24,12 +27,18 @@ public class OverlayTweaksConfig {
     @SerialEntry public float containerOpacity = (208/255F) * 100F;
     @SerialEntry public float containerTextureOpacity = 100F;
     @SerialEntry public int containerSize = 1;
-    @SerialEntry public float tabPlayerListOpacity = (32/255F) * 100F;
+    @SerialEntry public Color tabPlayerListColor = new Color(255, 255, 255, 32);
     @SerialEntry public float moveTabDown = 10F;
     @SerialEntry public boolean moveTabBelowBossBars = false;
     @SerialEntry public boolean showPingInTab = false;
     @SerialEntry public boolean scalePingDisplay = false;
     @SerialEntry public boolean hideFalsePing = false;
+    @SerialEntry public Color pingColorOne = new Color(-15466667);
+    @SerialEntry public Color pingColorTwo = new Color(-14773218);
+    @SerialEntry public Color pingColorThree = new Color(-4733653);
+    @SerialEntry public Color pingColorFour = new Color(-13779);
+    @SerialEntry public Color pingColorFive = new Color(-6458098);
+    @SerialEntry public Color pingColorSix = new Color(-4318437);
     @SerialEntry public boolean disableScreenBobbing = false;
     @SerialEntry public boolean disableHandBobbing = false;
     @SerialEntry public boolean disableMapBobbing = true;
@@ -42,6 +51,9 @@ public class OverlayTweaksConfig {
     @SerialEntry public float customShieldHeight = 0F;
     @SerialEntry public float customShieldOpacity = 100F;
     @SerialEntry public boolean colorShieldCooldown = false;
+    @SerialEntry public Color shieldColorHigh = new Color(1F, 0F, 0F);
+    @SerialEntry public Color shieldColorMid = new Color(0.75F, 0.37F, 0.2F);
+    @SerialEntry public Color shieldColorLow = new Color(1F, 1F, 0F);
     @SerialEntry public boolean removeWaterOverlay = true;
     @SerialEntry public boolean removeWaterFov = true;
     @SerialEntry public boolean removeFireOverlay = true;
@@ -49,7 +61,9 @@ public class OverlayTweaksConfig {
     @SerialEntry public float customFireOverlayOpacity = 100F;
     @SerialEntry public boolean removeItemTooltip = false;
     @SerialEntry public boolean hotbarEnchantmentGlance = false;
+    @SerialEntry public Color enchantmentGlanceColor = new Color(16777215);
     @SerialEntry public boolean hotbarDamageGlance = false;
+    @SerialEntry public Color damageGlanceColor = new Color(16777215);
     @SerialEntry public boolean hideScoreboardInDebug = false;
     @SerialEntry public boolean classicDebugStyle = false;
     @SerialEntry public boolean disableTitles = false;
@@ -132,14 +146,10 @@ public class OverlayTweaksConfig {
 
                         .group(OptionGroup.createBuilder()
                                 .name(Text.literal("Tab List"))
-                                .option(Option.createBuilder(float.class)
-                                        .name(Text.literal("Tab Player List Background Opacity"))
-                                        .description(OptionDescription.of(Text.of("Set the transparency of the player list in tab. Set to 0 to make it completely transparent.")))
-                                        .binding((32/255F) * 100F, () -> config.tabPlayerListOpacity, newVal -> config.tabPlayerListOpacity = newVal)
-                                        .controller(opt -> FloatSliderControllerBuilder.create(opt)
-                                                .valueFormatter(value -> Text.of(String.format("%,.0f", value) + "%"))
-                                                .range(0F, 100F)
-                                                .step(1F))
+                                .option(Option.<Color>createBuilder()
+                                        .name(Text.literal("Tab Widget Color"))
+                                        .binding(defaults.tabPlayerListColor, () -> config.tabPlayerListColor, value -> config.tabPlayerListColor = value)
+                                        .customController(opt -> new ColorController(opt, true))
                                         .build())
                                 .option(Option.createBuilder(float.class)
                                         .name(Text.literal("Move Tab List Down"))
@@ -173,6 +183,36 @@ public class OverlayTweaksConfig {
                                         .description(OptionDescription.of(Text.of("Some servers force a ping of 0 or 1 or very high numbers to hide players ping. This will hide the number from being displayed as it is useless.")))
                                         .binding(defaults.hideFalsePing, () -> config.hideFalsePing, newVal -> config.hideFalsePing = newVal)
                                         .controller(TickBoxControllerBuilder::create)
+                                        .build())
+                                .option(Option.<Color>createBuilder()
+                                        .name(Text.literal("Ping Between 0 and 75"))
+                                        .binding(defaults.pingColorOne, () -> config.pingColorOne, value -> config.pingColorOne = value)
+                                        .customController(opt -> new ColorController(opt, false))
+                                        .build())
+                                .option(Option.<Color>createBuilder()
+                                        .name(Text.literal("Ping Between 75 and 145"))
+                                        .binding(defaults.pingColorTwo, () -> config.pingColorTwo, value -> config.pingColorTwo = value)
+                                        .customController(opt -> new ColorController(opt, false))
+                                        .build())
+                                .option(Option.<Color>createBuilder()
+                                        .name(Text.literal("Ping Between 200 and 300"))
+                                        .binding(defaults.pingColorThree, () -> config.pingColorThree, value -> config.pingColorThree = value)
+                                        .customController(opt -> new ColorController(opt, false))
+                                        .build())
+                                .option(Option.<Color>createBuilder()
+                                        .name(Text.literal("Ping Between 300 and 400"))
+                                        .binding(defaults.pingColorFour, () -> config.pingColorFour, value -> config.pingColorFour = value)
+                                        .customController(opt -> new ColorController(opt, false))
+                                        .build())
+                                .option(Option.<Color>createBuilder()
+                                        .name(Text.literal("Ping Above 400"))
+                                        .binding(defaults.pingColorFive, () -> config.pingColorFive, value -> config.pingColorFive = value)
+                                        .customController(opt -> new ColorController(opt, false))
+                                        .build())
+                                .option(Option.<Color>createBuilder()
+                                        .name(Text.literal("Ping Between 0 and 75"))
+                                        .binding(defaults.pingColorSix, () -> config.pingColorSix, value -> config.pingColorSix = value)
+                                        .customController(opt -> new ColorController(opt, false))
                                         .build())
                                 .build())
 
@@ -261,6 +301,21 @@ public class OverlayTweaksConfig {
                                         .binding(defaults.colorShieldCooldown, () -> config.colorShieldCooldown, newVal -> config.colorShieldCooldown = newVal)
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
+                                .option(Option.<Color>createBuilder()
+                                        .name(Text.literal("Shield Color High"))
+                                        .binding(defaults.shieldColorHigh, () -> config.shieldColorHigh, value -> config.shieldColorHigh = value)
+                                        .customController(opt -> new ColorController(opt, false))
+                                        .build())
+                                .option(Option.<Color>createBuilder()
+                                        .name(Text.literal("Shield Color Mid"))
+                                        .binding(defaults.shieldColorMid, () -> config.shieldColorMid, value -> config.shieldColorMid = value)
+                                        .customController(opt -> new ColorController(opt, false))
+                                        .build())
+                                .option(Option.<Color>createBuilder()
+                                        .name(Text.literal("Shield Color Low"))
+                                        .binding(defaults.shieldColorLow, () -> config.shieldColorLow, value -> config.shieldColorLow = value)
+                                        .customController(opt -> new ColorController(opt, false))
+                                        .build())
                                 .build())
 
                         // Water
@@ -326,11 +381,21 @@ public class OverlayTweaksConfig {
                                         .binding(defaults.hotbarEnchantmentGlance, () -> config.hotbarEnchantmentGlance, newVal -> config.hotbarEnchantmentGlance = newVal)
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
+                                .option(Option.<Color>createBuilder()
+                                        .name(Text.literal("Enchantment Glance Color"))
+                                        .binding(defaults.enchantmentGlanceColor, () -> config.enchantmentGlanceColor, value -> config.enchantmentGlanceColor = value)
+                                        .customController(opt -> new ColorController(opt, true))
+                                        .build())
                                 .option(Option.createBuilder(boolean.class)
                                         .name(Text.literal("Damage Glance"))
                                         .description(OptionDescription.of(Text.of("Shows the attack damage of a held item above the hotbar.")))
                                         .binding(defaults.hotbarDamageGlance, () -> config.hotbarDamageGlance, newVal -> config.hotbarDamageGlance = newVal)
                                         .controller(TickBoxControllerBuilder::create)
+                                        .build())
+                                .option(Option.<Color>createBuilder()
+                                        .name(Text.literal("Damage Glance Color"))
+                                        .binding(defaults.damageGlanceColor, () -> config.damageGlanceColor, value -> config.damageGlanceColor = value)
+                                        .customController(opt -> new ColorController(opt, true))
                                         .build())
                                 .build())
 
@@ -586,10 +651,6 @@ public class OverlayTweaksConfig {
                                 .build())
                         .build())
         )).generateScreen(parent);
-    }
-
-    public static void load() {
-        OverlayTweaksConfig.CONFIG.serializer().load();
     }
 
 }
