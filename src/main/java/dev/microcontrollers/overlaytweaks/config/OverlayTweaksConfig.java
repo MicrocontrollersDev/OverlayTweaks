@@ -96,6 +96,7 @@ public class OverlayTweaksConfig {
     @SerialEntry public float striderOpacity = 100F;
     @SerialEntry public float camelOpacity = 100F;
     @SerialEntry public float pumpkinOpacity = 100F;
+    @SerialEntry public float freezingOpacity = 100F;
     @SerialEntry public boolean customVignetteDarkness = false;
     @SerialEntry public float customVignetteDarknessValue = 0F;
 
@@ -633,6 +634,15 @@ public class OverlayTweaksConfig {
                                                 .range(0F, 100F)
                                                 .step(1F))
                                         .build())
+                                .option(Option.createBuilder(float.class)
+                                        .name(Text.literal("Freezing Overlay Opacity"))
+                                        .description(OptionDescription.of(Text.of("Changes the opacity of the freezing overlay when wearing inside powdered snow.")))
+                                        .binding(100F, () -> config.freezingOpacity, newVal -> config.freezingOpacity = newVal)
+                                        .controller(opt -> FloatSliderControllerBuilder.create(opt)
+                                                .valueFormatter(value -> Text.of(String.format("%,.0f", value) + "%"))
+                                                .range(0F, 100F)
+                                                .step(1F))
+                                        .build())
                                 .option(Option.createBuilder(boolean.class)
                                         .name(Text.literal("Constant Vignette Darkness"))
                                         .description(OptionDescription.of(Text.of("Apply a constant vignette regardless of sky light level.")))
@@ -640,7 +650,7 @@ public class OverlayTweaksConfig {
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
                                 .option(Option.createBuilder(float.class)
-                                        .name(Text.literal("Custom Vignette Darkness Value"))
+                                        .name(Text.literal("Constant Vignette Darkness Value"))
                                         .description(OptionDescription.of(Text.of("The value for constant vignette.")))
                                         .binding(0F, () -> config.customVignetteDarknessValue, newVal -> config.customVignetteDarknessValue = newVal)
                                         .controller(opt -> FloatSliderControllerBuilder.create(opt)

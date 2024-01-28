@@ -22,7 +22,7 @@ Contributing software and their licenses can be found at [OPEN_SOURCE_SOFTWARE.m
 
 #### Tab List
 
-- Tab Player List Background Opacity
+- Tab Widget Color
 - Move Tab List Down
 - Move Tab List Below Bossbars
 - Show Numerical Ping
@@ -36,6 +36,10 @@ Contributing software and their licenses can be found at [OPEN_SOURCE_SOFTWARE.m
 - Disable Map Bobbing
 - Disable Screen Damage Tilt
 - Disable Hand Damage Tilt
+
+#### Tab Background Opacity
+
+- Change Tab Background Opacity
 
 ### HUD
 
@@ -57,7 +61,6 @@ Contributing software and their licenses can be found at [OPEN_SOURCE_SOFTWARE.m
 
 #### Hotbar
 
-- Move Hotbar Up
 - Remove Held Item Name Tooltip
 - Enchantment Glance
 - Damage Glance
@@ -83,9 +86,10 @@ Contributing software and their licenses can be found at [OPEN_SOURCE_SOFTWARE.m
 
 #### General
 
-- Hide Crosshair in Containers
-- Show Crosshair in Third Person
-- Remove Crosshair Blending
+- Hide in Containers
+- Show in Third Person
+- Always Show in Spectator
+- Remove Blending
 - Crosshair Opacity
 
 #### Debug
@@ -109,9 +113,12 @@ Contributing software and their licenses can be found at [OPEN_SOURCE_SOFTWARE.m
 - Remove Elder Guardian Jumpscare
 - Ridden Horse Opacity
 - Ridden Pig Opacity
+- Ridden Strider Opacity
+- Ridden Camel Opacity
 
 #### Full Screen Effects
 
 - Pumpkin Overlay Opacity
+- Freezing Overlay Opacity
 - Constant Vignette Darkness
-- Custom Vignette Darkness Value
+- Constant Vignette Darkness Value
