@@ -636,7 +636,7 @@ public class OverlayTweaksConfig {
                                         .build())
                                 .option(Option.createBuilder(float.class)
                                         .name(Text.literal("Freezing Overlay Opacity"))
-                                        .description(OptionDescription.of(Text.of("Changes the opacity of the freezing overlay when wearing inside powdered snow.")))
+                                        .description(OptionDescription.of(Text.of("Changes the maximum opacity of the freezing overlay when inside powdered snow. It will take the same amount of time to reach the maximum opacity as vanilla does.")))
                                         .binding(100F, () -> config.freezingOpacity, newVal -> config.freezingOpacity = newVal)
                                         .controller(opt -> FloatSliderControllerBuilder.create(opt)
                                                 .valueFormatter(value -> Text.of(String.format("%,.0f", value) + "%"))

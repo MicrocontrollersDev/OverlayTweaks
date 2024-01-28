@@ -29,6 +29,7 @@ import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -78,9 +79,9 @@ public class InGameHudMixin {
         return OverlayTweaksConfig.CONFIG.instance().pumpkinOpacity / 100F;
     }
 
-    @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;renderOverlay(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/util/Identifier;F)V", ordinal = 1), index = 2)
-    private float changeFreezingOpacity(float opacity) {
-        return OverlayTweaksConfig.CONFIG.instance().freezingOpacity / 100F;
+    @ModifyArgs(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;renderOverlay(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/util/Identifier;F)V", ordinal = 1))
+    private void changeFreezingOpacity(Args args) {
+        args.set(2, (float) args.get(2) * OverlayTweaksConfig.CONFIG.instance().freezingOpacity / 100F);
     }
 
     @Inject(method = "renderHeldItemTooltip", at = @At("HEAD"), cancellable = true)
