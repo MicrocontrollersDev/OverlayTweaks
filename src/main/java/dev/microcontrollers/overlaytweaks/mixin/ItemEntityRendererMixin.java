@@ -1,18 +1,16 @@
 package dev.microcontrollers.overlaytweaks.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import dev.microcontrollers.overlaytweaks.config.OverlayTweaksConfig;
 import net.minecraft.client.render.entity.ItemEntityRenderer;
-import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /*
     The following methods were taken from Easeify under LGPLV3
     https://github.com/Polyfrost/Easeify/blob/main/LICENSE
-    No code has been changed except variables names
+    Code is mostly the same with name changes and better mixin compatability
  */
 @Mixin(ItemEntityRenderer.class)
 public class ItemEntityRendererMixin {
@@ -21,9 +19,10 @@ public class ItemEntityRendererMixin {
         return OverlayTweaksConfig.CONFIG.instance().staticItems ? -1.0f : value;
     }
 
-    @Inject(method = "getRenderedAmount", at = @At("HEAD"), cancellable = true)
-    private void forceAmount(ItemStack stack, CallbackInfoReturnable<Integer> cir) {
-        if (OverlayTweaksConfig.CONFIG.instance().unstackedItems) cir.setReturnValue(1);
+    @ModifyReturnValue(method = "getRenderedAmount", at = @At("RETURN"))
+    private int forceStackAmount(int original) {
+        if (OverlayTweaksConfig.CONFIG.instance().unstackedItems) return 1;
+        return original;
     }
 
 }

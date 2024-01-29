@@ -1,6 +1,7 @@
 package dev.microcontrollers.overlaytweaks.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -24,11 +25,9 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.hit.HitResult;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 import java.util.HashMap;
@@ -249,9 +248,10 @@ public class InGameHudMixin {
         RenderSystem.defaultBlendFunc();
     }
 
-    @Inject(method = "shouldRenderSpectatorCrosshair", at = @At("HEAD"), cancellable = true)
-    private void showInSpectator(HitResult hitResult, CallbackInfoReturnable<Boolean> cir) {
-        if (OverlayTweaksConfig.CONFIG.instance().showCrosshairInSpectator) cir.setReturnValue(true);
+    @ModifyReturnValue(method = "shouldRenderSpectatorCrosshair", at = @At("RETURN"))
+    private boolean showInSpectator(boolean original) {
+        if (OverlayTweaksConfig.CONFIG.instance().showCrosshairInSpectator) return true;
+        return original;
     }
 
     @Inject(method = "renderScoreboardSidebar", at = @At("HEAD"), cancellable = true)

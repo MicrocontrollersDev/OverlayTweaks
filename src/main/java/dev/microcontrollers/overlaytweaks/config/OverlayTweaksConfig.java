@@ -70,6 +70,7 @@ public class OverlayTweaksConfig {
     @SerialEntry public float titleScale = 100F;
     @SerialEntry public boolean autoTitleScale = true;
     @SerialEntry public float titleOpacity = 100F;
+    @SerialEntry public Color subtitleColor = new Color(0F, 0F, 0F, 1F);
 
     // Crosshair
 
@@ -453,6 +454,19 @@ public class OverlayTweaksConfig {
                                                 .step(1F))
                                         .build())
                                 .build())
+
+                        // Subtitle
+
+                        .group(OptionGroup.createBuilder()
+                                .name(Text.literal("Subtitles"))
+                                .option(Option.<Color>createBuilder()
+                                        .name(Text.literal("Subtitle Background Color"))
+                                        .binding(defaults.subtitleColor, () -> config.subtitleColor, value -> config.subtitleColor = value)
+                                        .customController(opt -> new ColorController(opt, true))
+                                        .build())
+                                .build())
+
+
                         .build())
 
                 // Crosshair

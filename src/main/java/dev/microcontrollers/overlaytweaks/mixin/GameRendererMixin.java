@@ -1,6 +1,7 @@
 package dev.microcontrollers.overlaytweaks.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import dev.microcontrollers.overlaytweaks.InvScale;
 import dev.microcontrollers.overlaytweaks.config.OverlayTweaksConfig;
@@ -10,7 +11,6 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.FilledMapItem;
@@ -22,7 +22,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(value = GameRenderer.class, priority = 1001)
@@ -33,12 +32,14 @@ public class GameRendererMixin {
         else return original;
     }
 
-    @Inject(method = "getNightVisionStrength", at = @At("TAIL"), cancellable = true)
-    private static void cleanerNightVision(LivingEntity entity, float tickDelta, CallbackInfoReturnable<Float> cir) {
-        StatusEffectInstance statusEffectInstance = entity.getStatusEffect(StatusEffects.NIGHT_VISION);
+    @ModifyReturnValue(method = "getNightVisionStrength", at = @At("RETURN"))
+    private static float cleanerNightVision(float original) {
+        assert MinecraftClient.getInstance().player != null;
+        StatusEffectInstance statusEffectInstance = MinecraftClient.getInstance().player.getStatusEffect(StatusEffects.NIGHT_VISION);
         assert statusEffectInstance != null;
         if (OverlayTweaksConfig.CONFIG.instance().cleanerNightVision)
-            cir.setReturnValue(!statusEffectInstance.isDurationBelow(200) ? 1.0F : (float) statusEffectInstance.getDuration() / 200F);
+            return !statusEffectInstance.isDurationBelow(200) ? 1.0F : (float) statusEffectInstance.getDuration() / 200F;
+        return original;
     }
 
     @WrapWithCondition(method = "renderWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/GameRenderer;bobView(Lnet/minecraft/client/util/math/MatrixStack;F)V"))

@@ -1,5 +1,6 @@
 package dev.microcontrollers.overlaytweaks.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import dev.microcontrollers.overlaytweaks.Shifter;
 import dev.microcontrollers.overlaytweaks.config.OverlayTweaksConfig;
 import net.minecraft.client.MinecraftClient;
@@ -12,9 +13,7 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerListHud.class)
@@ -23,8 +22,8 @@ public class PlayerListHudMixin {
     @Final
     private MinecraftClient client;
 
-    @ModifyConstant(method = "render", constant = @Constant(intValue = 553648127))
-    private int tabColor(int opacity) {
+    @ModifyExpressionValue(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/option/GameOptions;getTextBackgroundColor(I)I"))
+    private int modifyTabColor(int opacity) {
         return OverlayTweaksConfig.CONFIG.instance().tabPlayerListColor.getRGB();
     }
 
