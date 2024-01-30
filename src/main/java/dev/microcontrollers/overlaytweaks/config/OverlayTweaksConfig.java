@@ -27,6 +27,7 @@ public class OverlayTweaksConfig {
     @SerialEntry public float containerOpacity = (208/255F) * 100F;
     @SerialEntry public float containerTextureOpacity = 100F;
     @SerialEntry public int containerSize = 1;
+    @SerialEntry public int maxTabPlayers = 80;
     @SerialEntry public Color tabPlayerListColor = new Color(255, 255, 255, 32);
     @SerialEntry public float moveTabDown = 10F;
     @SerialEntry public boolean moveTabBelowBossBars = false;
@@ -64,6 +65,7 @@ public class OverlayTweaksConfig {
     @SerialEntry public Color enchantmentGlanceColor = new Color(16777215);
     @SerialEntry public boolean hotbarDamageGlance = false;
     @SerialEntry public Color damageGlanceColor = new Color(16777215);
+    @SerialEntry public boolean keepHand = false;
     @SerialEntry public boolean hideScoreboardInDebug = false;
     @SerialEntry public boolean classicDebugStyle = false;
     @SerialEntry public boolean disableTitles = false;
@@ -87,6 +89,7 @@ public class OverlayTweaksConfig {
     // Effects
 
     @SerialEntry public boolean potionGlint = false;
+    @SerialEntry public boolean removeBookGlint = false;
     @SerialEntry public boolean staticItems = false;
     @SerialEntry public boolean unstackedItems = false;
     @SerialEntry public boolean cleanerNightVision = true;
@@ -148,6 +151,14 @@ public class OverlayTweaksConfig {
 
                         .group(OptionGroup.createBuilder()
                                 .name(Text.literal("Tab List"))
+                                .option(Option.createBuilder(int.class)
+                                        .name(Text.literal("Max Tab Players"))
+                                        .description(OptionDescription.of(Text.of("Change the maximum number of players that can appear in the tab list. By default, Minecraft has a maximum of 80.")))
+                                        .binding(2, () -> config.maxTabPlayers, newVal -> config.maxTabPlayers = newVal)
+                                        .controller(opt -> IntegerSliderControllerBuilder.create(opt)
+                                                .range(1, 200)
+                                                .step(1))
+                                        .build())
                                 .option(Option.<Color>createBuilder()
                                         .name(Text.literal("Tab Widget Color"))
                                         .binding(defaults.tabPlayerListColor, () -> config.tabPlayerListColor, value -> config.tabPlayerListColor = value)
@@ -399,6 +410,12 @@ public class OverlayTweaksConfig {
                                         .binding(defaults.damageGlanceColor, () -> config.damageGlanceColor, value -> config.damageGlanceColor = value)
                                         .customController(opt -> new ColorController(opt, true))
                                         .build())
+                                .option(Option.createBuilder(boolean.class)
+                                        .name(Text.literal("Keep Hand in Hidden HUD"))
+                                        .description(OptionDescription.of(Text.of("Keep your hand/held item in view when hiding hud (pressing F1).")))
+                                        .binding(defaults.keepHand, () -> config.keepHand, newVal -> config.keepHand = newVal)
+                                        .controller(TickBoxControllerBuilder::create)
+                                        .build())
                                 .build())
 
                         // F3 Debug
@@ -559,6 +576,12 @@ public class OverlayTweaksConfig {
                                         .name(Text.literal("Potion Glint"))
                                         .description(OptionDescription.of(Text.of("Add the potion glint that was removed in 1.19.4.")))
                                         .binding(defaults.potionGlint, () -> config.potionGlint, newVal -> config.potionGlint = newVal)
+                                        .controller(TickBoxControllerBuilder::create)
+                                        .build())
+                                .option(Option.createBuilder(boolean.class)
+                                        .name(Text.literal("Disable Enchanted Book Glint"))
+                                        .description(OptionDescription.of(Text.of("Remove the glint effect from enchanted books.")))
+                                        .binding(defaults.removeBookGlint, () -> config.removeBookGlint, newVal -> config.removeBookGlint = newVal)
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
                                 .option(Option.createBuilder(boolean.class)

@@ -16,6 +16,7 @@
     "CreativeInventoryScreenMixin",
     "DebugHudMixin",
     "ElderGuardianAppearanceParticleMixin",
+    "EnchantedBookItemMixin",
     "EnchantmentScreenMixin",
     "ForgingScreenMixin",
     "GameRendererMixin",

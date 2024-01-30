@@ -8,6 +8,7 @@ import dev.microcontrollers.overlaytweaks.config.OverlayTweaksConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
@@ -21,6 +22,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
@@ -65,6 +67,11 @@ public class GameRendererMixin {
     @WrapWithCondition(method = "renderHand", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/GameRenderer;tiltViewWhenHurt(Lnet/minecraft/client/util/math/MatrixStack;F)V"))
     public boolean disableHandDamageTilt(GameRenderer instance, MatrixStack matrices, float tickDelta) {
         return !OverlayTweaksConfig.CONFIG.instance().disableHandDamage;
+    }
+
+    @Redirect(method = "renderHand", at = @At(value = "FIELD", target = "Lnet/minecraft/client/option/GameOptions;hudHidden:Z"))
+    public boolean keepHand(GameOptions instance) {
+        return !OverlayTweaksConfig.CONFIG.instance().keepHand && instance.hudHidden;
     }
 
     @WrapWithCondition(method = "renderWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/GameRenderer;tiltViewWhenHurt(Lnet/minecraft/client/util/math/MatrixStack;F)V"))
