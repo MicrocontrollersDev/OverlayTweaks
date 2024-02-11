@@ -12,4 +12,5 @@ public class EnchantedBookItemMixin {
     public boolean removeBookGlint(boolean original) {
         return !OverlayTweaksConfig.CONFIG.instance().removeBookGlint;
     }
+
 }

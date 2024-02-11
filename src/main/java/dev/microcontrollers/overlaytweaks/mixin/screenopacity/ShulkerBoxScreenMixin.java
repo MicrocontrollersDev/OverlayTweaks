@@ -1,16 +1,16 @@
-package dev.microcontrollers.overlaytweaks.mixin;
+package dev.microcontrollers.overlaytweaks.mixin.screenopacity;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.microcontrollers.overlaytweaks.config.OverlayTweaksConfig;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ingame.Generic3x3ContainerScreen;
+import net.minecraft.client.gui.screen.ingame.ShulkerBoxScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(Generic3x3ContainerScreen.class)
-public class Generic3x3ContainerScreenMixin {
+@Mixin(ShulkerBoxScreen.class)
+public class ShulkerBoxScreenMixin {
     @Inject(method = "drawBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"))
     private void containerOpacityStart(DrawContext context, float delta, int mouseX, int mouseY, CallbackInfo ci) {
         RenderSystem.enableBlend();
@@ -22,5 +22,4 @@ public class Generic3x3ContainerScreenMixin {
         RenderSystem.disableBlend();
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
     }
-
 }

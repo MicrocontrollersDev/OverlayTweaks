@@ -1,4 +1,4 @@
-package dev.microcontrollers.overlaytweaks.mixin;
+package dev.microcontrollers.overlaytweaks.mixin.screenopacity;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.microcontrollers.overlaytweaks.config.OverlayTweaksConfig;

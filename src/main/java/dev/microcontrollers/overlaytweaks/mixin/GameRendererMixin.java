@@ -79,6 +79,12 @@ public class GameRendererMixin {
         return !OverlayTweaksConfig.CONFIG.instance().disableScreenDamage;
     }
 
+    /*
+        The following methods were taken from DulkirMod-Fabric under MPL 2.0
+        https://github.com/inglettronald/DulkirMod-Fabric/blob/master/LICENSE
+        No changes of note have been made other than adapting to this project
+     */
+
     @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;renderWithTooltip(Lnet/minecraft/client/gui/DrawContext;IIF)V"), index = 1)
     public int fixMouseX(int mouseX) {
         return (int) (mouseX / InvScale.getScale());
@@ -88,12 +94,6 @@ public class GameRendererMixin {
     public int fixMouseY(int mouseY) {
         return (int) (mouseY / InvScale.getScale());
     }
-
-    /*
-        The following methods were taken from DulkirMod-Fabric under MPL 2.0
-        https://github.com/inglettronald/DulkirMod-Fabric/blob/master/LICENSE
-        No changes of note have been made other than adapting to this project
-     */
 
     // ignore the error about method params
     @Inject(method = "render", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/MinecraftClient;currentScreen:Lnet/minecraft/client/gui/screen/Screen;", shift = At.Shift.BEFORE, ordinal = 1), locals = LocalCapture.CAPTURE_FAILHARD)

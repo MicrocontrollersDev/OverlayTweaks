@@ -78,9 +78,9 @@ public class InGameHudMixin {
         return OverlayTweaksConfig.CONFIG.instance().pumpkinOpacity / 100F;
     }
 
-    @ModifyArgs(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;renderOverlay(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/util/Identifier;F)V", ordinal = 1))
-    private void changeFreezingOpacity(Args args) {
-        args.set(2, (float) args.get(2) * OverlayTweaksConfig.CONFIG.instance().freezingOpacity / 100F);
+    @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;renderOverlay(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/util/Identifier;F)V", ordinal = 1), index = 2)
+    private float changeFreezingOpacity(float opacity) {
+        return opacity * OverlayTweaksConfig.CONFIG.instance().freezingOpacity / 100F;
     }
 
     @Inject(method = "renderHeldItemTooltip", at = @At("HEAD"), cancellable = true)
@@ -124,7 +124,7 @@ public class InGameHudMixin {
         put(Enchantment.byRawId(30), "LOY");    // Loyalty
         put(Enchantment.byRawId(31), "IMP");    // Impaling
         put(Enchantment.byRawId(32), "RIP");    // Riptide
-        put(Enchantment.byRawId(33), "CHAN");   // Channeling
+        put(Enchantment.byRawId(33), "CH");   // Channeling
         put(Enchantment.byRawId(34), "MS");     // Multishot
         put(Enchantment.byRawId(35), "QC");     // Quick Charge
         put(Enchantment.byRawId(36), "PIER");   // Piercing

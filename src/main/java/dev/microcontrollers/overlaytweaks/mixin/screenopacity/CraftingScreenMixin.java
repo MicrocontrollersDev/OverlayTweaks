@@ -1,16 +1,16 @@
-package dev.microcontrollers.overlaytweaks.mixin;
+package dev.microcontrollers.overlaytweaks.mixin.screenopacity;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.microcontrollers.overlaytweaks.config.OverlayTweaksConfig;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ingame.ForgingScreen;
+import net.minecraft.client.gui.screen.ingame.CraftingScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ForgingScreen.class)
-public class ForgingScreenMixin {
+@Mixin(CraftingScreen.class)
+public class CraftingScreenMixin {
     @Inject(method = "drawBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"))
     private void containerOpacityStart(DrawContext context, float delta, int mouseX, int mouseY, CallbackInfo ci) {
         RenderSystem.enableBlend();

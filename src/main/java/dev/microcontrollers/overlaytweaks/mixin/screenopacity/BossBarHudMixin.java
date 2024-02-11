@@ -1,4 +1,4 @@
-package dev.microcontrollers.overlaytweaks.mixin;
+package dev.microcontrollers.overlaytweaks.mixin.screenopacity;
 
 import dev.microcontrollers.overlaytweaks.Shifter;
 import net.minecraft.client.gui.hud.BossBarHud;
