@@ -3,6 +3,7 @@
   "package": "dev.microcontrollers.overlaytweaks.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
+    "BossBarHudMixin",
     "BuiltinItemModelRendererMixin",
     "ClientWorldMixin",
     "DebugHudMixin",
@@ -23,7 +24,6 @@
     "screenopacity.AbstractFurnaceScreenMixin",
     "screenopacity.AnvilScreenMixin",
     "screenopacity.BeaconScreenMixin",
-    "screenopacity.BossBarHudMixin",
     "screenopacity.BrewingStandScreenMixin",
     "screenopacity.CartographyTableScreenMixin",
     "screenopacity.CrafterScreenMixin",
