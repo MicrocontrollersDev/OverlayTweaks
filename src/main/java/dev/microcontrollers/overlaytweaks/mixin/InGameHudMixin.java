@@ -28,7 +28,6 @@ import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -224,7 +223,7 @@ public class InGameHudMixin {
         return original;
     }
 
-    @Inject(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;applyModelViewMatrix()V"))
+    @Inject(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;applyModelViewMatrix()V", ordinal = 0))
     private void showCooldownOnDebug(DrawContext context, CallbackInfo ci) {
         if (!OverlayTweaksConfig.CONFIG.instance().fixDebugCooldown) return;
         if (this.client.options.getAttackIndicator().getValue() == AttackIndicator.CROSSHAIR) {
