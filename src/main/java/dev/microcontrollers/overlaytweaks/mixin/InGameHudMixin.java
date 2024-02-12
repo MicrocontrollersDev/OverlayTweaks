@@ -1,6 +1,7 @@
 package dev.microcontrollers.overlaytweaks.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -8,7 +9,6 @@ import dev.microcontrollers.overlaytweaks.config.OverlayTweaksConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.hud.DebugHud;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.AttackIndicator;
@@ -25,12 +25,13 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.hit.HitResult;
 import org.objectweb.asm.Opcodes;
-import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -60,9 +61,14 @@ public class InGameHudMixin {
             this.vignetteDarkness = OverlayTweaksConfig.CONFIG.instance().customVignetteDarknessValue / 100;
     }
 
-    @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;renderOverlay(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/util/Identifier;F)V"), index = 2)
+    @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;renderOverlay(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/util/Identifier;F)V", ordinal = 0), index = 2)
     private float changePumpkinOpacity(float opacity) {
         return OverlayTweaksConfig.CONFIG.instance().pumpkinOpacity / 100F;
+    }
+
+    @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;renderOverlay(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/util/Identifier;F)V", ordinal = 1), index = 2)
+    private float changeFreezingOpacity(float opacity) {
+        return opacity * OverlayTweaksConfig.CONFIG.instance().freezingOpacity / 100F;
     }
 
     @Inject(method = "renderHeldItemTooltip", at = @At("HEAD"), cancellable = true)
@@ -159,11 +165,8 @@ public class InGameHudMixin {
         TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
 
         // the x and y values here and in the draw method are pretty much entirely random
-        // these are just eyeballed to look nice and centered which is why the math is stupid and makes no sense
-        int xush = 47;
-        if (player.isCreative()) xush = 31;
         int x = (context.getScaledWindowWidth() / 2) - (renderer.getWidth(itemDamageStr) / 2);
-        int y = context.getScaledWindowHeight() - xush - OverlayTweaksConfig.CONFIG.instance().moveHotbarBy;
+        int y = context.getScaledWindowHeight() - (player.isCreative() ? 31 : 47);
 
         RenderSystem.enableBlend(); // without this the hotbar loses all translucency for some reason
         RenderSystem.disableDepthTest();
@@ -175,55 +178,8 @@ public class InGameHudMixin {
         context.getMatrices().scale(2F, 2F, 2F);
     }
 
-    @ModifyArg(method = "renderHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"), index = 2)
-    private int moveHotbarUp(int y) {
-        return y - OverlayTweaksConfig.CONFIG.instance().moveHotbarBy;
-    }
-
-    @ModifyArg(method = "renderHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;renderHotbarItem(Lnet/minecraft/client/gui/DrawContext;IIFLnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/item/ItemStack;I)V"), index = 2)
-    private int moveHotbarUp2(int o) {
-        return o - OverlayTweaksConfig.CONFIG.instance().moveHotbarBy;
-    }
-
-    @ModifyArg(method = "renderMountJumpBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"), index = 2)
-    private int moveMountJumpUp(int k) {
-        return k - OverlayTweaksConfig.CONFIG.instance().moveHotbarBy;
-    }
-
-    @ModifyArg(method = "renderExperienceBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"), index = 2)
-    private int moveExperienceUp(int l) {
-        return l - OverlayTweaksConfig.CONFIG.instance().moveHotbarBy;
-    }
-
-    @ModifyArg(method = "renderExperienceBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawText(Lnet/minecraft/client/font/TextRenderer;Ljava/lang/String;IIIZ)I"), index = 3)
-    private int moveExperienceUp2(int l) {
-        return l - OverlayTweaksConfig.CONFIG.instance().moveHotbarBy;
-    }
-
-    @ModifyArg(method = "renderHeldItemTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTextWithShadow(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/text/Text;III)I"), index = 3)
-    private int moveTooltipUp(int y) {
-        int xextra = 0;
-        if (OverlayTweaksConfig.CONFIG.instance().hotbarEnchantmentGlance) xextra = 7;
-        return y - OverlayTweaksConfig.CONFIG.instance().moveHotbarBy - xextra;
-    }
-
-    @ModifyArg(method = "renderStatusBars", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"), index = 2)
-    private int moveStatusUp(int s) {
-        return s - OverlayTweaksConfig.CONFIG.instance().moveHotbarBy;
-    }
-
-    @ModifyArg(method = "renderStatusBars", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;renderHealthBar(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/entity/player/PlayerEntity;IIIIFIIIZ)V"), index = 3)
-    private int moveStatusUp2(int o) {
-        return o - OverlayTweaksConfig.CONFIG.instance().moveHotbarBy;
-    }
-
-    @ModifyArg(method = "renderMountHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"), index = 2)
-    private int moveMountHealthUp(int m) {
-        return m - OverlayTweaksConfig.CONFIG.instance().moveHotbarBy;
-    }
-
     @Inject(method = "renderCrosshair", at = @At("HEAD"), cancellable = true)
-    private void isInContainer(DrawContext context, CallbackInfo ci) {
+    private void removeCrosshairInContainer(DrawContext context, CallbackInfo ci) {
         if (MinecraftClient.getInstance().currentScreen != null && OverlayTweaksConfig.CONFIG.instance().hideCrosshairInContainers)
             ci.cancel();
     }
@@ -235,7 +191,7 @@ public class InGameHudMixin {
     }
 
     @WrapWithCondition(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;blendFuncSeparate(Lcom/mojang/blaze3d/platform/GlStateManager$SrcFactor;Lcom/mojang/blaze3d/platform/GlStateManager$DstFactor;Lcom/mojang/blaze3d/platform/GlStateManager$SrcFactor;Lcom/mojang/blaze3d/platform/GlStateManager$DstFactor;)V"))
-    private boolean removeBlending(GlStateManager.SrcFactor srcFactor, GlStateManager.DstFactor dstFactor, GlStateManager.SrcFactor srcAlpha, GlStateManager.DstFactor dstAlpha) {
+    private boolean removeCrosshairBlending(GlStateManager.SrcFactor srcFactor, GlStateManager.DstFactor dstFactor, GlStateManager.SrcFactor srcAlpha, GlStateManager.DstFactor dstAlpha) {
         return !OverlayTweaksConfig.CONFIG.instance().removeCrosshairBlending;
     }
 
@@ -280,9 +236,10 @@ public class InGameHudMixin {
         RenderSystem.defaultBlendFunc();
     }
 
-    @Inject(method = "shouldRenderSpectatorCrosshair", at = @At("HEAD"), cancellable = true)
-    private void showInSpectator(HitResult hitResult, CallbackInfoReturnable<Boolean> cir) {
-        if (OverlayTweaksConfig.CONFIG.instance().showCrosshairInSpectator) cir.setReturnValue(true);
+    @ModifyReturnValue(method = "shouldRenderSpectatorCrosshair", at = @At("RETURN"))
+    private boolean showInSpectator(boolean original) {
+        if (OverlayTweaksConfig.CONFIG.instance().showCrosshairInSpectator) return true;
+        return original;
     }
 
     @Inject(method = "renderScoreboardSidebar", at = @At("HEAD"), cancellable = true)
@@ -298,17 +255,14 @@ public class InGameHudMixin {
 
     @ModifyExpressionValue(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/MathHelper;clamp(III)I"))
     private int clamp(int value) {
-        if (OverlayTweaksConfig.CONFIG.instance().disableTitles) {
-            return 0;
-        } else {
-            return value;
-        }
+        if (OverlayTweaksConfig.CONFIG.instance().disableTitles) return 0;
+        else return value;
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;scale(FFF)V", ordinal = 0, shift = At.Shift.AFTER))
     private void modifyTitle(DrawContext context, float tickDelta, CallbackInfo ci) {
         float titleScale = OverlayTweaksConfig.CONFIG.instance().titleScale / 100;
-        // MCCIsland uses a giant title to black out your screen when switching worlds, so let's keep that
+        // TODO: MCCIsland uses a giant title to black out your screen when switching worlds, so let's keep that. Find a better way to only keep black out
         if (OverlayTweaksConfig.CONFIG.instance().autoTitleScale && (MinecraftClient.getInstance().getCurrentServerEntry() != null && !MinecraftClient.getInstance().getCurrentServerEntry().address.contains("mccisland.net"))) {
             final float width = MinecraftClient.getInstance().textRenderer.getWidth(title) * 4.0F;
             if (width > context.getScaledWindowWidth()) {
@@ -321,7 +275,7 @@ public class InGameHudMixin {
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;scale(FFF)V", ordinal = 1, shift = At.Shift.AFTER))
     private void modifySubtitle(DrawContext context, float tickDelta, CallbackInfo ci) {
         float titleScale = OverlayTweaksConfig.CONFIG.instance().titleScale / 100;
-        // MCCIsland uses a giant title to black out your screen when switching worlds, so let's keep that
+        // TODO: MCCIsland uses a giant title to black out your screen when switching worlds, so let's keep that. Find a better way to only keep black out
         if (OverlayTweaksConfig.CONFIG.instance().autoTitleScale && (MinecraftClient.getInstance().getCurrentServerEntry() != null && !MinecraftClient.getInstance().getCurrentServerEntry().address.contains("mccisland.net"))) {
             final float width = MinecraftClient.getInstance().textRenderer.getWidth(subtitle) * 2.0F;
             if (width > context.getScaledWindowWidth()) {

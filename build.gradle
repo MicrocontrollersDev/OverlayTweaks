@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.4-SNAPSHOT'
+	id 'fabric-loom' version '1.5-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -16,7 +16,6 @@ repositories {
 	maven { url = "https://oss.sonatype.org/content/repositories/snapshots" } // required for yacl for some reason
 	maven { url = "https://maven.terraformersmc.com/releases" } // required for modmenu
 	maven { url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1" } // required for oauth
-	maven { url = "https://api.modrinth.com/maven" } // required for appleskin compat
 	maven { url = "https://maven.quiltmc.org/repository/release" } // required for yacl for some reason
 }
 
@@ -27,9 +26,6 @@ loom {
 }
 
 dependencies { // To change the versions see the gradle.properties file
-	// Mixin Extras
-	include(implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-fabric:${mixinExtrasVersion}")))
-
 	// YACL
 	modImplementation("dev.isxander.yacl:yet-another-config-lib-fabric:${yaclVersion}")
 
@@ -46,13 +42,6 @@ dependencies { // To change the versions see the gradle.properties file
 
 	// DevAuth. Lets us log in with our own Minecraft account. Useful for testing tab features.
 	modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:${project.devauthVersion}")
-
-	// To test AppleSkin compatability.
-	modImplementation("maven.modrinth:appleskin:${project.appleSkinVersion}")
-	modImplementation("maven.modrinth:cloth-config:${project.clothConfigVersion}")
-
-	// To test Detail Armor Bar compatability.
-	modImplementation("maven.modrinth:detail-armor-bar:${project.detailArmorBarVersion}")
 }
 
 processResources {

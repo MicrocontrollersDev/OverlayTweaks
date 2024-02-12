@@ -1,16 +1,17 @@
 package dev.microcontrollers.overlaytweaks.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import dev.microcontrollers.overlaytweaks.InvScale;
 import dev.microcontrollers.overlaytweaks.config.OverlayTweaksConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.FilledMapItem;
@@ -21,8 +22,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(value = GameRenderer.class, priority = 1001)
@@ -33,12 +34,14 @@ public class GameRendererMixin {
         else return original;
     }
 
-    @Inject(method = "getNightVisionStrength", at = @At("TAIL"), cancellable = true)
-    private static void cleanerNightVision(LivingEntity entity, float tickDelta, CallbackInfoReturnable<Float> cir) {
-        StatusEffectInstance statusEffectInstance = entity.getStatusEffect(StatusEffects.NIGHT_VISION);
+    @ModifyReturnValue(method = "getNightVisionStrength", at = @At("RETURN"))
+    private static float cleanerNightVision(float original) {
+        assert MinecraftClient.getInstance().player != null;
+        StatusEffectInstance statusEffectInstance = MinecraftClient.getInstance().player.getStatusEffect(StatusEffects.NIGHT_VISION);
         assert statusEffectInstance != null;
         if (OverlayTweaksConfig.CONFIG.instance().cleanerNightVision)
-            cir.setReturnValue(!statusEffectInstance.isDurationBelow(200) ? 1.0F : (float) statusEffectInstance.getDuration() / 200F);
+            return !statusEffectInstance.isDurationBelow(200) ? 1.0F : (float) statusEffectInstance.getDuration() / 200F;
+        return original;
     }
 
     @WrapWithCondition(method = "renderWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/GameRenderer;bobView(Lnet/minecraft/client/util/math/MatrixStack;F)V"))
@@ -66,10 +69,16 @@ public class GameRendererMixin {
         return !OverlayTweaksConfig.CONFIG.instance().disableHandDamage;
     }
 
+    @Redirect(method = "renderHand", at = @At(value = "FIELD", target = "Lnet/minecraft/client/option/GameOptions;hudHidden:Z"))
+    public boolean keepHand(GameOptions instance) {
+        return !OverlayTweaksConfig.CONFIG.instance().keepHand && instance.hudHidden;
+    }
+
     @WrapWithCondition(method = "renderWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/GameRenderer;tiltViewWhenHurt(Lnet/minecraft/client/util/math/MatrixStack;F)V"))
     public boolean disableScreenDamageTilt(GameRenderer instance, MatrixStack matrices, float tickDelta) {
         return !OverlayTweaksConfig.CONFIG.instance().disableScreenDamage;
     }
+
 
     /*
         The following methods were taken from DulkirMod-Fabric under MPL 2.0
@@ -89,6 +98,7 @@ public class GameRendererMixin {
 
     // ignore the error about method params
     @Inject(method = "render", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/MinecraftClient;currentScreen:Lnet/minecraft/client/gui/screen/Screen;", shift = At.Shift.BEFORE, ordinal = 1), locals = LocalCapture.CAPTURE_FAILHARD)
+    @SuppressWarnings("InvalidInjectorMethodSignature")
     public void onScreenRenderPre(float tickDelta, long startTime, boolean tick, CallbackInfo ci, int i, int j, Window window, Matrix4f matrix4f, MatrixStack matrixStack, DrawContext drawContext) {
         drawContext.getMatrices().push();
         drawContext.getMatrices().scale(InvScale.getScale(), InvScale.getScale(), 1f);
@@ -96,6 +106,7 @@ public class GameRendererMixin {
 
     // ignore the error about method params
     @Inject(method = "render", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/MinecraftClient;currentScreen:Lnet/minecraft/client/gui/screen/Screen;", shift = At.Shift.AFTER, ordinal = 3), locals = LocalCapture.CAPTURE_FAILHARD)
+    @SuppressWarnings("InvalidInjectorMethodSignature")
     public void onScreenRenderPost(float tickDelta, long startTime, boolean tick, CallbackInfo ci, int i, int j, Window window, Matrix4f matrix4f, MatrixStack matrixStack, DrawContext drawContext) {
         drawContext.getMatrices().pop();
     }
