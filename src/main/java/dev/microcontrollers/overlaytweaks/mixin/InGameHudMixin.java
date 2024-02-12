@@ -212,8 +212,9 @@ public class InGameHudMixin {
         return gameOptions.debugEnabled;
     }
 
-    @Inject(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;applyModelViewMatrix()V"))
+    @Inject(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;applyModelViewMatrix()V", ordinal = 0))
     private void showCooldownOnDebug(DrawContext context, CallbackInfo ci) {
+        RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.ONE_MINUS_DST_COLOR, GlStateManager.DstFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
         if (!OverlayTweaksConfig.CONFIG.instance().fixDebugCooldown) return;
         if (this.client.options.getAttackIndicator().getValue() == AttackIndicator.CROSSHAIR) {
             assert this.client.player != null;
