@@ -38,7 +38,8 @@
     "screenopacity.InventoryScreenMixin",
     "screenopacity.LoomScreenMixin",
     "screenopacity.ShulkerBoxScreenMixin",
-    "screenopacity.StonecutterScreenMixin"
+    "screenopacity.StonecutterScreenMixin",
+    "SubtitlesHudMixin"
   ],
   "injectors": {
     "defaultRequire": 1

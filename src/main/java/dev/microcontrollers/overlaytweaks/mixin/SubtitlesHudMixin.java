@@ -1,4 +1,4 @@
-package dev.microcontrollers.overlaytweaks.mixin.screenopacity;
+package dev.microcontrollers.overlaytweaks.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import dev.microcontrollers.overlaytweaks.config.OverlayTweaksConfig;
