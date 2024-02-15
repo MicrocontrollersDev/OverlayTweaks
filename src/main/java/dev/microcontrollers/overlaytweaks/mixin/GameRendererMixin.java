@@ -79,7 +79,6 @@ public class GameRendererMixin {
         return !OverlayTweaksConfig.CONFIG.instance().disableScreenDamage;
     }
 
-
     /*
         The following methods were taken from DulkirMod-Fabric under MPL 2.0
         https://github.com/inglettronald/DulkirMod-Fabric/blob/master/LICENSE

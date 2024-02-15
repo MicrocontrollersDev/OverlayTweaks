@@ -66,6 +66,7 @@ public class OverlayTweaksConfig {
     @SerialEntry public boolean hotbarDamageGlance = false;
     @SerialEntry public Color damageGlanceColor = new Color(16777215);
     @SerialEntry public boolean keepHand = false;
+    @SerialEntry public boolean disableHandViewSway = false;
     @SerialEntry public boolean hideScoreboardInDebug = false;
     @SerialEntry public boolean classicDebugStyle = false;
     @SerialEntry public boolean disableTitles = false;
@@ -414,6 +415,12 @@ public class OverlayTweaksConfig {
                                         .name(Text.literal("Keep Hand in Hidden HUD"))
                                         .description(OptionDescription.of(Text.of("Keep your hand/held item in view when hiding hud (pressing F1).")))
                                         .binding(defaults.keepHand, () -> config.keepHand, newVal -> config.keepHand = newVal)
+                                        .controller(TickBoxControllerBuilder::create)
+                                        .build())
+                                .option(Option.createBuilder(boolean.class)
+                                        .name(Text.literal("Disable Hand View Sway"))
+                                        .description(OptionDescription.of(Text.of("Disables the hand view sway when moving your mouse.")))
+                                        .binding(defaults.disableHandViewSway, () -> config.disableHandViewSway, newVal -> config.disableHandViewSway = newVal)
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
                                 .build())
