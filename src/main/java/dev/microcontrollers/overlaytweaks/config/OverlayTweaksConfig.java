@@ -45,6 +45,7 @@ public class OverlayTweaksConfig {
     @SerialEntry public boolean disableMapBobbing = true;
     @SerialEntry public boolean disableScreenDamage = false;
     @SerialEntry public boolean disableHandDamage = false;
+    @SerialEntry public boolean disableHandViewSway = false;
     @SerialEntry public float tabBackgroundOpacity = 100F;
 
     // HUD
@@ -261,6 +262,12 @@ public class OverlayTweaksConfig {
                                         .name(Text.literal("Disable Hand Damage Tilt"))
                                         .description(OptionDescription.of(Text.of("Disables the hand shake when taking damage.")))
                                         .binding(defaults.disableHandDamage, () -> config.disableHandDamage, newVal -> config.disableHandDamage = newVal)
+                                        .controller(TickBoxControllerBuilder::create)
+                                        .build())
+                                .option(Option.createBuilder(boolean.class)
+                                        .name(Text.literal("Disable Hand View Sway"))
+                                        .description(OptionDescription.of(Text.of("Disables the hand view sway when moving your mouse.")))
+                                        .binding(defaults.disableHandViewSway, () -> config.disableHandViewSway, newVal -> config.disableHandViewSway = newVal)
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
                                 .build())
