@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 /*
-    The following class is based on DulkirMod-NicerTabBackground under MIT
+    The following class is based on NicerTabBackground under MIT
     https://github.com/Benonardo/NicerTabBackground/blob/main/LICENSE
     Only idea and injection location have been reused
  */
