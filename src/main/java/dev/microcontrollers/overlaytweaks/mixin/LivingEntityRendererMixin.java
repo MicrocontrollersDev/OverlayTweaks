@@ -28,13 +28,14 @@ public class LivingEntityRendererMixin<T extends LivingEntity> {
     private RenderLayer transparentEntityRenderLayer(EntityModel model, Identifier texture, Operation<RenderLayer> original) {
         // let's not set this unless we absolutely have to
         // TODO: fix pig saddles
-        assert MinecraftClient.getInstance().player != null;
-        if (MinecraftClient.getInstance().player.hasVehicle() &&
-                ((OverlayTweaksConfig.CONFIG.instance().horseOpacity != 100  && texture.toString().contains("horse")) ||
-                        (OverlayTweaksConfig.CONFIG.instance().pigOpacity != 100 && texture.toString().contains("pig")) ||
-                        (OverlayTweaksConfig.CONFIG.instance().striderOpacity != 100 && texture.toString().contains("strider")) ||
-                        (OverlayTweaksConfig.CONFIG.instance().camelOpacity != 100 && texture.toString().contains("camel")))) {
-            return RenderLayer.getEntityTranslucent(texture);
+        if (MinecraftClient.getInstance().player != null) {
+            if (MinecraftClient.getInstance().player.hasVehicle() &&
+                    ((OverlayTweaksConfig.CONFIG.instance().horseOpacity != 100 && texture.toString().contains("horse")) ||
+                    (OverlayTweaksConfig.CONFIG.instance().pigOpacity != 100 && texture.toString().contains("pig")) ||
+                    (OverlayTweaksConfig.CONFIG.instance().striderOpacity != 100 && texture.toString().contains("strider")) ||
+                    (OverlayTweaksConfig.CONFIG.instance().camelOpacity != 100 && texture.toString().contains("camel")))) {
+                return RenderLayer.getEntityTranslucent(texture);
+            }
         }
         return original.call(model, texture);
     }
