@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(CreativeInventoryScreen.class)
+@Mixin(value = CreativeInventoryScreen.class, priority = 1500)
 public class CreativeInventoryScreenMixin {
     @Inject(method = "drawBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"))
     private void containerOpacityStart(DrawContext context, float delta, int mouseX, int mouseY, CallbackInfo ci) {

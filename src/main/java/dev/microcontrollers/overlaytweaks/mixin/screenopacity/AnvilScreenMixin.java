@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(AnvilScreen.class)
+@Mixin(value = AnvilScreen.class, priority = 2000)
 public class AnvilScreenMixin {
     @Inject(method = "drawBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"))
     private void buttonOpacityStart(DrawContext context, float delta, int mouseX, int mouseY, CallbackInfo ci) {

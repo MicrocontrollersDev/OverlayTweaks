@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-@Mixin(BossBarHud.class)
+@Mixin(value = BossBarHud.class, priority = 900)
 public class BossBarHudMixin implements Shifter {
     @Unique
     private int distance;
